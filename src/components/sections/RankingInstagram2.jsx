@@ -7,7 +7,7 @@ import {
 import HeaderInstagramImage from '/src/assets/header_Relatorio_Insta.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
 
-const RankingInstagram = ({ dados }) => {
+const RankingInstagram2 = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
     if (variacao > 0) return <ArrowUpRight className="text-green-600" size={20} />;
     if (variacao < 0) return <ArrowDownRight className="text-red-600" size={20} />;
@@ -16,18 +16,18 @@ const RankingInstagram = ({ dados }) => {
 
   if (!dados || dados.length === 0) return null;
 
-  const primeiraMetade = dados.slice(0, 33);
+  const segundaMetade = dados.slice(33, 66);
 
-  const renderSecao = (lista, numeroSecao) => (
+  const renderSecao = (lista) => (
     <div className="w-full bg-gray-100 pb-0">
       {/* SVG Header do Instagram */}
       <div className="w-full">
         <img
           src={HeaderInstagramImage}
-          alt={`Ranking Instagram Header ${numeroSecao}`}
+          alt="Ranking Instagram Header 2"
           className="w-full object-cover" 
         />
-      </div>    
+      </div>
 
       {/* Título abaixo do header */}
       <div className="max-w-7xl mx-auto px-4 mt-8 mb-4">
@@ -43,7 +43,7 @@ const RankingInstagram = ({ dados }) => {
           >
             <div className="flex items-center gap-3">
               <div className="text-lg font-extrabold w-6 text-right">
-                {index + 1}º
+                {index + 34}º
               </div>
               <img
                 src={pessoa.foto || '/placeholder.png'}
@@ -79,18 +79,14 @@ const RankingInstagram = ({ dados }) => {
       <div className="w-full">
         <img
           src={FooterRankingImage}
-          alt={`Ranking Footer ${numeroSecao} `}
+          alt="Ranking Footer 2"
           className="w-full object-cover"
         />
       </div>
     </div>
   );
 
-  return (
-    <>
-      {renderSecao(primeiraMetade, 1)}
-    </>
-  );
+  return renderSecao(segundaMetade);
 };
 
-export default RankingInstagram;
+export default RankingInstagram2;

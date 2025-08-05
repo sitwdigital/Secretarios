@@ -9,6 +9,7 @@ import UploadRedes from './components/common/UploadRedes';
 
 import RankingGanhoSeguidores from './components/sections/RankingGanhoSeguidores';
 import RankingInstagram from './components/sections/RankingInstagram';
+import RankingInstagram2 from './components/sections/RankingInstagram2';
 import RankingFacebook from './components/sections/RankingFacebook';
 import RankingTwitter from './components/sections/RankingTwitter';
 
@@ -20,7 +21,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   const sectionsRef = useRef([]);
-  const endPageRef = useRef(null); // ✅ referência para a imagem final
+  const endPageRef = useRef(null);
 
   const handleUpload = (dados) => {
     setLoading(true);
@@ -35,12 +36,10 @@ const App = () => {
     const pageWidth = 297;
     const pageHeight = 210;
 
-    // Página 1: Capa
     const coverCanvas = await html2canvas(document.getElementById('cover'), { scale: 2 });
     const coverImgData = coverCanvas.toDataURL('image/png');
     pdf.addImage(coverImgData, 'PNG', 0, 0, pageWidth, pageHeight);
 
-    // Conteúdo principal
     for (let i = 0; i < sectionsRef.current.length; i++) {
       const el = sectionsRef.current[i];
       if (!el) continue;
@@ -50,7 +49,6 @@ const App = () => {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
     }
 
-    // Página final com imagem do fechamento
     if (endPageRef.current) {
       const canvas = await html2canvas(endPageRef.current, { scale: 2 });
       const imgData = canvas.toDataURL('image/png');
@@ -90,7 +88,6 @@ const App = () => {
 
       {!loading && dadosExcel && (
         <>
-          {/* Capa do relatório */}
           <div id="cover" className="w-full">
             <img
               src={CoverRelatorioImage}
@@ -99,24 +96,26 @@ const App = () => {
             />
           </div>
 
-          {/* Conteúdo PDF */}
           <section ref={(el) => (sectionsRef.current[0] = el)} id="ranking-top10" className="py-0">
             <RankingGanhoSeguidores dados={dadosExcel.rankingGanho} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[1] = el)} id="instagram" className="py-0">
+          <section ref={(el) => (sectionsRef.current[1] = el)} id="instagram1" className="py-0">
             <RankingInstagram dados={dadosExcel.instagram} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[2] = el)} id="facebook" className="py-0">
+          <section ref={(el) => (sectionsRef.current[2] = el)} id="instagram2" className="py-0">
+            <RankingInstagram2 dados={dadosExcel.instagram} />
+          </section>
+
+          <section ref={(el) => (sectionsRef.current[3] = el)} id="facebook" className="py-0">
             <RankingFacebook dados={dadosExcel.facebook} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[3] = el)} id="twitter" className="py-0">
+          <section ref={(el) => (sectionsRef.current[4] = el)} id="twitter" className="py-0">
             <RankingTwitter dados={dadosExcel.twitter} />
           </section>
 
-          {/* Imagem final (antes do footer) */}
           <div ref={endPageRef} className="w-full">
             <img
               src={EndPageRelatorioImage}
@@ -125,7 +124,6 @@ const App = () => {
             />
           </div>
 
-          {/* Botão de exportar PDF */}
           <div className="py-8 text-center bg-gray-100">
             <button
               onClick={exportarPDF}
@@ -142,4 +140,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App;

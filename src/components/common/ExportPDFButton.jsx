@@ -3,20 +3,21 @@ import html2canvas from 'html2canvas';
 
 const ExportPDFButton = () => {
   const exportToPDF = async () => {
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdf = new jsPDF('landscape', 'mm', 'a4');
     const sections = [
-      { id: 'cover', title: 'Capa' },
-      { id: 'ranking-top10', title: 'Ganho de Seguidores' },
-      { id: 'instagram', title: 'Instagram' },
-      { id: 'facebook', title: 'Facebook' },
-      { id: 'twitter', title: 'Twitter' },
+        { id: 'cover', title: 'Capa' },
+        { id: 'ranking-top10', title: 'Ganho de Seguidores' },
+        { id: 'instagram-page-1', title: 'Instagram Parte 1' },
+        { id: 'instagram-page-2', title: 'Instagram Parte 2' },
+        { id: 'facebook', title: 'Facebook' },
+        { id: 'twitter', title: 'Twitter' },
     ];
 
     for (let i = 0; i < sections.length; i++) {
       const section = document.getElementById(sections[i].id);
       if (!section) continue;
 
-      const canvas = await html2canvas(section, { scale: 2 });
+      const canvas = await html2canvas(section, { scale: 3 });
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
 
       const pageWidth = 210;
