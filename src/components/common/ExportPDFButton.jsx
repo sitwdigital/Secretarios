@@ -1,15 +1,47 @@
-import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const ExportPDFButton = () => {
-  const handleExport = () => {
-    const content = document.getElementById('relatorio');
-    html2pdf().from(content).save('relatorio_redes_sociais.pdf');
+  const exportToPDF = async () => {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const sections = [
+      { id: 'cover', title: 'Capa' },
+      { id: 'ranking-top10', title: 'Ganho de Seguidores' },
+      { id: 'instagram', title: 'Instagram' },
+      { id: 'facebook', title: 'Facebook' },
+      { id: 'twitter', title: 'Twitter' },
+    ];
+
+    for (let i = 0; i < sections.length; i++) {
+      const section = document.getElementById(sections[i].id);
+      if (!section) continue;
+
+      const canvas = await html2canvas(section, { scale: 2 });
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const imgProps = {
+        width: pageWidth,
+        height: (canvas.height * pageWidth) / canvas.width,
+      };
+
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgProps.width, imgProps.height);
+    }
+
+    pdf.save('Relatorio_Secretarias.pdf');
   };
 
   return (
-    <button onClick={handleExport} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
-      Exportar PDF
-    </button>
+    <div className="flex justify-center my-6">
+      <button
+        onClick={exportToPDF}
+        className="bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition"
+      >
+        📄 Exportar Relatório em PDF
+      </button>
+    </div>
   );
 };
 

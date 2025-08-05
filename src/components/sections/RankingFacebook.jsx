@@ -4,10 +4,10 @@ import {
   Minus,
 } from 'lucide-react';
 
-import HeaderRankingImage from '/src/assets/header_Relatorio_Ranking.svg';
-import FooterRankingImage from '/src/assets/footer_Relatorio.svg'; // ✅ novo footer
+import HeaderFacebookImage from '/src/assets/header_Relatorio_Facebook.svg';
+import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
 
-const RankingGanhoSeguidores = ({ dados }) => {
+const RankingFacebook = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
     if (variacao > 0) return <ArrowUpRight className="text-green-600" size={20} />;
     if (variacao < 0) return <ArrowDownRight className="text-red-600" size={20} />;
@@ -16,32 +16,32 @@ const RankingGanhoSeguidores = ({ dados }) => {
 
   return (
     <div className="w-full bg-gray-100 pb-0">
-      {/* SVG Header no topo */}
+      {/* Header específico do Facebook */}
       <div className="w-full">
         <img
-          src={HeaderRankingImage}
-          alt="Ranking Header"
+          src={HeaderFacebookImage}
+          alt="Ranking Facebook Header"
           className="w-full object-cover"
         />
       </div>
 
       {/* Título abaixo do header */}
       <div className="max-w-7xl mx-auto px-4 mt-8 mb-4">
-        <h3 className="text-xl font-bold text-center">Soma de seguidores nas redes</h3>
+        <h3 className="text-xl font-bold text-center">Ranking de Seguidores no Facebook</h3>
       </div>
 
       {/* Lista dos cards */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
         {dados.map((pessoa, index) => (
           <div
-            key={pessoa.nome}
+            key={index}
             className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition"
           >
             <div className="flex items-center gap-3">
               {/* Posição */}
               <div className="text-xl font-extrabold w-8 text-right">{index + 1}º</div>
 
-              {/* Foto do secretário */}
+              {/* Foto */}
               <img
                 src={pessoa.foto || '/placeholder.png'}
                 alt={pessoa.nome}
@@ -55,11 +55,11 @@ const RankingGanhoSeguidores = ({ dados }) => {
               </div>
             </div>
 
-            {/* Variação e número */}
+            {/* Seguidores */}
             <div className="flex items-center gap-2">
-              {getIconeVariacao(pessoa.variacao || 1)}
+              {getIconeVariacao(pessoa.variacao)}
               <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
-                {pessoa.ganho.toLocaleString()}
+                {(pessoa.seguidores ?? 0).toLocaleString()}
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@ const RankingGanhoSeguidores = ({ dados }) => {
         </div>
       </div>
 
-      {/* SVG Footer no final da seção */}
+      {/* Footer */}
       <div className="w-full">
         <img
           src={FooterRankingImage}
@@ -91,4 +91,4 @@ const RankingGanhoSeguidores = ({ dados }) => {
   );
 };
 
-export default RankingGanhoSeguidores;
+export default RankingFacebook;
