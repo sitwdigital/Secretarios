@@ -1,25 +1,25 @@
 import React from 'react';
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
-} from 'lucide-react';
 
 import HeaderRankingImage from '/src/assets/header_Relatorio_Ranking.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
-import LegendaImage from '/src/assets/LEGENDA_2.svg'; 
+import LegendaImage from '/src/assets/LEGENDA_2.svg';
+
+
+import IconGanhou from '/src/assets/GANHOU.svg';
+import IconPerdeu from '/src/assets/PERDEU.svg';
+import IconManteve from '/src/assets/MANTEVE.svg';
 
 const RankingGanhoSeguidores = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
-    if (variacao > 0) return <ArrowUpRight className="text-green-600" size={20} />;
-    if (variacao < 0) return <ArrowDownRight className="text-red-600" size={20} />;
-    return <Minus className="text-gray-400" size={20} />;
+    if (variacao > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
+    if (variacao < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
+    return <img src={IconManteve} alt="Manteve posição" className="w-5 h-5" />;
   };
 
   if (!dados || dados.length === 0) return null;
 
-  const esquerda = dados.slice(0, 5); 
-  const direita = dados.slice(5, 10); 
+  const esquerda = dados.slice(0, 5);
+  const direita = dados.slice(5, 10);
 
   return (
     <div className="w-full bg-gray-100 pb-0">
@@ -33,7 +33,7 @@ const RankingGanhoSeguidores = ({ dados }) => {
       </div>
 
       {/* Título */}
-      <div className="max-w-7xl mx-auto px-4  mb-4">
+      <div className="max-w-7xl mx-auto px-4 mb-4">
         <h3 className="text-[25px] font-bold text-center">Soma de seguidores nas redes</h3>
       </div>
 
@@ -96,7 +96,7 @@ const RankingGanhoSeguidores = ({ dados }) => {
         ))}
       </div>
 
-      {/* Legenda como imagem */}
+      {/* Legenda */}
       <div className="max-w-7xl mx-auto flex justify-center mt-12 mb-6">
         <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>

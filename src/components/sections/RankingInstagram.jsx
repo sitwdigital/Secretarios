@@ -1,18 +1,17 @@
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
-} from 'lucide-react';
-
 import HeaderInstagramImage from '/src/assets/header_Relatorio_Insta.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
-import LegendaImage from '/src/assets/LEGENDA.svg'; // <- ✅ imagem da legenda
+import LegendaImage from '/src/assets/LEGENDA.svg';
+
+// ✅ Novos ícones como imagens
+import IconGanhou from '/src/assets/GANHOU.svg';
+import IconPerdeu from '/src/assets/PERDEU.svg';
+import IconManteve from '/src/assets/MANTEVE.svg';
 
 const RankingInstagram = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
-    if (variacao > 0) return <ArrowUpRight className="text-green-600" size={20} />;
-    if (variacao < 0) return <ArrowDownRight className="text-red-600" size={20} />;
-    return <Minus className="text-gray-400" size={20} />;
+    if (variacao > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
+    if (variacao < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
+    return <img src={IconManteve} alt="Manteve posição" className="w-5 h-5" />;
   };
 
   if (!dados || dados.length === 0) return null;
