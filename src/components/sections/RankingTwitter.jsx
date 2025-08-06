@@ -6,6 +6,7 @@ import {
 
 import HeaderTwitterImage from '/src/assets/header_Relatorio_X.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
+import LegendaImage from '/src/assets/LEGENDA.svg'; 
 
 const RankingTwitter = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
@@ -25,58 +26,63 @@ const RankingTwitter = ({ dados }) => {
         />
       </div>
 
-      {/* Título abaixo do header */}
-      <div className="max-w-7xl mx-auto px-4 mt-8 mb-4">
-        <h3 className="text-xl font-bold text-center">Ranking de Seguidores no Twitter (X)</h3>
-      </div>
-
       {/* Lista dos cards */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-        {dados.map((pessoa, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition"
-          >
-            <div className="flex items-center gap-3">
-              {/* Posição */}
-              <div className="text-xl font-extrabold w-8 text-right">{index + 1}º</div>
+        {dados.map((pessoa, index) => {
+          const isPrimeiro = index === 0;
 
-              {/* Foto */}
-              <img
-                src={pessoa.foto || '/placeholder.png'}
-                alt={pessoa.nome}
-                className="w-12 h-12 rounded-full object-cover border-2 border-white"
-              />
+          return (
+            <div
+              key={index}
+              className={`flex items-center justify-between p-3 shadow hover:scale-[1.01] transition rounded-full ${
+                isPrimeiro ? 'bg-[#FEBD11]' : 'bg-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {/* Posição */}
+                <div className="text-lg font-extrabold w-6 text-right">{index + 1}º</div>
 
-              {/* Nome e cargo */}
-              <div>
-                <p className="font-semibold text-sm">{pessoa.nome}</p>
-                <p className="text-xs text-gray-500">{pessoa.cargo || 'Cargo não informado'}</p>
+                {/* Foto */}
+                <img
+                  src={pessoa.foto || '/placeholder.png'}
+                  alt={pessoa.nome}
+                  className={`rounded-full object-cover border-2 ${
+                    isPrimeiro ? 'w-10 h-10 border-[#F7901E]' : 'w-10 h-10 border-white'
+                  }`}
+                />
+
+                {/* Nome e cargo */}
+                <div>
+                  <p className="font-semibold text-sm max-w-[160px] whitespace-normal break-words leading-tight">
+                    {pessoa.nome}
+                  </p>
+                  {pessoa.cargo && (
+                    <p className="text-xs text-gray-500 max-w-[160px] whitespace-normal break-words leading-tight">
+                      {pessoa.cargo}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Seguidores */}
+              <div className="flex items-center gap-2">
+                {getIconeVariacao(pessoa.variacao)}
+                <div
+                  className={`text-sm font-bold px-3 py-1 rounded-full ${
+                    isPrimeiro ? 'bg-[#F7901E] text-white' : 'bg-gray-300 text-black'
+                  }`}
+                >
+                  {(pessoa.seguidores ?? 0).toLocaleString()}
+                </div>
               </div>
             </div>
-
-            {/* Seguidores */}
-            <div className="flex items-center gap-2">
-              {getIconeVariacao(pessoa.variacao)}
-              <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
-                {(pessoa.seguidores ?? 0).toLocaleString()}
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Legenda de variações */}
-      <div className="max-w-7xl mx-auto flex justify-center gap-6 items-center mt-8 mb-6 text-sm text-gray-700">
-        <div className="flex items-center gap-2">
-          <ArrowUpRight className="text-green-600" size={16} /> Ganhou posição
-        </div>
-        <div className="flex items-center gap-2">
-          <ArrowDownRight className="text-red-600" size={16} /> Perdeu posição
-        </div>
-        <div className="flex items-center gap-2">
-          <Minus className="text-gray-400" size={16} /> Manteve a posição
-        </div>
+      {/* Legenda visual com imagem */}
+      <div className="max-w-7xl mx-auto flex justify-center mt-12">
+        <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>
 
       {/* Footer */}

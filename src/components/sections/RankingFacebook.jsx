@@ -6,6 +6,7 @@ import {
 
 import HeaderFacebookImage from '/src/assets/header_Relatorio_Facebook.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
+import LegendaImage from '/src/assets/LEGENDA.svg';
 
 const RankingFacebook = ({ dados }) => {
   const getIconeVariacao = (variacao) => {
@@ -14,9 +15,23 @@ const RankingFacebook = ({ dados }) => {
     return <Minus className="text-gray-400" size={20} />;
   };
 
+  if (!dados || dados.length === 0) return null;
+
+  const dadosOrdenados = [...dados].sort((a, b) => b.seguidores - a.seguidores).slice(0, 33);
+
+  const col1 = dadosOrdenados.slice(0, 11);
+  const col2 = dadosOrdenados.slice(11, 22);
+  const col3 = dadosOrdenados.slice(22, 33);
+
+  const linhas = Array.from({ length: 11 }, (_, i) => ({
+    esquerda: col1[i],
+    centro: col2[i],
+    direita: col3[i],
+  }));
+
   return (
     <div className="w-full bg-gray-100 pb-0">
-      {/* Header específico do Facebook */}
+      {/* Header */}
       <div className="w-full">
         <img
           src={HeaderFacebookImage}
@@ -25,58 +40,26 @@ const RankingFacebook = ({ dados }) => {
         />
       </div>
 
-      {/* Título abaixo do header */}
-      <div className="max-w-7xl mx-auto px-4 mt-8 mb-4">
-        <h3 className="text-xl font-bold text-center">Ranking de Seguidores no Facebook</h3>
-      </div>
-
-      {/* Lista dos cards */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-        {dados.map((pessoa, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition"
-          >
-            <div className="flex items-center gap-3">
-              {/* Posição */}
-              <div className="text-xl font-extrabold w-8 text-right">{index + 1}º</div>
-
-              {/* Foto */}
-              <img
-                src={pessoa.foto || '/placeholder.png'}
-                alt={pessoa.nome}
-                className="w-12 h-12 rounded-full object-cover border-2 border-white"
-              />
-
-              {/* Nome e cargo */}
-              <div>
-                <p className="font-semibold text-sm">{pessoa.nome}</p>
-                <p className="text-xs text-gray-500">{pessoa.cargo || 'Cargo não informado'}</p>
-              </div>
-            </div>
-
-            {/* Seguidores */}
-            <div className="flex items-center gap-2">
-              {getIconeVariacao(pessoa.variacao)}
-              <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
-                {(pessoa.seguidores ?? 0).toLocaleString()}
-              </div>
-            </div>
+      {/* Cards */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 gap-3 px-4 sm:grid-cols-1">
+        {linhas.map((linha, i) => (
+          <div key={i} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {linha.esquerda && (
+              <CardPessoa pessoa={linha.esquerda} posicao={i + 1} getIconeVariacao={getIconeVariacao} />
+            )}
+            {linha.centro && (
+              <CardPessoa pessoa={linha.centro} posicao={i + 12} getIconeVariacao={getIconeVariacao} />
+            )}
+            {linha.direita && (
+              <CardPessoa pessoa={linha.direita} posicao={i + 23} getIconeVariacao={getIconeVariacao} />
+            )}
           </div>
         ))}
       </div>
 
-      {/* Legenda de variações */}
-      <div className="max-w-7xl mx-auto flex justify-center gap-6 items-center mt-8 mb-6 text-sm text-gray-700">
-        <div className="flex items-center gap-2">
-          <ArrowUpRight className="text-green-600" size={16} /> Ganhou posição
-        </div>
-        <div className="flex items-center gap-2">
-          <ArrowDownRight className="text-red-600" size={16} /> Perdeu posição
-        </div>
-        <div className="flex items-center gap-2">
-          <Minus className="text-gray-400" size={16} /> Manteve a posição
-        </div>
+      {/* Legenda com imagem */}
+      <div className="max-w-7xl mx-auto flex justify-center mt-12">
+        <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>
 
       {/* Footer */}
@@ -86,6 +69,50 @@ const RankingFacebook = ({ dados }) => {
           alt="Ranking Footer"
           className="w-full object-cover"
         />
+      </div>
+    </div>
+  );
+};
+
+// Card reutilizável
+const CardPessoa = ({ pessoa, posicao, getIconeVariacao }) => {
+  const isPrimeiro = posicao === 1;
+
+  return (
+    <div
+      className={`flex items-center justify-between p-3 shadow hover:scale-[1.01] transition rounded-full ${
+        isPrimeiro ? 'bg-[#FEBD11]' : 'bg-white'
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <div className="text-lg font-extrabold w-6 text-right">{posicao}º</div>
+        <img
+          src={pessoa.foto || '/placeholder.png'}
+          alt={pessoa.nome}
+          className={`rounded-full object-cover border-2 ${
+            isPrimeiro ? 'w-10 h-10 border-[#F7901E]' : 'w-10 h-10 border-white'
+          }`}
+        />
+        <div>
+          <p className="font-semibold text-sm max-w-[160px] whitespace-normal break-words leading-tight">
+            {pessoa.nome}
+          </p>
+          {pessoa.cargo && (
+            <p className="text-xs text-gray-500 max-w-[160px] whitespace-normal break-words leading-tight">
+              {pessoa.cargo}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        {getIconeVariacao(pessoa.variacao || 0)}
+        <div
+          className={`text-sm font-bold px-3 py-1 rounded-full ${
+            isPrimeiro ? 'bg-[#F7901E] text-white' : 'bg-gray-300 text-black'
+          }`}
+        >
+          {(pessoa.seguidores ?? 0).toLocaleString()}
+        </div>
       </div>
     </div>
   );
