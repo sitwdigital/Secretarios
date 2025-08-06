@@ -19,6 +19,7 @@ import EndPageRelatorioImage from './assets/endpage_Relatorio.svg';
 const App = () => {
   const [dadosExcel, setDadosExcel] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [dataUpload, setDataUpload] = useState(null); 
 
   const sectionsRef = useRef([]);
   const endPageRef = useRef(null);
@@ -27,37 +28,71 @@ const App = () => {
     setLoading(true);
     setTimeout(() => {
       setDadosExcel(dados);
+      setDataUpload(new Date()); 
       setLoading(false);
     }, 1000);
   };
 
   const exportarPDF = async () => {
-    const pdf = new jsPDF('landscape', 'mm', 'a4');
-    const pageWidth = 297;
-    const pageHeight = 210;
+  const pdf = new jsPDF('landscape', 'mm', 'a4');
+  const pageWidth = 297;
+  const pageHeight = 210;
 
-    const coverCanvas = await html2canvas(document.getElementById('cover'), { scale: 2 });
-    const coverImgData = coverCanvas.toDataURL('image/png');
-    pdf.addImage(coverImgData, 'PNG', 0, 0, pageWidth, pageHeight);
-
-    for (let i = 0; i < sectionsRef.current.length; i++) {
-      const el = sectionsRef.current[i];
-      if (!el) continue;
-      const canvas = await html2canvas(el, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
-    }
-
-    if (endPageRef.current) {
-      const canvas = await html2canvas(endPageRef.current, { scale: 2 });
-      const imgData = canvas.toDataURL('image/png');
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
-    }
-
-    pdf.save('Relatorio_Secretarias.pdf');
+  const options = {
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    windowWidth: document.body.scrollWidth,
   };
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const renderToPDF = async (element, isFirstPage = false) => {
+    await delay(300);
+    const canvas = await html2canvas(element, options);
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = pdf.getImageProperties(imgData);
+
+    const imgRatio = imgProps.width / imgProps.height;
+    const pdfRatio = pageWidth / pageHeight;
+
+    let imgWidth = pageWidth;
+    let imgHeight = pageHeight;
+
+    if (imgRatio > pdfRatio) {
+      imgHeight = pageWidth / imgRatio;
+    } else {
+      imgWidth = pageHeight * imgRatio;
+    }
+
+    const x = (pageWidth - imgWidth) / 2;
+    const y = (pageHeight - imgHeight) / 2;
+
+    if (!isFirstPage) pdf.addPage();
+    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+  };
+
+  // CAPA
+  if (document.getElementById('cover')) {
+    await renderToPDF(document.getElementById('cover'), true);
+  }
+
+  // SEÇÕES
+  for (let i = 0; i < sectionsRef.current.length; i++) {
+    if (sectionsRef.current[i]) {
+      await renderToPDF(sectionsRef.current[i]);
+    }
+  }
+
+  // ÚLTIMA PÁGINA
+  if (endPageRef.current) {
+    await renderToPDF(endPageRef.current);
+  }
+
+  pdf.save('Relatorio_Secretarias.pdf');
+};
+
+
 
   return (
     <div className="bg-gray-100 text-gray-900 font-sans min-h-screen">
@@ -88,14 +123,21 @@ const App = () => {
 
       {!loading && dadosExcel && (
         <>
-          <div id="cover" className="w-full">
+          {/* CAPA DO RELATÓRIO COM DATA */}
+          <div id="cover" className="relative w-full">
             <img
               src={CoverRelatorioImage}
               alt="Capa do Relatório"
               className="w-full object-cover mb-4"
             />
+            {dataUpload && (
+              <div className="absolute top-[500px] left-[80px] text-[30px] font-semibold text-[#0F1120]">
+                {dataUpload.toLocaleDateString('pt-BR')}
+              </div>
+            )}
           </div>
 
+          {/* SEÇÕES */}
           <section ref={(el) => (sectionsRef.current[0] = el)} id="ranking-top10" className="py-0">
             <RankingGanhoSeguidores dados={dadosExcel.rankingGanho} />
           </section>
@@ -116,6 +158,7 @@ const App = () => {
             <RankingTwitter dados={dadosExcel.twitter} />
           </section>
 
+          {/* ÚLTIMA PÁGINA */}
           <div ref={endPageRef} className="w-full">
             <img
               src={EndPageRelatorioImage}
@@ -124,6 +167,7 @@ const App = () => {
             />
           </div>
 
+          {/* BOTÃO DE EXPORTAÇÃO */}
           <div className="py-8 text-center bg-gray-100">
             <button
               onClick={exportarPDF}
