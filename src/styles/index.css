@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Quebra de página e ajustes para impressão */
+@layer utilities {
+  .page-break {
+    break-after: page;
+    page-break-after: always;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 landscape; /* paisagem */
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    width: 100%;
+    height: auto;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

@@ -27,30 +27,56 @@ const Print = () => {
 
   useEffect(() => {
     if (dados) {
-      // Aguarda renderização visual
       setTimeout(() => {
         const readyDiv = document.getElementById('pdf-ready');
         if (readyDiv) {
           readyDiv.classList.remove('hidden');
           readyDiv.classList.add('block');
         }
-      }, 1000); // 1 segundo após renderizar os dados
+      }, 1000);
     }
   }, [dados]);
 
   if (!dados) return <p className="text-center mt-10">Carregando relatório...</p>;
 
   return (
-    <div id="pdf-content" className="bg-white text-black">
-      <img src={CoverRelatorioImage} alt="Capa" className="w-full mb-4" />
-      <RankingGanhoSeguidores dados={dados.rankingGanho} />
-      <RankingInstagram dados={dados.instagram} />
-      <RankingInstagram2 dados={dados.instagram} />
-      <RankingFacebook dados={dados.facebook} />
-      <RankingTwitter dados={dados.twitter} />
-      <img src={EndPageRelatorioImage} alt="Fim" className="w-full mt-4" />
+    <div id="pdf-content" className="bg-white text-black w-full">
+      {/* Página 1: Capa */}
+      <section className="w-full page-break flex items-center justify-center">
+        <img src={CoverRelatorioImage} alt="Capa" className="w-full" />
+      </section>
 
-      {/* Sinalizador de prontidão para o Puppeteer */}
+      {/* Página 2: Ganho de seguidores */}
+      <section className="w-full page-break">
+        <RankingGanhoSeguidores dados={dados.rankingGanho} />
+      </section>
+
+      {/* Página 3: Instagram Parte 1 */}
+      <section className="w-full page-break">
+        <RankingInstagram dados={dados.instagram} />
+      </section>
+
+      {/* Página 4: Instagram Parte 2 */}
+      <section className="w-full page-break">
+        <RankingInstagram2 dados={dados.instagram} />
+      </section>
+
+      {/* Página 5: Facebook */}
+      <section className="w-full page-break">
+        <RankingFacebook dados={dados.facebook} />
+      </section>
+
+      {/* Página 6: Twitter */}
+      <section className="w-full page-break">
+        <RankingTwitter dados={dados.twitter} />
+      </section>
+
+      {/* Página 7: Encerramento */}
+      <section className="w-full page-break flex items-center justify-center">
+        <img src={EndPageRelatorioImage} alt="Fim" className="w-full" />
+      </section>
+
+      {/* Sinalizador para Puppeteer */}
       <div id="pdf-ready" className="hidden" />
     </div>
   );
