@@ -57,6 +57,7 @@ const UploadRedes = ({ setDados }) => {
       resultado.twitter = twitter;
 
       setDados(resultado);
+      localStorage.setItem('relatorioSecretarias', JSON.stringify(resultado)); // <- linha adicionada
     };
 
     reader.readAsArrayBuffer(file);

@@ -1,7 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 import Header from './components/layout/Header';
 import Footer from './components/common/Footer';
@@ -16,87 +14,89 @@ import RankingTwitter from './components/sections/RankingTwitter';
 import CoverRelatorioImage from './assets/cover_Relatorio.svg';
 import EndPageRelatorioImage from './assets/endpage_Relatorio.svg';
 
-const App = () => {
+const App = ({ modoPrint = false }) => {
   const [dadosExcel, setDadosExcel] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dataUpload, setDataUpload] = useState(null); 
+  const [dataUpload, setDataUpload] = useState(null);
 
   const sectionsRef = useRef([]);
   const endPageRef = useRef(null);
 
+  // 🔄 Ao fazer upload
   const handleUpload = (dados) => {
     setLoading(true);
     setTimeout(() => {
       setDadosExcel(dados);
-      setDataUpload(new Date()); 
+      setDataUpload(new Date());
       setLoading(false);
     }, 1000);
   };
 
-  const exportarPDF = async () => {
-  const pdf = new jsPDF('landscape', 'mm', 'a4');
-  const pageWidth = 297;
-  const pageHeight = 210;
+  // 🖨️ Exportar com Puppeteer
+  const exportarComPuppeteer = async () => {
+    try {
+      const local = localStorage.getItem('relatorioSecretarias');
+      if (!local) {
+        alert('Dados do relatório não encontrados no localStorage.');
+        return;
+      }
 
-  const options = {
-    scale: 2,
-    useCORS: true,
-    logging: false,
-    windowWidth: document.body.scrollWidth,
+      const response = await fetch('http://localhost:4000/gerar-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: local,
+      });
+
+      if (!response.ok) throw new Error('Erro ao gerar PDF');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Relatorio_Secretarias.pdf';
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao exportar com Puppeteer:', error);
+      alert('Erro ao gerar o PDF. Verifique se o servidor está rodando.');
+    }
   };
 
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const renderToPDF = async (element, isFirstPage = false) => {
-    await delay(300);
-    const canvas = await html2canvas(element, options);
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = pdf.getImageProperties(imgData);
-
-    const imgRatio = imgProps.width / imgProps.height;
-    const pdfRatio = pageWidth / pageHeight;
-
-    let imgWidth = pageWidth;
-    let imgHeight = pageHeight;
-
-    if (imgRatio > pdfRatio) {
-      imgHeight = pageWidth / imgRatio;
-    } else {
-      imgWidth = pageHeight * imgRatio;
+  // 🔄 Salvar dados no localStorage após upload (modo normal)
+  useEffect(() => {
+    if (!modoPrint && dadosExcel) {
+      const dados = JSON.stringify(dadosExcel);
+      localStorage.setItem('relatorioRedes', dados);
+      localStorage.setItem('relatorioSecretarias', dados);
     }
+  }, [dadosExcel, modoPrint]);
 
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-
-    if (!isFirstPage) pdf.addPage();
-    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-  };
-
-  // CAPA
-  if (document.getElementById('cover')) {
-    await renderToPDF(document.getElementById('cover'), true);
-  }
-
-  // SEÇÕES
-  for (let i = 0; i < sectionsRef.current.length; i++) {
-    if (sectionsRef.current[i]) {
-      await renderToPDF(sectionsRef.current[i]);
+  // 🖨️ Carregar dados no modoPrint (lido via Puppeteer)
+  useEffect(() => {
+    if (modoPrint) {
+      const dadosSalvos = localStorage.getItem('relatorioRedes');
+      if (dadosSalvos) {
+        const parsed = JSON.parse(dadosSalvos);
+        setDadosExcel(parsed);
+        setDataUpload(new Date()); // ou salve a data junto se quiser fixar
+      }
     }
+  }, [modoPrint]);
+
+  // ⏳ Evitar render antes de carregar os dados no modoPrint
+  if (modoPrint && !dadosExcel) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-xl">
+        Carregando relatório...
+      </div>
+    );
   }
-
-  // ÚLTIMA PÁGINA
-  if (endPageRef.current) {
-    await renderToPDF(endPageRef.current);
-  }
-
-  pdf.save('Relatorio_Secretarias.pdf');
-};
-
-
 
   return (
     <div className="bg-gray-100 text-gray-900 font-sans min-h-screen">
-      {!dadosExcel && !loading && (
+      {!modoPrint && !dadosExcel && !loading && (
         <>
           <Header />
           <main className="flex flex-col items-center justify-center min-h-[80vh] px-4">
@@ -123,7 +123,9 @@ const App = () => {
 
       {!loading && dadosExcel && (
         <>
-          {/* CAPA DO RELATÓRIO COM DATA */}
+          {!modoPrint && <Header />}
+
+          {/* CAPA */}
           <div id="cover" className="relative w-full">
             <img
               src={CoverRelatorioImage}
@@ -167,21 +169,28 @@ const App = () => {
             />
           </div>
 
+          {/* SINALIZADOR PARA O PUPPETEER */}
+          {modoPrint && dadosExcel && (
+            <div id="pdf-ready" className="hidden" />
+          )}
+
           {/* BOTÃO DE EXPORTAÇÃO */}
-          <div className="py-8 text-center bg-gray-100">
-            <button
-              onClick={exportarPDF}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-full transition border border-black"
-            >
-              📄 Exportar Relatório em PDF
-            </button>
-          </div>
+          {!modoPrint && (
+            <div className="py-8 text-center bg-gray-100">
+              <button
+                onClick={exportarComPuppeteer}
+                className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-full transition border border-black"
+              >
+                📄 Exportar Relatório em PDF (Alta Qualidade)
+              </button>
+            </div>
+          )}
+
+          {!modoPrint && <Footer />}
         </>
       )}
-
-      <Footer />
     </div>
   );
 };
 
-export default App;
+export default App;
