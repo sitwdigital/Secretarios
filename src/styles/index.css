@@ -2,7 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Quebra de página e ajustes para impressão */
+/* Cada seção = 1 página no PDF */
+.print-page {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  page-break-after: always;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Ocupa exatamente a página inteira (sangria visual) */
+.print-full-bleed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Conteúdo que já tem header/footer embutidos no próprio componente */
+.print-body-full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;         /* evita “vazar” para página seguinte */
+  box-sizing: border-box;
+  background: #f3f4f6;      /* combina com seus componentes de ranking */
+}
+
+/* Utilitário antigo (mantido) */
 @layer utilities {
   .page-break {
     break-after: page;
@@ -10,30 +39,160 @@
   }
 }
 
+/* ===== Ajustes só para impressão ===== */
 @media print {
   @page {
-    size: A4 landscape; /* paisagem */
+    /* Padrão = A4 horizontal */
+    size: A4 landscape;
     margin: 0;
   }
 
   html, body {
     margin: 0 !important;
     padding: 0 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
     width: 100%;
     height: auto;
-  }
-
-  * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  .page-break {
-    page-break-before: always;
-    break-before: page;
-    break-inside: avoid;
-    page-break-inside: avoid;
+  /* Em modo print, faça cada página ocupar 100% do papel */
+  .print-page {
+    width: 100vw;
+    height: 100vh;
   }
+
+  /* --- remover qualquer largura máxima/centralização dos componentes --- */
+  .print-page .container,
+  .print-page [class*="max-w-"],
+  .print-page [class^="max-w-"] {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  .print-page .mx-auto { margin-left: 0 !important; margin-right: 0 !important; }
+
+  /* (mantém os ajustes específicos que você já usava) */
+  .print-page :where(.max-w-7xl) { max-width: none !important; }
+  .print-page :where(.mx-auto)   { margin-left: 0 !important; margin-right: 0 !important; }
+
+  /* --- wrappers do auto-fit --- */
+  .print-fit-wrap {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #f3f4f6; /* combina com seus cards */
+  }
+  .print-fit-target {
+    position: absolute;
+    inset: 0;
+    transform-origin: top left; /* cola no topo/esquerda, sem “margem” lateral */
+  }
+
+  /* Margem interna segura nas laterais (substitui px-4/px-6) */
+  .print-page :where(.px-4),
+  .print-page :where(.px-6) { padding-left: 8mm !important; padding-right: 8mm !important; }
+
+  /* Pequenos compactos de espaçamento para garantir que tudo caiba */
+  .print-page :where(.mt-12) { margin-top: 16px !important; }
+  .print-page :where(.mb-6)  { margin-bottom: 12px !important; }
+  .print-page :where(.mt-8)  { margin-top: 10px !important; }
+  .print-page :where(.mt-10) { margin-top: 6px !important; }
+  .print-page :where(.mb-12) { margin-bottom: 8px !important; }
+  .print-page :where(.mb-4)  { margin-bottom: 6px !important; }
+
+  /* Ajustes finos comuns nas UIs */
+  .print-page :where(.rounded-full) { border-radius: 9999px !important; }
+  .print-page :where(.gap-4) { gap: .6rem !important; }
+  .print-page :where(.gap-3) { gap: .5rem !important; }
+  .print-page :where(.text-\[25px\]) { font-size: 20px !important; }
+  .print-page :where(.text-lg) { font-size: .95rem !important; }
+  .print-page :where(.text-xl) { font-size: 1.05rem !important; }
+  .print-page :where(.text-2xl) { font-size: 1.2rem !important; }
+  .print-page :where(.h-10) { height: 30px !important; }
+  .print-page :where(.w-10) { width: 30px !important; }
+
+  /* ===== Redução suave (global) – usada pelo auto-fit se faltar altura ===== */
+  .print-scale { 
+    transform-origin: top center;
+  }
+  .shrink-95 { transform: scale(.95); }
+  .shrink-94 { transform: scale(.94); }
+  .shrink-93 { transform: scale(.93); }
+  .shrink-92 { transform: scale(.92); }
+  .shrink-91 { transform: scale(.91); }
+  .shrink-90 { transform: scale(.90); }
+
+  /* micro-ajustes de tipografia e espaçamentos dentro dos cards (global) */
+  .print-tight :where(.p-4) { padding: .75rem !important; }
+  .print-tight :where(.p-3) { padding: .55rem !important; }
+  .print-tight :where(.gap-4) { gap: .6rem !important; }
+  .print-tight :where(.gap-3) { gap: .5rem !important; }
+
+  .print-tight :where(.text-sm) { font-size: .80rem !important; }
+  .print-tight :where(.text-lg) { font-size: .95rem !important; }
+  .print-tight :where(.text-xl) { font-size: 1.05rem !important; }
+
+  /* nível extra de compactação (global) */
+  .print-tighter :where(.p-4){ padding: .6rem !important; }
+  .print-tighter :where(.p-3){ padding: .45rem !important; }
+  .print-tighter :where(.gap-4){ gap: .45rem !important; }
+  .print-tighter :where(.gap-3){ gap: .4rem !important; }
+  .print-tighter :where(.text-lg){ font-size: .9rem !important; }
+  .print-tighter :where(.text-xl){ font-size: 1rem !important; }
+
+  /* avatares e badges um pouco menores (global) */
+  .print-tight img.rounded-full { width: 32px !important; height: 32px !important; }
+  .print-tight :where(.w-10) { width: 28px !important; }
+  .print-tight :where(.h-10) { height: 28px !important; }
+  .print-tight :where(.px-4) { padding-left: .9rem !important; padding-right: .9rem !important; }
+  .print-tight :where(.py-2) { padding-top: .45rem !important; padding-bottom: .45rem !important; }
+
+  .print-tight .grid { row-gap: .45rem !important; }
+
+  /* respiro opcional abaixo do conteúdo reduzido para não encostar no footer */
+  .print-scale + .print-bottom-safe { height: 4mm; }
+
+  /* ===== crescimento leve p/ preencher rodapé (usado só no Twitter) ===== */
+  .print-grow { transform-origin: bottom center; }
+  .grow-101 { transform: scale(1.01); }
+  .grow-102 { transform: scale(1.02); }
+  .grow-103 { transform: scale(1.03); }
+
+  /* --- só FB e IGs: reserva um espaço extra pro footer --- */
+  .footer-safe-8mm  { padding-bottom: 8mm !important; box-sizing: border-box !important; }
+  .footer-safe-10mm { padding-bottom: 10mm !important; box-sizing: border-box !important; }
+  /* --- novos tamanhos para mais respiro --- */
+  .footer-safe-12mm { padding-bottom: 12mm !important; box-sizing: border-box !important; }
+  .footer-safe-14mm { padding-bottom: 14mm !important; box-sizing: border-box !important; }
+  .footer-safe-16mm { padding-bottom: 16mm !important; box-sizing: border-box !important; }
+  .footer-safe-18mm { padding-bottom: 18mm !important; box-sizing: border-box !important; }
+  .footer-safe-20mm { padding-bottom: 20mm !important; box-sizing: border-box !important; }
+  .footer-safe-22mm { padding-bottom: 22mm !important; box-sizing: border-box !important; }
+  
+
+  /* ======= NOVO: apertar SOMENTE os CARDS (depois do header) ======= */
+  /* Use adicionando a classe `cards-only-tight` no .print-fit-target da seção */
+  .cards-only-tight > :not(:first-child) :where(.p-4) { padding: .70rem !important; }
+  .cards-only-tight > :not(:first-child) :where(.p-3) { padding: .50rem !important; }
+  .cards-only-tight > :not(:first-child) :where(.px-4) { padding-left: .85rem !important; padding-right: .85rem !important; }
+  .cards-only-tight > :not(:first-child) :where(.py-2) { padding-top: .42rem !important; padding-bottom: .42rem !important; }
+
+  .cards-only-tight > :not(:first-child) :where(.gap-4) { gap: .55rem !important; }
+  .cards-only-tight > :not(:first-child) :where(.gap-3) { gap: .45rem !important; }
+  .cards-only-tight > :not(:first-child) .grid { row-gap: .40rem !important; }
+
+  .cards-only-tight > :not(:first-child) :where(.text-lg) { font-size: .92rem !important; }
+  .cards-only-tight > :not(:first-child) :where(.text-xl) { font-size: 1.02rem !important; }
+
+  .cards-only-tight > :not(:first-child) img.rounded-full { width: 30px !important; height: 30px !important; }
+  .cards-only-tight > :not(:first-child) :where(.w-10) { width: 28px !important; }
+  .cards-only-tight > :not(:first-child) :where(.h-10) { height: 28px !important; }
+}
+
+/* Preview opcional no /print?preview=1 (não afeta o Puppeteer) */
+.preview .print-page {
+  transform-origin: top left;
+  transform: scale(.75);
+  margin-bottom: 16px;
 }
