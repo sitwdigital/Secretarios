@@ -202,7 +202,7 @@ const Print = () => {
       {/* Página 4: Instagram 2 */}
       <section className="print-page">
         <div className="print-fit-wrap">
-          <div className="print-fit-target footer-safe-20mm" data-tight="2">
+          <div className="print-fit-target footer-safe-12mm" data-tight="2">
             <RankingInstagram2 dados={dados.instagram} modoPrint />
           </div>
         </div>
@@ -211,7 +211,7 @@ const Print = () => {
       {/* Página 5: Facebook */}
       <section className="print-page">
         <div className="print-fit-wrap">
-          <div className="print-fit-target footer-safe-22mm" data-tight="2">
+          <div className="print-fit-target footer-safe-14mm" data-tight="2">
             <RankingFacebook dados={dados.facebook} modoPrint />
           </div>
         </div>
