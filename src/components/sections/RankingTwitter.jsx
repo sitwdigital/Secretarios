@@ -96,4 +96,4 @@ const RankingTwitter = ({ dados }) => {
   );
 };
 
-export default RankingTwitter;
+export default RankingTwitter;

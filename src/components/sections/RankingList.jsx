@@ -1,4 +1,3 @@
-// src/components/sections/RankingList.jsx
 import { motion } from 'framer-motion';
 import { Instagram, Facebook, Twitter, UserRound } from 'lucide-react';
 

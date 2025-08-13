@@ -1,7 +1,9 @@
+// server/index.js
 import express from 'express';
 import puppeteer from 'puppeteer';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,10 +15,94 @@ const PORT = process.env.PORT || 4000;
 // URL do front (sem ?preview=1 pra não aplicar scale)
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173/print';
 
+// ---- armazenamento simples em arquivo (último snapshot) ----
+const DATA_DIR = path.join(__dirname, 'data');
+const SNAPSHOT_PATH = path.join(DATA_DIR, 'lastSnapshot.json');
+
+async function ensureDataDir() {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+  } catch (_) {}
+}
+
+async function readSnapshot() {
+  try {
+    const buf = await fs.readFile(SNAPSHOT_PATH, 'utf-8');
+    const json = JSON.parse(buf);
+    const stat = await fs.stat(SNAPSHOT_PATH);
+    return { ok: true, data: json, updatedAt: stat.mtime };
+  } catch (err) {
+    return { ok: false, error: 'SNAPSHOT_NOT_FOUND' };
+  }
+}
+
+async function writeSnapshot(obj) {
+  await ensureDataDir();
+  const json = JSON.stringify(obj, null, 2);
+  await fs.writeFile(SNAPSHOT_PATH, json, 'utf-8');
+  const stat = await fs.stat(SNAPSHOT_PATH);
+  return { ok: true, updatedAt: stat.mtime };
+}
+
+async function deleteSnapshot() {
+  try {
+    await fs.unlink(SNAPSHOT_PATH);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: 'SNAPSHOT_NOT_FOUND' };
+  }
+}
+
+// ------------------------------------------------------------
+
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+
+// Se você também “builda” o front em ../dist, isto serve os arquivos estáticos:
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
+// ---------- Health ----------
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, service: 'secretarios-server', time: new Date().toISOString() });
+});
+
+// ---------- Snapshot API ----------
+
+// pega o último snapshot salvo
+app.get('/api/last-snapshot', async (_req, res) => {
+  const result = await readSnapshot();
+  if (!result.ok) {
+    return res.status(204).send(); // no content
+  }
+  res.json({
+    ok: true,
+    snapshot: result.data,
+    updatedAt: result.updatedAt,
+  });
+});
+
+// salva (e sobrescreve) o snapshot
+app.post('/api/last-snapshot', async (req, res) => {
+  try {
+    // o corpo é o snapshot inteiro (obj com instagram/facebook/twitter/rankingGanho etc.)
+    const result = await writeSnapshot(req.body);
+    res.json({ ok: true, updatedAt: result.updatedAt });
+  } catch (err) {
+    console.error('Erro ao salvar snapshot:', err);
+    res.status(500).json({ ok: false, error: 'WRITE_FAILED' });
+  }
+});
+
+// apaga o snapshot (opcional)
+app.delete('/api/last-snapshot', async (_req, res) => {
+  const result = await deleteSnapshot();
+  if (!result.ok) {
+    return res.status(404).json({ ok: false, error: result.error });
+  }
+  res.json({ ok: true });
+});
+
+// ---------- PDF ----------
 app.post('/gerar-pdf', async (req, res) => {
   let browser;
   try {
@@ -64,7 +150,7 @@ app.post('/gerar-pdf', async (req, res) => {
 
     const pdfOptions = {
       printBackground: true,
-      preferCSSPageSize: true,   // respeita @page do CSS
+      preferCSSPageSize: true, // respeita @page do CSS
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     };
 

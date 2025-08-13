@@ -1,4 +1,3 @@
-// src/components/sections/RankingRedeSocial.jsx
 import RankingList from './RankingList';
 
 const RankingRedeSocial = ({ rede, dados }) => {

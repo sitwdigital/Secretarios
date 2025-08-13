@@ -1,4 +1,3 @@
-// src/components/sections/RankingTop10.jsx
 import Top10Card from '../common/Top10Card';
 
 const RankingTop10 = ({ dados }) => {

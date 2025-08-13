@@ -1,35 +1,74 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import HeaderRankingImage from '/src/assets/header_Relatorio_Ranking.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
 import LegendaImage from '/src/assets/LEGENDA_2.svg';
 
-
 import IconGanhou from '/src/assets/GANHOU.svg';
 import IconPerdeu from '/src/assets/PERDEU.svg';
 import IconManteve from '/src/assets/MANTEVE.svg';
 
+import { fotoPorNome } from '../../utils/fotoCatalog';
+
+const LS_KEY = 'rankingGanho_prev'; // lista de nomes em ordem (1..10)
+
 const RankingGanhoSeguidores = ({ dados }) => {
-  const getIconeVariacao = (variacao) => {
-    if (variacao > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
-    if (variacao < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
+  if (!dados || dados.length === 0) return null;
+
+  // nomes na ordem atual (assumindo que 'dados' já vem ordenado por ganho desc)
+  const nomesAtuais = useMemo(() => dados.map(d => d.nome), [dados]);
+
+  // carrega a ordem anterior do localStorage (se houver)
+  const prevOrder = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  }, []);
+
+  // cria um mapa nome -> posição anterior (1-based)
+  const prevPos = useMemo(() => {
+    const m = new Map();
+    prevOrder.forEach((nome, i) => m.set(nome, i + 1));
+    return m;
+  }, [prevOrder]);
+
+  // devolve +1 (subiu), -1 (caiu) ou 0 (manteve) comparando posição
+  const deltaPos = (nome, posAtual) => {
+    const posAnterior = prevPos.get(nome);
+    if (!posAnterior) return 0; // sem histórico, mantém neutro
+    const diff = posAnterior - posAtual; // positivo = subiu (posição menor)
+    if (diff > 0) return 1;
+    if (diff < 0) return -1;
+    return 0;
+  };
+
+  const getIcone = (nome, posAtual) => {
+    const d = deltaPos(nome, posAtual);
+    if (d > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
+    if (d < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
     return <img src={IconManteve} alt="Manteve posição" className="w-5 h-5" />;
   };
 
-  if (!dados || dados.length === 0) return null;
+  const resolveFoto = (pessoa) => pessoa.foto || fotoPorNome(pessoa.nome) || '/placeholder.png';
 
+  // após renderizar com sucesso, salva o ranking atual para a próxima comparação
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(nomesAtuais));
+    } catch {}
+  }, [nomesAtuais]);
+
+  // divide em 2 colunas (1–5 e 6–10)
   const esquerda = dados.slice(0, 5);
-  const direita = dados.slice(5, 10);
+  const direita  = dados.slice(5, 10);
 
   return (
     <div className="w-full bg-gray-100 pb-0">
       {/* Header */}
       <div className="w-full">
-        <img
-          src={HeaderRankingImage}
-          alt="Ranking Header"
-          className="w-full object-cover"
-        />
+        <img src={HeaderRankingImage} alt="Ranking Header" className="w-full object-cover" />
       </div>
 
       {/* Título */}
@@ -37,17 +76,17 @@ const RankingGanhoSeguidores = ({ dados }) => {
         <h3 className="text-[25px] font-bold text-center">Soma de seguidores nas redes</h3>
       </div>
 
-      {/* Grid de 2 colunas */}
+      {/* Grid 2 colunas */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 mt-8 md:grid-cols-2 gap-4 px-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <div className="contents" key={i}>
-            {/* Coluna Esquerda */}
+            {/* Coluna esquerda (pos 1..5) */}
             {esquerda[i] && (
               <div className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition">
                 <div className="flex items-center gap-3">
                   <div className="text-xl font-extrabold w-8 text-right">{i + 1}º</div>
                   <img
-                    src={esquerda[i].foto || '/placeholder.png'}
+                    src={resolveFoto(esquerda[i])}
                     alt={esquerda[i].nome}
                     className="w-12 h-12 rounded-full object-cover border-2 border-white"
                   />
@@ -59,21 +98,21 @@ const RankingGanhoSeguidores = ({ dados }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {getIconeVariacao(esquerda[i].variacao || 1)}
+                  {getIcone(esquerda[i].nome, i + 1)}
                   <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
-                    {esquerda[i].ganho.toLocaleString()}
+                    {Number(esquerda[i].ganho || 0).toLocaleString()}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Coluna Direita */}
+            {/* Coluna direita (pos 6..10) */}
             {direita[i] && (
               <div className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition">
                 <div className="flex items-center gap-3">
                   <div className="text-xl font-extrabold w-8 text-right">{i + 6}º</div>
                   <img
-                    src={direita[i].foto || '/placeholder.png'}
+                    src={resolveFoto(direita[i])}
                     alt={direita[i].nome}
                     className="w-12 h-12 rounded-full object-cover border-2 border-white"
                   />
@@ -85,9 +124,9 @@ const RankingGanhoSeguidores = ({ dados }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {getIconeVariacao(direita[i].variacao || 1)}
+                  {getIcone(direita[i].nome, i + 6)}
                   <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
-                    {direita[i].ganho.toLocaleString()}
+                    {Number(direita[i].ganho || 0).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -103,11 +142,7 @@ const RankingGanhoSeguidores = ({ dados }) => {
 
       {/* Footer */}
       <div className="w-full">
-        <img
-          src={FooterRankingImage}
-          alt="Ranking Footer"
-          className="w-full object-cover"
-        />
+        <img src={FooterRankingImage} alt="Ranking Footer" className="w-full object-cover" />
       </div>
     </div>
   );

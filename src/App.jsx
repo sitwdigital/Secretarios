@@ -123,7 +123,7 @@ const App = ({ modoPrint = false }) => {
 
       {!loading && dadosExcel && (
         <>
-          {!modoPrint && <Header />}
+          {!modoPrint}
 
           {/* CAPA */}
           <div id="cover" className="relative w-full">

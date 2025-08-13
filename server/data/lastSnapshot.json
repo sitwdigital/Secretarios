@@ -1,0 +1,820 @@
+{
+  "top10": [
+    {
+      "instagram": 0,
+      "facebook": 0,
+      "twitter": 0,
+      "total": 0
+    }
+  ],
+  "instagram": [
+    {
+      "nome": "Orleans Brandão",
+      "seguidores": 6711,
+      "foto": "/src/assets/fotos/orleans-brandao.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Tiago Fernandes",
+      "seguidores": 11187,
+      "foto": "/src/assets/fotos/tiago-fernandes.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Sérgio Antonio Mesquita Macedo",
+      "seguidores": 51593,
+      "foto": "/src/assets/fotos/sergio-antonio-mesquita-macedo.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Paulo Casé Fernandes",
+      "seguidores": 16921,
+      "foto": "/src/assets/fotos/paulo-case-fernandes.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Vinícius Ferro",
+      "seguidores": 6711,
+      "foto": "/src/assets/fotos/vinicius-ferro.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "França",
+      "seguidores": 58987,
+      "foto": "/src/assets/fotos/franca.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Vagtonio Brandão",
+      "seguidores": 13697,
+      "foto": "/src/assets/fotos/vagtonio-brandao.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Fábio Gentil",
+      "seguidores": 97760,
+      "foto": "/src/assets/fotos/fabio-gentil.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Walter Canales",
+      "seguidores": 58987,
+      "foto": "/src/assets/fotos/walter-canales.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Celso Dias",
+      "seguidores": 808,
+      "foto": "/src/assets/fotos/celso-dias.png",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Maurício Ribeiro Martins",
+      "seguidores": 23934,
+      "foto": "/src/assets/fotos/mauricio-ribeiro-martins.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Kecio Rabelo",
+      "seguidores": 2258,
+      "foto": "/src/assets/fotos/kecio-rabelo.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Pedro Chagas",
+      "seguidores": 12965,
+      "foto": "/src/assets/fotos/pedro-chagas.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "YURI ARRUDA",
+      "seguidores": 62460,
+      "foto": "/src/assets/fotos/yuri-arruda.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Luzia Frazão Waquim",
+      "seguidores": 16564,
+      "foto": "/src/assets/fotos/luzia-frazao-waquim.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "SEBASTIÃO MADEIRA",
+      "seguidores": 31770,
+      "foto": "/src/assets/fotos/sebastiao-madeira.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Junior Marreca",
+      "seguidores": 19761,
+      "foto": "/src/assets/fotos/junior-marreca.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Susan Lucena",
+      "seguidores": 16523,
+      "foto": "/src/assets/fotos/susan-lucena.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Jandira Dias",
+      "seguidores": 8857,
+      "foto": "/src/assets/fotos/jandira-dias.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Natassia Weba",
+      "seguidores": 11788,
+      "foto": "/src/assets/fotos/natassia-weba.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Raimundo Soares Cutrim",
+      "seguidores": 4650,
+      "foto": "/src/assets/fotos/raimundo-soares-cutrim.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Cricielle Muniz",
+      "seguidores": 31752,
+      "foto": "/src/assets/fotos/cricielle-muniz.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Pitagoras Nunes",
+      "seguidores": 5614,
+      "foto": "/src/assets/fotos/pitagoras-nunes.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Rubens Pereira",
+      "seguidores": 12576,
+      "foto": "/src/assets/fotos/rubens-pereira.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Karen Taveira Barros",
+      "seguidores": 43278,
+      "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Thiago Prado",
+      "seguidores": 13382,
+      "foto": "/src/assets/fotos/thiago-prado.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Aparício Bandeira",
+      "seguidores": 5295,
+      "foto": "/src/assets/fotos/aparicio-bandeira.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Bira do Pindaré",
+      "seguidores": 47693,
+      "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Adriano Sarney",
+      "seguidores": 39711,
+      "foto": "/src/assets/fotos/adriano-sarney.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Alberto Bastos",
+      "seguidores": 5712,
+      "foto": "/src/assets/fotos/alberto-bastos.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Washigtong Oliveira",
+      "seguidores": 5000,
+      "foto": "/src/assets/fotos/washigtong-oliveira.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Marcello Duailibe",
+      "seguidores": 10237,
+      "foto": "/src/assets/fotos/marcello-duailibe.png",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Jucielly Oliveira",
+      "seguidores": 1437,
+      "foto": "/src/assets/fotos/jucielly-oliveira.png",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Gerson Pinheiro",
+      "seguidores": 1865,
+      "foto": "/src/assets/fotos/gerson-pinheiro.png",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Anderson Ferreira",
+      "seguidores": 8939,
+      "foto": "/src/assets/fotos/anderson-ferreira.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Socorro Araujo",
+      "seguidores": 3795,
+      "foto": "/src/assets/fotos/socorro-araujo.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Diego F M Rolim",
+      "seguidores": 11680,
+      "foto": "/src/assets/fotos/diego-f-m-rolim.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Eliel Gama",
+      "seguidores": 3573,
+      "foto": "/src/assets/fotos/eliel-gama.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Nordman Wall",
+      "seguidores": 3028,
+      "foto": "/src/assets/fotos/nordman-wall.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Lucilea Gonçalves",
+      "seguidores": 1367,
+      "foto": "/src/assets/fotos/lucilea-goncalves.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Dionatan Carvalho",
+      "seguidores": 546,
+      "foto": "/src/assets/fotos/dionatan-carvalho.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Wallquiria ✨",
+      "seguidores": 42760,
+      "foto": "/src/assets/fotos/wallquiria.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Sorimar Sabóia",
+      "seguidores": 3388,
+      "foto": "/src/assets/fotos/sorimar-saboia.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Robson Paz",
+      "seguidores": 3271,
+      "foto": "/src/assets/fotos/robson-paz.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Valdenio Caminha",
+      "seguidores": 1771,
+      "foto": "/src/assets/fotos/valdenio-caminha.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Leandro Costa",
+      "seguidores": 1657,
+      "foto": "/src/assets/fotos/leandro-costa.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Allan Kardec Barros",
+      "seguidores": 2370,
+      "foto": "/src/assets/fotos/allan-kardec-barros.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Gabriel Tenório",
+      "seguidores": 15417,
+      "foto": "/src/assets/fotos/gabriel-tenorio.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Murillo Andrade",
+      "seguidores": 7332,
+      "foto": "/src/assets/fotos/murillo-andrade.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Coronel Aldrim",
+      "seguidores": 2761,
+      "foto": "/src/assets/fotos/coronel-aldrim.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Patrick Freire",
+      "seguidores": 1257,
+      "foto": "/src/assets/fotos/patrick-freire.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Marcos Freitas",
+      "seguidores": 1100,
+      "foto": "/src/assets/fotos/marcos-freitas.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Leonidas A. Silva",
+      "seguidores": 567,
+      "foto": "/src/assets/fotos/leonidas.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "SERGIO SOMBRA",
+      "seguidores": 6300,
+      "foto": "/src/assets/fotos/sergio-sombra.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Marcellus Alves",
+      "seguidores": 1157,
+      "foto": "/src/assets/fotos/marcellus-alves.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Leuzinete Pereira da Silva",
+      "seguidores": 3826,
+      "foto": "/src/assets/fotos/leuzinete-pereira-da-silva.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "ABIGAIL CUNHA",
+      "seguidores": 50370,
+      "foto": "/src/assets/fotos/abigail-cunha.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Zé Reinaldo Tavares",
+      "seguidores": 10430,
+      "foto": "/src/assets/fotos/ze-reinaldo-tavares.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Raysa Maciel",
+      "seguidores": 6786,
+      "foto": "/src/assets/fotos/raysa-maciel.jpeg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Cassiano Pereira Junior",
+      "seguidores": 13266,
+      "foto": "/src/assets/fotos/cassiano-pereira-junior.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Luiz Henrique Lula",
+      "seguidores": 5742,
+      "foto": "/src/assets/fotos/luiz-henrique-lula.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Célio Roberto Pinto de Araújo",
+      "seguidores": 18800,
+      "foto": "/src/assets/fotos/celio-roberto-pinto-de-araujo.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Cauê Aragão",
+      "seguidores": 7639,
+      "foto": "/src/assets/fotos/caue-aragao.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Lilia Raquel",
+      "seguidores": 6521,
+      "foto": "/src/assets/fotos/lilia-raquel.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Wolmer Araújo",
+      "seguidores": 12434,
+      "foto": "/src/assets/fotos/wolmer-araujo.jpg",
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "RAUL CANCIAN MOCHEL",
+      "seguidores": 10431,
+      "foto": "/src/assets/fotos/raul-cancian-mochel.jpg",
+      "cargo": "",
+      "variacao": 0
+    }
+  ],
+  "facebook": [
+    {
+      "nome": "Bira do Pindaré",
+      "seguidores": 17523,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Adriano Sarney",
+      "seguidores": 43300,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/adriano-sarney.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Junior Marreca",
+      "seguidores": 17525,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/junior-marreca.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "França do Macaquinho",
+      "seguidores": 14250,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/franca.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Sebastião Madeira",
+      "seguidores": 9324,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/sebastiao-madeira.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Zé Reinaldo",
+      "seguidores": 9289,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/ze-reinaldo.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Sorimar Saboia",
+      "seguidores": 6000,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/sorimar-saboia.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Susan Lucena",
+      "seguidores": 4900,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/susan-lucena.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Robson Paz",
+      "seguidores": 4900,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/robson-paz.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Valdenio Caminha",
+      "seguidores": 4900,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/valdenio-caminha.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Flávio Lima",
+      "seguidores": 4800,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/flavio-lima.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Tiago Fernandes",
+      "seguidores": 4392,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/tiago-fernandes.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Natassia Weba",
+      "seguidores": 3000,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/natassia-weba.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Nordman Wall",
+      "seguidores": 3000,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/nordman-wall.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Abigail Cunha",
+      "seguidores": 2998,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/abigail-cunha.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Alberto Bastos",
+      "seguidores": 2264,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/alberto-bastos.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Cassiano Pereira Junior",
+      "seguidores": 1863,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/cassiano-pereira-junior.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Cricielle Muniz",
+      "seguidores": 1488,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/cricielle-muniz.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Kecio Rabelo",
+      "seguidores": 1332,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/kecio-rabelo.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Sergio Sombra",
+      "seguidores": 1207,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/sergio-sombra.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Orleans Brandão",
+      "seguidores": 1122,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/orleans-brandao.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Socorro Araújo",
+      "seguidores": 1060,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/socorro-araujo.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Raul Cancian Mochel",
+      "seguidores": 984,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/raul-cancian-mochel.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Karen Taveira Barros",
+      "seguidores": 799,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Paulo Casé Fernandes",
+      "seguidores": 691,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/paulo-case-fernandes.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Coronel Celio Roberto",
+      "seguidores": 687,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/coronel-celio-roberto.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Gerson Pinheiro",
+      "seguidores": 605,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/gerson-pinheiro.png",
+      "cargo": ""
+    },
+    {
+      "nome": "Sandro Montenegro",
+      "seguidores": 513,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/sandro-montenegro.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Lilia Raquel",
+      "seguidores": 297,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/lilia-raquel.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Eliel Gama",
+      "seguidores": 245,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/eliel-gama.jpg",
+      "cargo": ""
+    }
+  ],
+  "twitter": [
+    {
+      "nome": "Bira do Pindaré ???? ❤️",
+      "seguidores": 15752,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Robson Paz ????",
+      "seguidores": 5935,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/robson-paz.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Karen Taveira Barros",
+      "seguidores": 4205,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Gerson Pinheiro",
+      "seguidores": 4173,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/gerson-pinheiro.png",
+      "cargo": ""
+    },
+    {
+      "nome": "Adriano Sarney",
+      "seguidores": 4094,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/adriano-sarney.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Sergio Sombra ??",
+      "seguidores": 4079,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/sergio-sombra.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Allan Kardec Barros",
+      "seguidores": 1887,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/allan-kardec-barros.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Cricielle Muniz",
+      "seguidores": 1838,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/cricielle-muniz.jpg",
+      "cargo": ""
+    },
+    {
+      "nome": "Orleans Brandão",
+      "seguidores": 291,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/orleans-brandao.jpeg",
+      "cargo": ""
+    },
+    {
+      "nome": "Nordman W.B.C.Filho",
+      "seguidores": 130,
+      "variacao": 0,
+      "foto": "/src/assets/fotos/nordman-w-b-c-filho.jpg",
+      "cargo": ""
+    }
+  ],
+  "rankingGanho": [
+    {
+      "nome": "Tiago Fernandes",
+      "ganho": 400,
+      "cargo": "",
+      "variacao": 2
+    },
+    {
+      "nome": "Sérgio Antonio Mesquita Macedo",
+      "ganho": 300,
+      "cargo": "",
+      "variacao": 0
+    },
+    {
+      "nome": "Paulo Casé Fernandes",
+      "ganho": 215,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Vinícius Ferro",
+      "ganho": 200,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "França",
+      "ganho": 169,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Vagtonio Brandão",
+      "ganho": 153,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Fábio Gentil",
+      "ganho": 150,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Walter Canales",
+      "ganho": 150,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Celso Dias",
+      "ganho": 135,
+      "cargo": "",
+      "variacao": 1
+    },
+    {
+      "nome": "Orleans Brandão",
+      "ganho": 100,
+      "cargo": "",
+      "variacao": -9
+    }
+  ]
+}
