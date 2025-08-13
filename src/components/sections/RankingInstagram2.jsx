@@ -1,31 +1,63 @@
-// Remova esses ícones antigos:
-// import {
-//   ArrowUpRight,
-//   ArrowDownRight,
-//   Minus,
-// } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 
 import HeaderInstagramImage from '/src/assets/header_Relatorio_Insta.svg';
 import FooterRankingImage from '/src/assets/footer_Relatorio.svg';
 import LegendaImage from '/src/assets/LEGENDA.svg';
 
-// ✅ Novos ícones personalizados
 import IconGanhou from '/src/assets/GANHOU.svg';
 import IconPerdeu from '/src/assets/PERDEU.svg';
 import IconManteve from '/src/assets/MANTEVE.svg';
 
-const RankingInstagram2 = ({ dados }) => {
-  const getIconeVariacao = (variacao) => {
-    if (variacao > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
-    if (variacao < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
+const LS_KEY = 'rankingInstagram2_prev'; // chave para armazenar a ordem anterior
+
+const RankingInstagram2 = ({ dados = [] }) => {
+  if (!dados.length) return null;
+
+  // 1) Ordena e pega a segunda metade (posições 34 a 66)
+  const segundaMetade = useMemo(() => {
+    return [...dados]
+      .sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0))
+      .slice(33, 66);
+  }, [dados]);
+
+  // 2) Ordem atual (nomes)
+  const nomesAtuais = useMemo(() => segundaMetade.map(p => p.nome), [segundaMetade]);
+
+  // 3) Ordem anterior salva
+  const prevOrder = useMemo(() => {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+  }, []);
+
+  // 4) Mapa nome -> posição anterior
+  const prevPos = useMemo(() => {
+    const m = new Map();
+    prevOrder.forEach((nome, i) => m.set(nome, i + 34)); // começa no 34
+    return m;
+  }, [prevOrder]);
+
+  // 5) Calcula delta de posição
+  const deltaPos = (nome, posAtual) => {
+    const posAnterior = prevPos.get(nome);
+    if (!posAnterior) return 0;
+    const diff = posAnterior - posAtual;
+    if (diff > 0) return 1; // subiu
+    if (diff < 0) return -1; // desceu
+    return 0;
+  };
+
+  const getIcone = (nome, posAtual) => {
+    const d = deltaPos(nome, posAtual);
+    if (d > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
+    if (d < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
     return <img src={IconManteve} alt="Manteve posição" className="w-5 h-5" />;
   };
 
-  if (!dados || dados.length === 0) return null;
+  // 6) Salva a ordem atual para a próxima vez
+  useEffect(() => {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(nomesAtuais)); } catch {}
+  }, [nomesAtuais]);
 
-  const dadosOrdenados = [...dados].sort((a, b) => b.seguidores - a.seguidores);
-  const segundaMetade = dadosOrdenados.slice(33, 66);
-
+  // 7) Divide em 3 colunas
   const col1 = segundaMetade.slice(0, 11);
   const col2 = segundaMetade.slice(11, 22);
   const col3 = segundaMetade.slice(22, 33);
@@ -38,7 +70,6 @@ const RankingInstagram2 = ({ dados }) => {
 
   return (
     <div className="w-full bg-gray-100 pb-0">
-      {/* Header */}
       <div className="w-full">
         <img
           src={HeaderInstagramImage}
@@ -47,29 +78,26 @@ const RankingInstagram2 = ({ dados }) => {
         />
       </div>
 
-      {/* Cards */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 gap-3 px-4 sm:grid-cols-1">
         {linhas.map((linha, i) => (
           <div key={i} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {linha.esquerda && (
-              <CardPessoa pessoa={linha.esquerda} posicao={i + 34} getIconeVariacao={getIconeVariacao} />
+              <CardPessoa pessoa={linha.esquerda} posicao={i + 34} getIcone={getIcone} />
             )}
             {linha.centro && (
-              <CardPessoa pessoa={linha.centro} posicao={i + 45} getIconeVariacao={getIconeVariacao} />
+              <CardPessoa pessoa={linha.centro} posicao={i + 45} getIcone={getIcone} />
             )}
             {linha.direita && (
-              <CardPessoa pessoa={linha.direita} posicao={i + 56} getIconeVariacao={getIconeVariacao} />
+              <CardPessoa pessoa={linha.direita} posicao={i + 56} getIcone={getIcone} />
             )}
           </div>
         ))}
       </div>
 
-      {/* Legenda com imagem */}
       <div className="max-w-7xl mx-auto flex justify-center mt-12">
         <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>
 
-      {/* Footer */}
       <div className="w-full">
         <img
           src={FooterRankingImage}
@@ -81,7 +109,7 @@ const RankingInstagram2 = ({ dados }) => {
   );
 };
 
-const CardPessoa = ({ pessoa, posicao, getIconeVariacao }) => (
+const CardPessoa = ({ pessoa, posicao, getIcone }) => (
   <div className="bg-white rounded-full flex items-center justify-between p-3 shadow hover:scale-[1.01] transition">
     <div className="flex items-center gap-3">
       <div className="text-lg font-extrabold w-6 text-right">{posicao}º</div>
@@ -102,9 +130,9 @@ const CardPessoa = ({ pessoa, posicao, getIconeVariacao }) => (
       </div>
     </div>
     <div className="flex items-center gap-2">
-      {getIconeVariacao(pessoa.variacao || 1)}
+      {getIcone(pessoa.nome, posicao)}
       <div className="bg-gray-300 text-black text-sm font-bold px-3 py-1 rounded-full">
-        {pessoa.seguidores.toLocaleString()}
+        {(pessoa.seguidores ?? 0).toLocaleString()}
       </div>
     </div>
   </div>
