@@ -1,7 +1,10 @@
+// src/components/common/UploadRedes.jsx
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import processarRedes from '../../utils/processarRedes';
 import { fotoPorNome } from '../../utils/fotoCatalog';
+// ✅ usa a MESMA lógica de variação do site/print/servidor
+import { aplicarVariacoesEmTudo } from '../../shared/calcVariacao';
 
 // ---------- helpers de parsing ----------
 const num = (v) =>
@@ -36,41 +39,27 @@ async function saveSnapshot(data) {
   } catch (_) {}
 }
 
-// ---------- cálculo de movimento (delta de posição) ----------
-/**
- * Calcula variação de posição entre duas listas ordenadas por ranking.
- * @param {Array<{nome: string}>} prevList - lista anterior, já ordenada (1º, 2º, 3º...)
- * @param {Array<{nome: string}>} nextList - lista nova, já ordenada
- * @returns {Map<string, number>} map nome -> delta (positivo = subiu, negativo = desceu)
- */
+// ---------- cálculo legado (não usado — mantido por compat) ----------
 function calculaMovimento(prevList = [], nextList = []) {
   const posPrev = new Map();
-  prevList.forEach((p, i) => posPrev.set(p?.nome ?? '', i)); // 0-based
+  prevList.forEach((p, i) => posPrev.set(p?.nome ?? '', i));
   const deltas = new Map();
   nextList.forEach((p, i) => {
     const nome = p?.nome ?? '';
     if (!nome) return deltas.set(nome, 0);
-    if (!posPrev.has(nome)) {
-      // novo nome: trate como 0 (ou +1, se quiser destacar)
-      return deltas.set(nome, 0);
-    }
+    if (!posPrev.has(nome)) return deltas.set(nome, 0);
     const prev = posPrev.get(nome);
-    // delta = posAnterior - posAtual (se positivo, subiu)
     deltas.set(nome, prev - i);
   });
   return deltas;
 }
-
-/**
- * Atribui em-place a variacao (delta) nos itens da lista de base,
- * usando um Map de nome->delta.
- */
 function aplicaDeltaNaLista(baseList = [], deltasMap = new Map()) {
   baseList.forEach((item) => {
     const nome = item?.nome ?? '';
     item.variacao = deltasMap.get(nome) ?? 0;
   });
 }
+// ---------------------------------------------------------------------
 
 const UploadRedes = ({ setDados }) => {
   const [arquivoSelecionado, setArquivoSelecionado] = useState(null);
@@ -109,8 +98,6 @@ const UploadRedes = ({ setDados }) => {
           return {
             nome,
             seguidores: num(linha['SEGUIDORES']),
-            // "variacao" será substituído pelo delta de ranking
-            variacao: 0,
             foto: fotoPorNome(nome) || '',
             cargo: '',
           };
@@ -122,7 +109,6 @@ const UploadRedes = ({ setDados }) => {
             return {
               nome,
               seguidores: num(linha['SEGUIDORES']),
-              variacao: 0, // será delta de ranking
               foto: fotoPorNome(nome) || '',
               cargo: '',
             };
@@ -130,59 +116,29 @@ const UploadRedes = ({ setDados }) => {
           .filter((p) => p.seguidores > 0);
 
         // Processa para montar objeto final (top10, etc.)
-        const resultado = processarRedes(instagram, facebook, twitter, planilha4);
+        const base = processarRedes(instagram, facebook, twitter, planilha4);
 
         // Garante que as listas expostas são as "com fotos"
-        resultado.instagram = instagram;
-        resultado.facebook  = facebook;
-        resultado.twitter   = twitter;
+        base.instagram = instagram;
+        base.facebook  = facebook;
+        base.twitter   = twitter;
 
-        // ============== MOVIMENTO DE RANKING (vs snapshot anterior) ==============
-        const snapshotAnterior = await getLastSnapshot();
+        // ============== VARIAÇÕES (via módulo compartilhado) ====================
+        const snapshotAnterior = await getLastSnapshot(); // pega do backend
+        const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
+        // =======================================================================
 
-        // --- Ranking de ganho (planilha4 -> resultado.rankingGanho) ---
-        // nova ordem (desc por ganho)
-        const ganhoAtualOrdenado = [...(resultado.rankingGanho || [])]
-          .sort((a, b) => (b.ganho ?? 0) - (a.ganho ?? 0));
-        // anterior (se houver)
-        const ganhoAnteriorOrdenado = snapshotAnterior?.rankingGanho
-          ? [...snapshotAnterior.rankingGanho].sort((a, b) => (b.ganho ?? 0) - (a.ganho ?? 0))
-          : [];
-
-        const deltaGanho = calculaMovimento(ganhoAnteriorOrdenado, ganhoAtualOrdenado);
-        aplicaDeltaNaLista(resultado.rankingGanho, deltaGanho);
-
-        // --- Instagram (desc por seguidores) ---
-        const igAtualOrdenado = [...instagram].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0));
-        const igAnteriorOrdenado = snapshotAnterior?.instagram
-          ? [...snapshotAnterior.instagram].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0))
-          : [];
-        const deltaIG = calculaMovimento(igAnteriorOrdenado, igAtualOrdenado);
-        aplicaDeltaNaLista(instagram, deltaIG);
-
-        // --- Facebook ---
-        const fbAtualOrdenado = [...facebook].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0));
-        const fbAnteriorOrdenado = snapshotAnterior?.facebook
-          ? [...snapshotAnterior.facebook].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0))
-          : [];
-        const deltaFB = calculaMovimento(fbAnteriorOrdenado, fbAtualOrdenado);
-        aplicaDeltaNaLista(facebook, deltaFB);
-
-        // --- Twitter ---
-        const twAtualOrdenado = [...twitter].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0));
-        const twAnteriorOrdenado = snapshotAnterior?.twitter
-          ? [...snapshotAnterior.twitter].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0))
-          : [];
-        const deltaTW = calculaMovimento(twAnteriorOrdenado, twAtualOrdenado);
-        aplicaDeltaNaLista(twitter, deltaTW);
-
-        // =========================================================================
-
-        // Entrega pro app e persiste localmente
+        // Entrega pro app
         setDados(resultado);
+
+        // Persiste localmente (site e /print usam isto)
         const json = JSON.stringify(resultado);
         localStorage.setItem('relatorioSecretarias', json);
         localStorage.setItem('relatorioRedes', json);
+        // 🔸 reforça o snapshot local para o /print
+        try {
+          localStorage.setItem('lastSnapshot', JSON.stringify(resultado));
+        } catch {}
 
         // Persiste no servidor como "último snapshot"
         saveSnapshot(resultado); // fire-and-forget

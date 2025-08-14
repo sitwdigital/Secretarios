@@ -475,284 +475,284 @@
     {
       "nome": "Bira do Pindaré",
       "seguidores": 9289,
-      "variacao": -2,
       "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -2
     },
     {
       "nome": "Adriano Sarney",
       "seguidores": 17523,
-      "variacao": -2,
       "foto": "/src/assets/fotos/adriano-sarney.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -2
     },
     {
       "nome": "Junior Marreca",
       "seguidores": 57453,
-      "variacao": 1,
       "foto": "/src/assets/fotos/junior-marreca.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 1
     },
     {
       "nome": "França do Macaquinho",
       "seguidores": 9324,
-      "variacao": 0,
       "foto": "/src/assets/fotos/franca.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Sebastião Madeira",
       "seguidores": 57453,
-      "variacao": 1,
       "foto": "/src/assets/fotos/sebastiao-madeira.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 1
     },
     {
       "nome": "Zé Reinaldo",
       "seguidores": 14250,
-      "variacao": 2,
       "foto": "/src/assets/fotos/ze-reinaldo.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 2
     },
     {
       "nome": "Sorimar Saboia",
       "seguidores": 6000,
-      "variacao": 0,
       "foto": "/src/assets/fotos/sorimar-saboia.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Susan Lucena",
       "seguidores": 4900,
-      "variacao": 0,
       "foto": "/src/assets/fotos/susan-lucena.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Robson Paz",
       "seguidores": 4900,
-      "variacao": 0,
       "foto": "/src/assets/fotos/robson-paz.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Valdenio Caminha",
       "seguidores": 4900,
-      "variacao": 0,
       "foto": "/src/assets/fotos/valdenio-caminha.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Flávio Lima",
       "seguidores": 4800,
-      "variacao": 0,
       "foto": "/src/assets/fotos/flavio-lima.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Tiago Fernandes",
       "seguidores": 4392,
-      "variacao": 0,
       "foto": "/src/assets/fotos/tiago-fernandes.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Natassia Weba",
       "seguidores": 3000,
-      "variacao": 0,
       "foto": "/src/assets/fotos/natassia-weba.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Nordman Wall",
       "seguidores": 3000,
-      "variacao": 0,
       "foto": "/src/assets/fotos/nordman-wall.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Abigail Cunha",
       "seguidores": 2998,
-      "variacao": 0,
       "foto": "/src/assets/fotos/abigail-cunha.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Alberto Bastos",
       "seguidores": 2264,
-      "variacao": 0,
       "foto": "/src/assets/fotos/alberto-bastos.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Cassiano Pereira Junior",
       "seguidores": 1863,
-      "variacao": 0,
       "foto": "/src/assets/fotos/cassiano-pereira-junior.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Cricielle Muniz",
       "seguidores": 1488,
-      "variacao": 0,
       "foto": "/src/assets/fotos/cricielle-muniz.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Kecio Rabelo",
       "seguidores": 1332,
-      "variacao": 0,
       "foto": "/src/assets/fotos/kecio-rabelo.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "SergioSombra",
       "seguidores": 1207,
-      "variacao": 0,
       "foto": "",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Orleans Brandão",
       "seguidores": 1122,
-      "variacao": 0,
       "foto": "/src/assets/fotos/orleans-brandao.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Socorro Araújo",
       "seguidores": 1060,
-      "variacao": 0,
       "foto": "/src/assets/fotos/socorro-araujo.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Raul Cancian Mochel",
       "seguidores": 984,
-      "variacao": 0,
       "foto": "/src/assets/fotos/raul-cancian-mochel.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Karen Taveira Barros",
       "seguidores": 799,
-      "variacao": 0,
       "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Paulo Casé Fernandes",
       "seguidores": 691,
-      "variacao": 0,
       "foto": "/src/assets/fotos/paulo-case-fernandes.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Coronel Celio Roberto",
       "seguidores": 687,
-      "variacao": 0,
       "foto": "/src/assets/fotos/coronel-celio-roberto.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Gerson Pinheiro",
       "seguidores": 605,
-      "variacao": 0,
       "foto": "/src/assets/fotos/gerson-pinheiro.png",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Sandro Montenegro",
       "seguidores": 513,
-      "variacao": 0,
       "foto": "/src/assets/fotos/sandro-montenegro.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Lilia Raquel",
       "seguidores": 297,
-      "variacao": 0,
       "foto": "/src/assets/fotos/lilia-raquel.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Eliel Gama",
       "seguidores": 245,
-      "variacao": 0,
       "foto": "/src/assets/fotos/eliel-gama.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     }
   ],
   "twitter": [
     {
       "nome": "Bira do Pindaré ???? ❤️",
       "seguidores": 1887,
-      "variacao": -3,
       "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -3
     },
     {
       "nome": "Robson Paz ????",
       "seguidores": 4079,
-      "variacao": -2,
       "foto": "/src/assets/fotos/robson-paz.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -2
     },
     {
       "nome": "Karen Taveira Barros",
       "seguidores": 1838,
-      "variacao": -7,
       "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -7
     },
     {
       "nome": "Gerson Pinheiro",
       "seguidores": 1887,
-      "variacao": -1,
       "foto": "/src/assets/fotos/gerson-pinheiro.png",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -1
     },
     {
       "nome": "Adriano Sarney",
       "seguidores": 1888,
-      "variacao": -1,
       "foto": "/src/assets/fotos/adriano-sarney.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": -1
     },
     {
       "nome": "Sergio Sombra ??",
       "seguidores": 15752,
-      "variacao": 6,
       "foto": "/src/assets/fotos/sergio-sombra.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 6
     },
     {
       "nome": "Allan Kardec Barros",
       "seguidores": 4173,
-      "variacao": 2,
       "foto": "/src/assets/fotos/allan-kardec-barros.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 2
     },
     {
       "nome": "Cricielle Muniz",
       "seguidores": 5935,
-      "variacao": 6,
       "foto": "/src/assets/fotos/cricielle-muniz.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 6
     },
     {
       "nome": "Orleans Brandão",
       "seguidores": 291,
-      "variacao": 0,
       "foto": "/src/assets/fotos/orleans-brandao.jpeg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     },
     {
       "nome": "Nordman W.B.C.Filho",
       "seguidores": 130,
-      "variacao": 0,
       "foto": "/src/assets/fotos/nordman-w-b-c-filho.jpg",
-      "cargo": ""
+      "cargo": "",
+      "variacao": 0
     }
   ],
   "rankingGanho": [

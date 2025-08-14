@@ -1,15 +1,17 @@
 import RankingList from './RankingList';
 
-const RankingRedeSocial = ({ rede, dados }) => {
-  // Seleciona a coluna específica (ex: pessoa.instagram, pessoa.twitter...)
+const RankingRedeSocial = ({ rede = '', dados = [] }) => {
+  const campo = String(rede).toLowerCase();
+
+  // Filtra quem tem o campo e ordena desc
   const dadosOrdenados = [...dados]
-    .filter(p => p[rede.toLowerCase()]) // Ex: pessoa.instagram
-    .sort((a, b) => b[rede.toLowerCase()] - a[rede.toLowerCase()]);
+    .filter((p) => typeof p?.[campo] === 'number')
+    .sort((a, b) => (b?.[campo] ?? 0) - (a?.[campo] ?? 0));
 
   return (
     <div className="max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Ranking de Seguidores no {rede}</h2>
-      <RankingList dados={dadosOrdenados} campo={rede.toLowerCase()} />
+      <RankingList dados={dadosOrdenados} campo={campo} />
     </div>
   );
 };

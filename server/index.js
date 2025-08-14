@@ -6,32 +6,33 @@ import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// importa o mesmo módulo usado no front
+import { aplicarVariacoesEmTudo } from '../src/shared/calcVariacao.js';
 
-const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+
+const app  = express();
 const PORT = process.env.PORT || 4000;
 
 // URL do front (sem ?preview=1 pra não aplicar scale)
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173/print';
 
 // ---- armazenamento simples em arquivo (último snapshot) ----
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR      = path.join(__dirname, 'data');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'lastSnapshot.json');
 
 async function ensureDataDir() {
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-  } catch (_) {}
+  try { await fs.mkdir(DATA_DIR, { recursive: true }); } catch (_) {}
 }
 
 async function readSnapshot() {
   try {
-    const buf = await fs.readFile(SNAPSHOT_PATH, 'utf-8');
+    const buf  = await fs.readFile(SNAPSHOT_PATH, 'utf-8');
     const json = JSON.parse(buf);
     const stat = await fs.stat(SNAPSHOT_PATH);
     return { ok: true, data: json, updatedAt: stat.mtime };
-  } catch (err) {
+  } catch {
     return { ok: false, error: 'SNAPSHOT_NOT_FOUND' };
   }
 }
@@ -48,7 +49,7 @@ async function deleteSnapshot() {
   try {
     await fs.unlink(SNAPSHOT_PATH);
     return { ok: true };
-  } catch (err) {
+  } catch {
     return { ok: false, error: 'SNAPSHOT_NOT_FOUND' };
   }
 }
@@ -67,24 +68,15 @@ app.get('/api/health', (_req, res) => {
 });
 
 // ---------- Snapshot API ----------
-
-// pega o último snapshot salvo
 app.get('/api/last-snapshot', async (_req, res) => {
   const result = await readSnapshot();
-  if (!result.ok) {
-    return res.status(204).send(); // no content
-  }
-  res.json({
-    ok: true,
-    snapshot: result.data,
-    updatedAt: result.updatedAt,
-  });
+  if (!result.ok) return res.status(204).send(); // no content
+  res.json({ ok: true, snapshot: result.data, updatedAt: result.updatedAt });
 });
 
-// salva (e sobrescreve) o snapshot
 app.post('/api/last-snapshot', async (req, res) => {
   try {
-    // o corpo é o snapshot inteiro (obj com instagram/facebook/twitter/rankingGanho etc.)
+    // o corpo é o snapshot inteiro (instagram/facebook/twitter/rankingGanho etc.)
     const result = await writeSnapshot(req.body);
     res.json({ ok: true, updatedAt: result.updatedAt });
   } catch (err) {
@@ -93,12 +85,9 @@ app.post('/api/last-snapshot', async (req, res) => {
   }
 });
 
-// apaga o snapshot (opcional)
 app.delete('/api/last-snapshot', async (_req, res) => {
   const result = await deleteSnapshot();
-  if (!result.ok) {
-    return res.status(404).json({ ok: false, error: result.error });
-  }
+  if (!result.ok) return res.status(404).json({ ok: false, error: result.error });
   res.json({ ok: true });
 });
 
@@ -106,7 +95,13 @@ app.delete('/api/last-snapshot', async (_req, res) => {
 app.post('/gerar-pdf', async (req, res) => {
   let browser;
   try {
-    const htmlUrl = FRONTEND_URL;
+    // 1) Carrega o snapshot anterior e aplica a MESMA lógica de variação do front
+    const prev = await readSnapshot();
+    const snapshotAnterior = prev.ok ? prev.data : null;
+
+    // req.body deve conter o payload atual (instagram/facebook/twitter/rankingGanho)
+    // enriquecemos com "variacao" aqui no servidor
+    const dadosComVariacao = aplicarVariacoesEmTudo(req.body, snapshotAnterior);
 
     console.log('🚀 Iniciando Puppeteer...');
     browser = await puppeteer.launch({
@@ -121,16 +116,25 @@ app.post('/gerar-pdf', async (req, res) => {
 
     const page = await browser.newPage();
 
-    // Injeta os dados no localStorage ANTES de carregar a página
-    await page.evaluateOnNewDocument((dados) => {
+    // 2) Injeta os dados COM variação + o snapshot anterior no contexto da página
+    await page.evaluateOnNewDocument((dados, snap) => {
       try {
+        // payload atual para o /print
         localStorage.setItem('relatorioRedes', JSON.stringify(dados));
         localStorage.setItem('relatorioSecretarias', JSON.stringify(dados));
-      } catch (e) {}
-    }, req.body);
 
-    console.log('🌐 Acessando:', htmlUrl);
-    await page.goto(htmlUrl, { waitUntil: 'networkidle0', timeout: 60000 });
+        // snapshot anterior: sempre grava (vazio se null) para o Print.jsx poder recalcular
+        localStorage.setItem('lastSnapshot', JSON.stringify(snap || {}));
+
+        // também expõe globalmente (facilita debug e fallback)
+        window.__dadosPDF = dados;
+        window.__lastSnapshot = snap || null;
+        window._lastSnapshot  = snap || null; // compat com código antigo
+      } catch (e) {}
+    }, dadosComVariacao, snapshotAnterior);
+
+    console.log('🌐 Acessando:', FRONTEND_URL);
+    await page.goto(FRONTEND_URL, { waitUntil: 'networkidle0', timeout: 60000 });
 
     // Usa mídia de impressão (CSS @media print + @page)
     await page.emulateMediaType('print');
@@ -152,11 +156,9 @@ app.post('/gerar-pdf', async (req, res) => {
       printBackground: true,
       preferCSSPageSize: true, // respeita @page do CSS
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
+      format: 'A4',
+      landscape: true,
     };
-
-    // Default A4 landscape
-    pdfOptions.format = 'A4';
-    pdfOptions.landscape = true;
 
     // Overrides (opcional)
     if (fmtFromQuery) {

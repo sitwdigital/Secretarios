@@ -1,3 +1,4 @@
+// src/containers/Print.jsx
 import { useEffect, useState } from 'react';
 import RankingGanhoSeguidores from '../components/sections/RankingGanhoSeguidores';
 import RankingInstagram from '../components/sections/RankingInstagram';
@@ -6,6 +7,12 @@ import RankingFacebook from '../components/sections/RankingFacebook';
 import RankingTwitter from '../components/sections/RankingTwitter';
 import CoverRelatorioImage from '../assets/cover_Relatorio.svg';
 import EndPageRelatorioImage from '../assets/endpage_Relatorio.svg';
+
+// usa o mesmo cálculo do site
+import { aplicarVariacoesEmTudo } from '../shared/calcVariacao';
+
+const API_BASE =
+  (import.meta.env?.VITE_API_URL || 'http://localhost:4000') + '/api';
 
 const Print = () => {
   const [dados, setDados] = useState(null);
@@ -20,22 +27,85 @@ const Print = () => {
     }
   })();
 
-  // Carrega os dados (querystring > localStorage)
+  // ---------- util: encontra snapshot anterior ----------
+  const getPrevSnapshot = async () => {
+    // 1) salvo localmente
+    try {
+      const snapRaw = localStorage.getItem('lastSnapshot');
+      if (snapRaw) return JSON.parse(snapRaw);
+    } catch {}
+
+    // 2) injetado pelo servidor
+    try {
+      // eslint-disable-next-line no-underscore-dangle
+      if (window._lastSnapshot) return window._lastSnapshot;
+      // eslint-disable-next-line no-underscore-dangle
+      if (window._lastSnapshot) return window._lastSnapshot;
+    } catch {}
+
+    // 3) fallback: pedir ao servidor
+    try {
+      const r = await fetch(`${API_BASE}/last-snapshot`);
+      if (r.status === 200) {
+        const j = await r.json();
+        return j?.snapshot ?? null;
+      }
+    } catch {}
+
+    return null;
+  };
+
+  // Pequeno helper: checa se já existe algum "variacao" nas listas
+  const temVariacao = (obj) => {
+    try {
+      const hasOn = (arr) =>
+        Array.isArray(arr) && arr.some((x) => typeof x?.variacao === 'number');
+      return (
+        hasOn(obj?.instagram) ||
+        hasOn(obj?.facebook) ||
+        hasOn(obj?.twitter) ||
+        hasOn(obj?.rankingGanho)
+      );
+    } catch {
+      return false;
+    }
+  };
+
+  // Carrega os dados (querystring > localStorage) e aplica variações se necessário
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
+
+    const preparar = async (atual) => {
+      try {
+        // Se já veio com variacao (do servidor), só usa
+        if (temVariacao(atual)) {
+          setDados(atual);
+          return;
+        }
+        // Caso contrário, aplica aqui usando o snapshot
+        const anterior = await getPrevSnapshot();
+        const comVariacoes = aplicarVariacoesEmTudo(atual, anterior);
+        setDados(comVariacoes);
+      } catch {
+        setDados(atual);
+      }
+    };
+
     if (data) {
       try {
-        setDados(JSON.parse(decodeURIComponent(data)));
+        const atual = JSON.parse(decodeURIComponent(data));
+        preparar(atual);
         return;
-      } catch (_) {}
+      } catch {}
     }
-    const local = localStorage.getItem('relatorioRedes');
-    if (local) {
-      try {
-        setDados(JSON.parse(local));
-      } catch (_) {}
-    }
+
+    try {
+      const local = localStorage.getItem('relatorioRedes');
+      if (local) {
+        preparar(JSON.parse(local));
+      }
+    } catch {}
   }, []);
 
   // Aguarda imagens + fontes + layout estabilizar antes de sinalizar pro Puppeteer
@@ -79,10 +149,12 @@ const Print = () => {
           });
         });
 
-        // Espera imagens e fontes (importante pra altura final dos cards)
+        // Espera imagens e fontes
         await Promise.all(promises);
         if (document.fonts && document.fonts.ready) {
-          try { await document.fonts.ready; } catch {}
+          try {
+            await document.fonts.ready;
+          } catch {}
         }
 
         // um “tic” pra layout assentar
@@ -93,7 +165,7 @@ const Print = () => {
         autoFitSections();
         markReady();
 
-        // Em preview, refaz ao redimensionar (com debounce simples)
+        // Em preview, refaz ao redimensionar (com debounce)
         if (isPreview) {
           let _t;
           const onResize = () => {
@@ -166,7 +238,7 @@ const Print = () => {
         }
       }
 
-      // cola no topo/esquerda (sem margens laterais “visuais”)
+      // cola no topo/esquerda
       target.style.transform = `scale(${scale})`;
     });
   };
@@ -174,8 +246,7 @@ const Print = () => {
   if (!dados) return <p className="text-center mt-10">Carregando relatório...</p>;
 
   return (
-    <div id="pdf-content" className={`bg-white text-black ${isPreview ? 'preview' : ''}`}>
-
+    <div id="pdf-content" className={`bg-white text-black ${isPreview ? 'preview' : ''} `}>
       {/* Página 1: Capa – sangria total */}
       <section className="print-page">
         <img src={CoverRelatorioImage} alt="Capa" className="print-full-bleed" />
@@ -217,7 +288,7 @@ const Print = () => {
         </div>
       </section>
 
-      {/* Página 6: Twitter (naturalmente mais curto; o fit preenche a largura) */}
+      {/* Página 6: Twitter */}
       <section className="print-page">
         <div className="print-fit-wrap">
           <div className="print-fit-target">
@@ -237,4 +308,4 @@ const Print = () => {
   );
 };
 
-export default Print;
+export default Print;

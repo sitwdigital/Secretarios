@@ -12,7 +12,7 @@ import { fotoPorNome } from '../../utils/fotoCatalog';
 
 const LS_KEY = 'rankingGanho_prev'; // lista de nomes em ordem (1..10)
 
-const RankingGanhoSeguidores = ({ dados }) => {
+const RankingGanhoSeguidores = ({ dados = [], modoPrint = false }) => {
   if (!dados || dados.length === 0) return null;
 
   // nomes na ordem atual (assumindo que 'dados' já vem ordenado por ganho desc)
@@ -20,12 +20,9 @@ const RankingGanhoSeguidores = ({ dados }) => {
 
   // carrega a ordem anterior do localStorage (se houver)
   const prevOrder = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    } catch {
-      return [];
-    }
-  }, []);
+    if (modoPrint) return [];
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+  }, [modoPrint]);
 
   // cria um mapa nome -> posição anterior (1-based)
   const prevPos = useMemo(() => {
@@ -34,18 +31,26 @@ const RankingGanhoSeguidores = ({ dados }) => {
     return m;
   }, [prevOrder]);
 
-  // devolve +1 (subiu), -1 (caiu) ou 0 (manteve) comparando posição
-  const deltaPos = (nome, posAtual) => {
+  // Fallback antigo: +1 / -1 / 0 comparando posições
+  const deltaPosFallback = (nome, posAtual) => {
     const posAnterior = prevPos.get(nome);
-    if (!posAnterior) return 0; // sem histórico, mantém neutro
-    const diff = posAnterior - posAtual; // positivo = subiu (posição menor)
+    if (!posAnterior) return 0;
+    const diff = posAnterior - posAtual;
     if (diff > 0) return 1;
     if (diff < 0) return -1;
     return 0;
   };
 
-  const getIcone = (nome, posAtual) => {
-    const d = deltaPos(nome, posAtual);
+  const resolveDelta = (pessoa, posAtual) => {
+    if (Number.isFinite(pessoa?.variacao)) {
+      // usa o campo calculado no servidor/app
+      return Math.sign(pessoa.variacao);
+    }
+    return deltaPosFallback(pessoa?.nome, posAtual);
+  };
+
+  const getIcone = (pessoa, posAtual) => {
+    const d = resolveDelta(pessoa, posAtual);
     if (d > 0) return <img src={IconGanhou} alt="Ganhou posição" className="w-5 h-5" />;
     if (d < 0) return <img src={IconPerdeu} alt="Perdeu posição" className="w-5 h-5" />;
     return <img src={IconManteve} alt="Manteve posição" className="w-5 h-5" />;
@@ -53,34 +58,28 @@ const RankingGanhoSeguidores = ({ dados }) => {
 
   const resolveFoto = (pessoa) => pessoa.foto || fotoPorNome(pessoa.nome) || '/placeholder.png';
 
-  // após renderizar com sucesso, salva o ranking atual para a próxima comparação
+  // salva ordem atual (somente fora do modoPrint)
   useEffect(() => {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify(nomesAtuais));
-    } catch {}
-  }, [nomesAtuais]);
+    if (modoPrint) return;
+    try { localStorage.setItem(LS_KEY, JSON.stringify(nomesAtuais)); } catch {}
+  }, [nomesAtuais, modoPrint]);
 
-  // divide em 2 colunas (1–5 e 6–10)
   const esquerda = dados.slice(0, 5);
   const direita  = dados.slice(5, 10);
 
   return (
     <div className="w-full bg-gray-100 pb-0">
-      {/* Header */}
       <div className="w-full">
         <img src={HeaderRankingImage} alt="Ranking Header" className="w-full object-cover" />
       </div>
 
-      {/* Título */}
       <div className="max-w-7xl mx-auto px-4 mb-4">
         <h3 className="text-[25px] font-bold text-center">Soma de seguidores nas redes</h3>
       </div>
 
-      {/* Grid 2 colunas */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 mt-8 md:grid-cols-2 gap-4 px-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <div className="contents" key={i}>
-            {/* Coluna esquerda (pos 1..5) */}
             {esquerda[i] && (
               <div className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition">
                 <div className="flex items-center gap-3">
@@ -92,13 +91,11 @@ const RankingGanhoSeguidores = ({ dados }) => {
                   />
                   <div>
                     <p className="font-semibold text-sm">{esquerda[i].nome}</p>
-                    {esquerda[i].cargo && (
-                      <p className="text-xs text-gray-500">{esquerda[i].cargo}</p>
-                    )}
+                    {esquerda[i].cargo && <p className="text-xs text-gray-500">{esquerda[i].cargo}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {getIcone(esquerda[i].nome, i + 1)}
+                  {getIcone(esquerda[i], i + 1)}
                   <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
                     {Number(esquerda[i].ganho || 0).toLocaleString()}
                   </div>
@@ -106,7 +103,6 @@ const RankingGanhoSeguidores = ({ dados }) => {
               </div>
             )}
 
-            {/* Coluna direita (pos 6..10) */}
             {direita[i] && (
               <div className="bg-white rounded-full flex items-center justify-between p-4 shadow hover:scale-[1.01] transition">
                 <div className="flex items-center gap-3">
@@ -118,13 +114,11 @@ const RankingGanhoSeguidores = ({ dados }) => {
                   />
                   <div>
                     <p className="font-semibold text-sm">{direita[i].nome}</p>
-                    {direita[i].cargo && (
-                      <p className="text-xs text-gray-500">{direita[i].cargo}</p>
-                    )}
+                    {direita[i].cargo && <p className="text-xs text-gray-500">{direita[i].cargo}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {getIcone(direita[i].nome, i + 6)}
+                  {getIcone(direita[i], i + 6)}
                   <div className="bg-gray-300 text-black text-sm font-bold px-4 py-2 rounded-full">
                     {Number(direita[i].ganho || 0).toLocaleString()}
                   </div>
@@ -135,12 +129,10 @@ const RankingGanhoSeguidores = ({ dados }) => {
         ))}
       </div>
 
-      {/* Legenda */}
       <div className="max-w-7xl mx-auto flex justify-center mt-12 mb-6">
         <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>
 
-      {/* Footer */}
       <div className="w-full">
         <img src={FooterRankingImage} alt="Ranking Footer" className="w-full object-cover" />
       </div>
