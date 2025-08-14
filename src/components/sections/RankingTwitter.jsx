@@ -1,3 +1,4 @@
+// src/components/sections/RankingTwitter.jsx
 import { useEffect, useMemo } from 'react';
 
 import HeaderTwitterImage from '/src/assets/header_Relatorio_X.svg';
@@ -11,12 +12,14 @@ import IconManteve from '/src/assets/MANTEVE.svg';
 const LS_KEY = 'rankingTwitter_prev';
 
 const RankingTwitter = ({ dados = [], modoPrint = false }) => {
+  if (!Array.isArray(dados) || dados.length === 0) return null;
+
   const dadosOrdenados = useMemo(
-    () => [...dados].sort((a, b) => (b.seguidores ?? 0) - (a.seguidores ?? 0)),
+    () => [...dados].sort((a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)),
     [dados]
   );
 
-  const nomesAtuais = useMemo(() => dadosOrdenados.map(p => p.nome), [dadosOrdenados]);
+  const nomesAtuais = useMemo(() => dadosOrdenados.map(p => p?.nome ?? ''), [dadosOrdenados]);
 
   const prevOrder = useMemo(() => {
     if (modoPrint) return [];
@@ -33,13 +36,13 @@ const RankingTwitter = ({ dados = [], modoPrint = false }) => {
     const posAnterior = prevPos.get(nome);
     if (!posAnterior) return 0;
     const diff = posAnterior - posAtual;
-    if (diff > 0) return 1;
-    if (diff < 0) return -1;
-    return 0;
+    return diff > 0 ? 1 : diff < 0 ? -1 : 0;
   };
 
   const resolveDelta = (pessoa, posAtual) => {
-    if (Number.isFinite(pessoa?.variacao)) return Math.sign(pessoa.variacao);
+    if (typeof pessoa?.variacao === 'number' && Number.isFinite(pessoa.variacao)) {
+      return Math.sign(pessoa.variacao);
+    }
     return deltaPosFallback(pessoa?.nome, posAtual);
   };
 
@@ -55,14 +58,14 @@ const RankingTwitter = ({ dados = [], modoPrint = false }) => {
     try { localStorage.setItem(LS_KEY, JSON.stringify(nomesAtuais)); } catch {}
   }, [nomesAtuais, modoPrint]);
 
-  if (!dadosOrdenados.length) return null;
-
   return (
     <div className="w-full bg-gray-100 pb-0">
+      {/* Header */}
       <div className="w-full">
         <img src={HeaderTwitterImage} alt="Ranking Twitter Header" className="w-full object-cover" />
       </div>
 
+      {/* Lista */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
         {dadosOrdenados.map((pessoa, index) => {
           const pos = index + 1;
@@ -70,26 +73,40 @@ const RankingTwitter = ({ dados = [], modoPrint = false }) => {
 
           return (
             <div
-              key={`${pessoa.nome}-${index}`}
-              className={`flex items-center justify-between p-3 shadow hover:scale-[1.01] transition rounded-full ${isPrimeiro ? 'bg-[#FEBD11]' : 'bg-white'}`}
+              key={`${pessoa?.nome || 'sem-nome'}-${index}`}
+              className={`flex items-center justify-between p-3 shadow hover:scale-[1.01] transition rounded-full ${
+                isPrimeiro ? 'bg-[#FEBD11]' : 'bg-white'
+              }`}
             >
               <div className="flex items-center gap-3">
                 <div className="text-lg font-extrabold w-6 text-right">{pos}º</div>
                 <img
-                  src={pessoa.foto || '/placeholder.png'}
-                  alt={pessoa.nome}
-                  className={`rounded-full object-cover border-2 ${isPrimeiro ? 'w-10 h-10 border-[#F7901E]' : 'w-10 h-10 border-white'}`}
+                  src={pessoa?.foto || '/placeholder.png'}
+                  alt={pessoa?.nome}
+                  className={`rounded-full object-cover border-2 ${
+                    isPrimeiro ? 'w-10 h-10 border-[#F7901E]' : 'w-10 h-10 border-white'
+                  }`}
                 />
                 <div>
-                  <p className="font-semibold text-sm max-w-[160px] whitespace-normal break-words leading-tight">{pessoa.nome}</p>
-                  {pessoa.cargo && <p className="text-xs text-gray-500 max-w-[160px] whitespace-normal break-words leading-tight">{pessoa.cargo}</p>}
+                  <p className="font-semibold text-sm max-w-[160px] whitespace-normal break-words leading-tight">
+                    {pessoa?.nome}
+                  </p>
+                  {pessoa?.cargo && (
+                    <p className="text-xs text-gray-500 max-w-[160px] whitespace-normal break-words leading-tight">
+                      {pessoa.cargo}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
                 {getIcone(pessoa, pos)}
-                <div className={`text-sm font-bold px-3 py-1 rounded-full ${isPrimeiro ? 'bg-[#F7901E] text-white' : 'bg-gray-300 text-black'}`}>
-                  {(pessoa.seguidores ?? 0).toLocaleString()}
+                <div
+                  className={`text-sm font-bold px-3 py-1 rounded-full ${
+                    isPrimeiro ? 'bg-[#F7901E] text-white' : 'bg-gray-300 text-black'
+                  }`}
+                >
+                  {(pessoa?.seguidores ?? 0).toLocaleString()}
                 </div>
               </div>
             </div>
@@ -97,10 +114,12 @@ const RankingTwitter = ({ dados = [], modoPrint = false }) => {
         })}
       </div>
 
+      {/* Legenda */}
       <div className="max-w-7xl mx-auto flex justify-center mt-12">
         <img src={LegendaImage} alt="Legenda" className="h-10 w-auto" />
       </div>
 
+      {/* Footer */}
       <div className="w-full">
         <img src={FooterRankingImage} alt="Ranking Footer" className="w-full object-cover" />
       </div>

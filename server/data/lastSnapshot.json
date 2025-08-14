@@ -10,52 +10,52 @@
   "instagram": [
     {
       "nome": "Orleans Brandão",
-      "seguidores": 50370,
+      "seguidores": 36708,
       "foto": "/src/assets/fotos/orleans-brandao.jpeg",
       "cargo": "",
-      "variacao": 5
+      "variacao": -5
     },
     {
       "nome": "Tiago Fernandes",
-      "seguidores": 11187,
+      "seguidores": 51593,
       "foto": "/src/assets/fotos/tiago-fernandes.jpeg",
       "cargo": "",
-      "variacao": -25
+      "variacao": 25
     },
     {
       "nome": "Sérgio Antonio Mesquita Macedo",
-      "seguidores": 36708,
+      "seguidores": 11187,
       "foto": "/src/assets/fotos/sergio-antonio-mesquita-macedo.jpeg",
       "cargo": "",
-      "variacao": 19
+      "variacao": -19
     },
     {
       "nome": "Paulo Casé Fernandes",
-      "seguidores": 12965,
+      "seguidores": 6711,
       "foto": "/src/assets/fotos/paulo-case-fernandes.jpeg",
       "cargo": "",
-      "variacao": 14
+      "variacao": -14
     },
     {
       "nome": "Vinícius Ferro",
-      "seguidores": 6711,
+      "seguidores": 16921,
       "foto": "/src/assets/fotos/vinicius-ferro.jpg",
       "cargo": "",
-      "variacao": -20
+      "variacao": 20
     },
     {
       "nome": "França",
-      "seguidores": 51593,
+      "seguidores": 4515,
       "foto": "/src/assets/fotos/franca.jpeg",
       "cargo": "",
-      "variacao": 43
+      "variacao": -43
     },
     {
       "nome": "Vagtonio Brandão",
-      "seguidores": 16921,
+      "seguidores": 97760,
       "foto": "/src/assets/fotos/vagtonio-brandao.jpeg",
       "cargo": "",
-      "variacao": -16
+      "variacao": 16
     },
     {
       "nome": "Fábio Gentil",
@@ -80,10 +80,10 @@
     },
     {
       "nome": "Maurício Ribeiro Martins",
-      "seguidores": 2167,
+      "seguidores": 12965,
       "foto": "/src/assets/fotos/mauricio-ribeiro-martins.jpeg",
       "cargo": "",
-      "variacao": -31
+      "variacao": 31
     },
     {
       "nome": "Kecio Rabelo",
@@ -258,7 +258,7 @@
       "seguidores": 3795,
       "foto": "/src/assets/fotos/socorro-araujo.jpeg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Diego F M Rolim",
@@ -272,14 +272,14 @@
       "seguidores": 3573,
       "foto": "/src/assets/fotos/eliel-gama.jpg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Nordman Wall",
       "seguidores": 3028,
       "foto": "/src/assets/fotos/nordman-wall.jpeg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Lucilea Gonçalves",
@@ -307,14 +307,14 @@
       "seguidores": 3388,
       "foto": "/src/assets/fotos/sorimar-saboia.jpg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Robson Paz",
       "seguidores": 3271,
       "foto": "/src/assets/fotos/robson-paz.jpg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Valdenio Caminha",
@@ -335,7 +335,7 @@
       "seguidores": 2370,
       "foto": "/src/assets/fotos/allan-kardec-barros.jpg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Gabriel Tenório",
@@ -356,7 +356,7 @@
       "seguidores": 2761,
       "foto": "/src/assets/fotos/coronel-aldrim.jpeg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Patrick Freire",
@@ -398,14 +398,14 @@
       "seguidores": 3826,
       "foto": "/src/assets/fotos/leuzinete-pereira-da-silva.jpg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "ABIGAIL CUNHA",
-      "seguidores": 97760,
+      "seguidores": 50370,
       "foto": "/src/assets/fotos/abigail-cunha.jpg",
       "cargo": "",
-      "variacao": 3
+      "variacao": -3
     },
     {
       "nome": "Zé Reinaldo Tavares",
@@ -474,24 +474,24 @@
   "facebook": [
     {
       "nome": "Bira do Pindaré",
-      "seguidores": 9289,
+      "seguidores": 9324,
       "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
       "cargo": "",
-      "variacao": -2
+      "variacao": 2
     },
     {
       "nome": "Adriano Sarney",
-      "seguidores": 17523,
+      "seguidores": 57453,
       "foto": "/src/assets/fotos/adriano-sarney.jpg",
       "cargo": "",
-      "variacao": -2
+      "variacao": 2
     },
     {
       "nome": "Junior Marreca",
-      "seguidores": 57453,
+      "seguidores": 17523,
       "foto": "/src/assets/fotos/junior-marreca.jpeg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "França do Macaquinho",
@@ -502,17 +502,17 @@
     },
     {
       "nome": "Sebastião Madeira",
-      "seguidores": 57453,
+      "seguidores": 14250,
       "foto": "/src/assets/fotos/sebastiao-madeira.jpeg",
       "cargo": "",
-      "variacao": 1
+      "variacao": -1
     },
     {
       "nome": "Zé Reinaldo",
-      "seguidores": 14250,
+      "seguidores": 9289,
       "foto": "/src/assets/fotos/ze-reinaldo.jpg",
       "cargo": "",
-      "variacao": 2
+      "variacao": -2
     },
     {
       "nome": "Sorimar Saboia",
@@ -686,59 +686,59 @@
   "twitter": [
     {
       "nome": "Bira do Pindaré ???? ❤️",
-      "seguidores": 1887,
+      "seguidores": 4173,
       "foto": "/src/assets/fotos/bira-do-pindare.jpeg",
       "cargo": "",
-      "variacao": -3
+      "variacao": 3
     },
     {
       "nome": "Robson Paz ????",
-      "seguidores": 4079,
+      "seguidores": 5935,
       "foto": "/src/assets/fotos/robson-paz.jpg",
       "cargo": "",
-      "variacao": -2
+      "variacao": 2
     },
     {
       "nome": "Karen Taveira Barros",
-      "seguidores": 1838,
+      "seguidores": 15752,
       "foto": "/src/assets/fotos/karen-taveira-barros.jpeg",
       "cargo": "",
-      "variacao": -7
+      "variacao": 7
     },
     {
       "nome": "Gerson Pinheiro",
       "seguidores": 1887,
       "foto": "/src/assets/fotos/gerson-pinheiro.png",
       "cargo": "",
-      "variacao": -1
+      "variacao": 1
     },
     {
       "nome": "Adriano Sarney",
-      "seguidores": 1888,
+      "seguidores": 4173,
       "foto": "/src/assets/fotos/adriano-sarney.jpg",
       "cargo": "",
-      "variacao": -1
+      "variacao": 1
     },
     {
       "nome": "Sergio Sombra ??",
-      "seguidores": 15752,
+      "seguidores": 1887,
       "foto": "/src/assets/fotos/sergio-sombra.jpg",
       "cargo": "",
-      "variacao": 6
+      "variacao": -6
     },
     {
       "nome": "Allan Kardec Barros",
-      "seguidores": 4173,
+      "seguidores": 4079,
       "foto": "/src/assets/fotos/allan-kardec-barros.jpg",
       "cargo": "",
-      "variacao": 2
+      "variacao": -2
     },
     {
       "nome": "Cricielle Muniz",
-      "seguidores": 5935,
+      "seguidores": 1838,
       "foto": "/src/assets/fotos/cricielle-muniz.jpg",
       "cargo": "",
-      "variacao": 6
+      "variacao": -6
     },
     {
       "nome": "Orleans Brandão",
@@ -757,32 +757,26 @@
   ],
   "rankingGanho": [
     {
-      "nome": "Paulo Casé Fernandes",
+      "nome": "Orleans Brandão",
       "ganho": 2672,
       "cargo": "",
       "variacao": 3
     },
     {
-      "nome": "Celso Dias",
-      "ganho": 673,
+      "nome": "Tiago Fernandes",
+      "ganho": 456,
       "cargo": "",
-      "variacao": 8
+      "variacao": 3
     },
     {
       "nome": "Sérgio Antonio Mesquita Macedo",
-      "ganho": 456,
+      "ganho": 304,
       "cargo": "",
       "variacao": 0
     },
     {
-      "nome": "Orleans Brandão",
-      "ganho": 304,
-      "cargo": "",
-      "variacao": -3
-    },
-    {
-      "nome": "Tiago Fernandes",
-      "ganho": 194,
+      "nome": "Paulo Casé Fernandes",
+      "ganho": 215,
       "cargo": "",
       "variacao": -3
     },
@@ -790,31 +784,37 @@
       "nome": "Vinícius Ferro",
       "ganho": 194,
       "cargo": "",
-      "variacao": -1
-    },
-    {
-      "nome": "Fábio Gentil",
-      "ganho": 155,
-      "cargo": "",
       "variacao": 1
     },
     {
       "nome": "França",
-      "ganho": 150,
+      "ganho": 169,
       "cargo": "",
-      "variacao": -2
+      "variacao": 2
     },
     {
       "nome": "Vagtonio Brandão",
+      "ganho": 153,
+      "cargo": "",
+      "variacao": 2
+    },
+    {
+      "nome": "Fábio Gentil",
       "ganho": 150,
       "cargo": "",
-      "variacao": -2
+      "variacao": -1
     },
     {
       "nome": "Walter Canales",
       "ganho": 150,
       "cargo": "",
-      "variacao": -1
+      "variacao": 1
+    },
+    {
+      "nome": "Celso Dias",
+      "ganho": 135,
+      "cargo": "",
+      "variacao": -8
     }
   ]
 }

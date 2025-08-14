@@ -29,6 +29,7 @@ async function getLastSnapshot() {
   return null;
 }
 
+// (Mantido caso queira um botão “Publicar” depois)
 async function saveSnapshot(data) {
   try {
     await fetch(`${API}/last-snapshot`, {
@@ -124,24 +125,22 @@ const UploadRedes = ({ setDados }) => {
         base.twitter   = twitter;
 
         // ============== VARIAÇÕES (via módulo compartilhado) ====================
-        const snapshotAnterior = await getLastSnapshot(); // pega do backend
-        const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
-        // =======================================================================
 
-        // Entrega pro app
+        const snapshotAnterior = await getLastSnapshot();
+        const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
+        
+
+        // Entrega pro app (site e /print leem daqui)
+
         setDados(resultado);
 
         // Persiste localmente (site e /print usam isto)
+        
         const json = JSON.stringify(resultado);
         localStorage.setItem('relatorioSecretarias', json);
         localStorage.setItem('relatorioRedes', json);
-        // 🔸 reforça o snapshot local para o /print
-        try {
-          localStorage.setItem('lastSnapshot', JSON.stringify(resultado));
-        } catch {}
 
-        // Persiste no servidor como "último snapshot"
-        saveSnapshot(resultado); // fire-and-forget
+
       } catch (err) {
         console.error('Erro ao ler o Excel:', err);
         alert('Não foi possível processar o arquivo. Confira os nomes das abas e o formato.');
