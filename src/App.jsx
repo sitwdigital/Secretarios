@@ -14,6 +14,8 @@ import RankingTwitter from './components/sections/RankingTwitter';
 import CoverRelatorioImage from './assets/cover_Relatorio.svg';
 import EndPageRelatorioImage from './assets/endpage_Relatorio.svg';
 
+import ExportPDFButton from './components/common/ExportPDFButton';
+
 const App = ({ modoPrint = false }) => {
   const [dadosExcel, setDadosExcel] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -32,38 +34,6 @@ const App = ({ modoPrint = false }) => {
     }, 1000);
   };
 
-  // 🖨️ Exportar com Puppeteer
-  const exportarComPuppeteer = async () => {
-    try {
-      const local = localStorage.getItem('relatorioSecretarias');
-      if (!local) {
-        alert('Dados do relatório não encontrados no localStorage.');
-        return;
-      }
-
-      const response = await fetch('http://localhost:4000/gerar-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: local,
-      });
-
-      if (!response.ok) throw new Error('Erro ao gerar PDF');
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'Relatorio_Secretarias.pdf';
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Erro ao exportar com Puppeteer:', error);
-      alert('Erro ao gerar o PDF. Verifique se o servidor está rodando.');
-    }
-  };
-
   // 🔄 Salvar dados no localStorage após upload (modo normal)
   useEffect(() => {
     if (!modoPrint && dadosExcel) {
@@ -73,19 +43,18 @@ const App = ({ modoPrint = false }) => {
     }
   }, [dadosExcel, modoPrint]);
 
-  // 🖨️ Carregar dados no modoPrint (lido via Puppeteer)
+  // 🖨️ Carregar dados no modoPrint
   useEffect(() => {
     if (modoPrint) {
       const dadosSalvos = localStorage.getItem('relatorioRedes');
       if (dadosSalvos) {
         const parsed = JSON.parse(dadosSalvos);
         setDadosExcel(parsed);
-        setDataUpload(new Date()); // ou salve a data junto se quiser fixar
+        setDataUpload(new Date());
       }
     }
   }, [modoPrint]);
 
-  // ⏳ Evitar render antes de carregar os dados no modoPrint
   if (modoPrint && !dadosExcel) {
     return (
       <div className="flex items-center justify-center min-h-screen text-xl">
@@ -123,8 +92,6 @@ const App = ({ modoPrint = false }) => {
 
       {!loading && dadosExcel && (
         <>
-          {!modoPrint}
-
           {/* CAPA */}
           <div id="cover" className="relative w-full">
             <img
@@ -169,20 +136,10 @@ const App = ({ modoPrint = false }) => {
             />
           </div>
 
-          {/* SINALIZADOR PARA O PUPPETEER */}
-          {modoPrint && dadosExcel && (
-            <div id="pdf-ready" className="hidden" />
-          )}
-
-          {/* BOTÃO DE EXPORTAÇÃO */}
+          {/* BOTÃO DE EXPORTAÇÃO (React-PDF) */}
           {!modoPrint && (
             <div className="py-8 text-center bg-gray-100">
-              <button
-                onClick={exportarComPuppeteer}
-                className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-full transition border border-black"
-              >
-                📄 Exportar Relatório em PDF (Alta Qualidade)
-              </button>
+              <ExportPDFButton dados={dadosExcel} />
             </div>
           )}
 

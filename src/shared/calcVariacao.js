@@ -39,11 +39,14 @@ export function computeDelta(prevPosMap = new Map(), currPosMap = new Map()) {
  */
 export function applyDeltaInPlace(list = [], deltaMap = new Map()) {
   list.forEach((p) => {
-    const slug = slugifyNome(p?.nome ?? '');
-    p.variacao = deltaMap.get(slug) ?? 0;
+    const slug = slugifyNome(p?.nome ?? ''), delta = deltaMap.get(slug);
+    p.variacao = delta ?? 0;
   });
 }
 
+/**
+ * Aplica variações em todos os blocos de dados (ganho, instagram, facebook, twitter).
+ */
 export function aplicarVariacoesEmTudo(dadosAtuais = {}, snapshotAnterior = {}) {
   const {
     rankingGanho = [],
@@ -83,5 +86,5 @@ export function aplicarVariacoesEmTudo(dadosAtuais = {}, snapshotAnterior = {}) 
   const deltaTW = computeDelta(prevTWPos, currTWPos);
   applyDeltaInPlace(twitter, deltaTW);
 
-  return dadosAtuais;
+  return dadosAtuais;
 }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import processarRedes from '../../utils/processarRedes';
 import { fotoPorNome } from '../../utils/fotoCatalog';
-// ✅ usa a MESMA lógica de variação do site/print/servidor
+// ✅ usa a MESMA lógica de variação do site/print
 import { aplicarVariacoesEmTudo } from '../../shared/calcVariacao';
 
 // ---------- helpers de parsing ----------
@@ -15,51 +15,22 @@ const lerAba = (wb, nome) =>
 
 const nomeStr = (v) => (v ? String(v).trim() : '');
 
-// ---------- API do snapshot ----------
-const API = (import.meta.env?.VITE_API_URL || 'http://localhost:4000') + '/api';
-
-async function getLastSnapshot() {
+// ---------- Snapshot (agora só localStorage) ----------
+function getLastSnapshot() {
   try {
-    const r = await fetch(`${API}/last-snapshot`);
-    if (r.status === 200) {
-      const j = await r.json();
-      return j?.snapshot ?? null;
-    }
-  } catch (_) {}
-  return null;
+    const snapRaw = localStorage.getItem('lastSnapshot');
+    return snapRaw ? JSON.parse(snapRaw) : null;
+  } catch {
+    return null;
+  }
 }
 
-// (Mantido caso queira um botão “Publicar” depois)
-async function saveSnapshot(data) {
+function saveSnapshot(data) {
   try {
-    await fetch(`${API}/last-snapshot`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-  } catch (_) {}
+    localStorage.setItem('lastSnapshot', JSON.stringify(data));
+  } catch {}
 }
 
-// ---------- cálculo legado (não usado — mantido por compat) ----------
-function calculaMovimento(prevList = [], nextList = []) {
-  const posPrev = new Map();
-  prevList.forEach((p, i) => posPrev.set(p?.nome ?? '', i));
-  const deltas = new Map();
-  nextList.forEach((p, i) => {
-    const nome = p?.nome ?? '';
-    if (!nome) return deltas.set(nome, 0);
-    if (!posPrev.has(nome)) return deltas.set(nome, 0);
-    const prev = posPrev.get(nome);
-    deltas.set(nome, prev - i);
-  });
-  return deltas;
-}
-function aplicaDeltaNaLista(baseList = [], deltasMap = new Map()) {
-  baseList.forEach((item) => {
-    const nome = item?.nome ?? '';
-    item.variacao = deltasMap.get(nome) ?? 0;
-  });
-}
 // ---------------------------------------------------------------------
 
 const UploadRedes = ({ setDados }) => {
@@ -124,22 +95,20 @@ const UploadRedes = ({ setDados }) => {
         base.facebook  = facebook;
         base.twitter   = twitter;
 
-        // ============== VARIAÇÕES (via módulo compartilhado) ====================
-
-        const snapshotAnterior = await getLastSnapshot();
+        // ============== VARIAÇÕES ====================
+        const snapshotAnterior = getLastSnapshot();
         const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
-        
 
-        // Entrega pro app (site e /print leem daqui)
-
+        // Entrega pro app
         setDados(resultado);
 
-        // Persiste localmente (site e /print usam isto)
-        
+        // Persiste localmente (para exportação /print)
         const json = JSON.stringify(resultado);
         localStorage.setItem('relatorioSecretarias', json);
         localStorage.setItem('relatorioRedes', json);
 
+        // Atualiza lastSnapshot
+        saveSnapshot(resultado);
 
       } catch (err) {
         console.error('Erro ao ler o Excel:', err);
@@ -164,4 +133,4 @@ const UploadRedes = ({ setDados }) => {
   );
 };
 
-export default UploadRedes;
+export default UploadRedes;
