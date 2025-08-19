@@ -9,30 +9,32 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#f3f4f6",
-    flex: 1,
-    position: "relative", // necessário para usar absolute no footer
+    paddingBottom: 0,
+    position: "relative", // necessário para fixar o footer
   },
-  header: { width: "100%" },
-  footer: {
-    width: "100%",
-    position: "absolute", // 🔑 fixo no fim da página
-    bottom: 0,
+  header: { width: "100%" }, 
+  footer: { 
+    width: "100%", 
+    position: "absolute", // fixa no fim da página
+    bottom: 0, 
+    left: 0 
   },
-  legenda: {
-    width: "100%",
-    alignItems: "center",
-    marginVertical: 6,
+  legenda: { 
+    width: "100%", 
+    alignItems: "center", 
+    marginVertical: -32
   },
 
   gridLinha: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 3,
+    marginBottom: 5,
+    paddingHorizontal: 150, // margem lateral só nos cards
   },
 
-  // Cards menores
+  // 🔽 Cards mais estreitos
   card: {
-    flex: 1,
+    width: "32%", 
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -40,17 +42,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     marginHorizontal: 2,
   },
-  posicao: { fontSize: 7, fontWeight: "bold", marginRight: 3 },
-  foto: { width: 18, height: 18, borderRadius: 9, marginRight: 3 },
-  nomeCargo: { flexDirection: "column", maxWidth: 80 },
-  nome: { fontSize: 7, fontWeight: "semibold" },
+  posicao: { fontSize: 9, fontWeight: "bold", marginRight: 4 },
+  foto: { width: 22, height: 22, borderRadius: 11, marginRight: 4 },
+  nomeCargo: { flexDirection: "column", maxWidth: 90 },
+  nome: { fontSize: 7, },
   cargo: { fontSize: 6, color: "gray" },
   seguidoresBox: {
-    fontSize: 7,
+    fontSize: 9,
     fontWeight: "bold",
-    paddingHorizontal: 3,
-    paddingVertical: 1,
-    borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 8,
     textAlign: "center",
   },
 });
@@ -113,8 +115,8 @@ const RankingInstagramPDF = ({ dados = [] }) => {
       {/* Header */}
       <Image src={headerImg} style={styles.header} />
 
-      {/* Conteúdo */}
-      <View style={{ marginTop: 6, marginBottom: 60 /* deixa espaço pro footer */ }}>
+      {/* Cards */}
+      <View style={{ marginTop: 8, marginBottom: 40 /* reserva espaço pro footer */ }}>
         {linhas.map((linha, i) => (
           <View key={i} style={styles.gridLinha}>
             <CardPessoaPDF pessoa={linha.esquerda} posicao={i + 1} />
@@ -122,10 +124,11 @@ const RankingInstagramPDF = ({ dados = [] }) => {
             <CardPessoaPDF pessoa={linha.direita} posicao={i + 23} />
           </View>
         ))}
+      </View>
 
-        <View style={styles.legenda}>
-          <Image src={legendaImg} style={{ height: 15 }} />
-        </View>
+      {/* Legenda */}
+      <View style={styles.legenda}>
+        <Image src={legendaImg} style={{ height: 15 }} />
       </View>
 
       {/* Footer fixo */}
