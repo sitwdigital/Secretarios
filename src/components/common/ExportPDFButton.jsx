@@ -7,6 +7,8 @@ const ExportPDFButton = () => {
   const local = localStorage.getItem('relatorioSecretarias');
   const dados = local ? JSON.parse(local) : null;
 
+  const dataRelatorio = new Date().toLocaleDateString("pt-BR");
+
   if (!dados) {
     return (
       <div className="flex justify-center my-6">
@@ -20,7 +22,7 @@ const ExportPDFButton = () => {
   return (
     <div className="flex justify-center my-6">
       <PDFDownloadLink
-        document={<PDFDocument dados={dados} />}
+        document={<PDFDocument dados={dados} dataRelatorio={dataRelatorio} />}
         fileName="Relatorio_Secretarias.pdf"
         className="bg-green-600 text-white px-6 py-2 rounded-full shadow hover:bg-green-700 transition"
       >

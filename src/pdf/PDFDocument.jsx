@@ -1,43 +1,84 @@
 // src/pdf/PDFDocument.jsx
 import React from "react";
-import { Page, Document, Image, StyleSheet } from "@react-pdf/renderer";
+import { Page, Document, Image, StyleSheet, Text, View } from "@react-pdf/renderer";
 
-// import da página de Instagram
+// import das páginas
+import RankingGanhoSeguidoresPDF from "./RankingGanhoSeguidoresPDF";
 import RankingInstagramPDF from "./RankingInstagramPDF";
-// (depois você cria também: RankingGanhoPDF, RankingFacebookPDF, RankingTwitterPDF)
+import RankingFacebookPDF from "./RankingFacebookPDF";
+import RankingTwitterPDF from "./RankingTwitterPDF";
 
 const styles = StyleSheet.create({
   fullPage: { width: "100%", height: "100%" },
+  overlayContainer: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+  },
+  dataOverlay: {
+    position: "absolute",
+    left: 60,   // ajuste horizontal
+    top: 370,   // ajuste vertical
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#000",
+  },
 });
 
-// ====== DOCUMENTO PDF ======
-const PDFDocument = ({ dados = {} }) => (
-  <Document>
-    {/* Página 1: Capa */}
-    <Page size="A4" orientation="landscape">
-      <Image src="/pdf-assets/cover_Relatorio.png" style={styles.fullPage} />
-    </Page>
+// Função para adicionar fotos ao ranking de ganho
+const enrichRankingGanho = (rankingGanho, instagram, facebook, twitter) => {
+  const todos = [...(instagram || []), ...(facebook || []), ...(twitter || [])];
 
-    {/* Página 2: Ranking Ganho de Seguidores (futuro) */}
-    {/* <RankingGanhoPDF dados={dados.rankingGanho} /> */}
+  return rankingGanho.map((p) => {
+    const match = todos.find((x) => x.nome === p.nome);
+    return {
+      ...p,
+      foto: match?.foto || null,
+    };
+  });
+};
 
-    {/* Página 3: Instagram (Top 33) */}
-    <RankingInstagramPDF dados={dados.instagram} />
+const PDFDocument = ({ dados = {}, dataRelatorio }) => {
+  const rankingGanhoEnriquecido = Array.isArray(dados.rankingGanho)
+    ? enrichRankingGanho(dados.rankingGanho, dados.instagram, dados.facebook, dados.twitter)
+    : [];
 
-    {/* Página 4: Instagram (34–66) -> duplicar depois */}
-    {/* <RankingInstagramPDF dados={dados.instagram.slice(33, 66)} /> */}
+  return (
+    <Document>
+      {/* Página 1: Capa com data sobreposta */}
+      <Page size="A4" orientation="landscape">
+        <View style={styles.overlayContainer}>
+          <Image src="/pdf-assets/cover_Relatorio.png" style={styles.fullPage} />
+          {dataRelatorio && <Text style={styles.dataOverlay}>{dataRelatorio}</Text>}
+        </View>
+      </Page>
 
-    {/* Página 5: Facebook (futuro) */}
-    {/* <RankingFacebookPDF dados={dados.facebook} /> */}
+      {/* Página 2: Ranking Ganho de Seguidores */}
+      {rankingGanhoEnriquecido.length > 0 && (
+        <RankingGanhoSeguidoresPDF dados={rankingGanhoEnriquecido} />
+      )}
 
-    {/* Página 6: Twitter (futuro) */}
-    {/* <RankingTwitterPDF dados={dados.twitter} /> */}
+      {/* Instagram */}
+      {Array.isArray(dados.instagram) && dados.instagram.length > 0 && (
+        <RankingInstagramPDF dados={dados.instagram} />
+      )}
 
-    {/* Página 7: Endpage */}
-    <Page size="A4" orientation="landscape">
-      <Image src="/pdf-assets/endpage_Relatorio.png" style={styles.fullPage} />
-    </Page>
-  </Document>
-);
+      {/* Facebook */}
+      {Array.isArray(dados.facebook) && dados.facebook.length > 0 && (
+        <RankingFacebookPDF dados={dados.facebook} />
+      )}
+
+      {/* Twitter */}
+      {Array.isArray(dados.twitter) && dados.twitter.length > 0 && (
+        <RankingTwitterPDF dados={dados.twitter} />
+      )}
+
+      {/* Página final: Endpage */}
+      <Page size="A4" orientation="landscape">
+        <Image src="/pdf-assets/endpage_Relatorio.png" style={styles.fullPage} />
+      </Page>
+    </Document>
+  );
+};
 
 export default PDFDocument;

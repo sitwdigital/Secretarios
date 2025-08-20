@@ -1,7 +1,7 @@
-// src/pdf/RankingInstagramPDF.jsx
+// src/pdf/RankingFacebookPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
-const headerImg = "/pdf-assets/header_Relatorio_Insta.png";
+const headerImg = "/pdf-assets/header_Relatorio_Facebook.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA.png";
 
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   gridLinhaCentro: {
     flexDirection: "row",
-    justifyContent: "center", // 🔥 centralizar quando só tiver 1–2 colunas
+    justifyContent: "center", // 🔥 centralizar quando tiver 1–2 colunas
     marginBottom: 5,
     paddingHorizontal: 60,
   },
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
   seguidoresText: {
     fontSize: 9,
     fontWeight: "bold",
-    color: "white",
     textAlign: "center",
+    color: "white",
   },
 });
 
@@ -86,17 +86,15 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
 
-  // escolher ícone de status
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
   return (
     <View
       style={[
         styles.card,
-        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" }, // destaque 1º
+        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
       ]}
     >
-      {/* Nome + Foto */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
         {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
@@ -106,7 +104,6 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
       </View>
 
-      {/* Seguidores */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {iconeStatus && (
           <Image
@@ -129,22 +126,22 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   );
 };
 
-// ====== Ranking Instagram
-const RankingInstagramPDF = ({ dados = [] }) => {
+// ====== Páginas do Ranking Facebook
+const RankingFacebookPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // converter variacao -> status
+  // adicionar status
   const dadosComStatus = dados.map((p) => ({
     ...p,
     status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : "manteve",
   }));
 
-  // ordenar desc por seguidores
+  // ordenar por seguidores
   const ordenados = [...dadosComStatus].sort(
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // dividir em blocos de 33 por página
+  // dividir em blocos de 33 (11x3 por página)
   const blocos = [];
   for (let i = 0; i < ordenados.length; i += 33) {
     blocos.push(ordenados.slice(i, i + 33));
@@ -152,10 +149,10 @@ const RankingInstagramPDF = ({ dados = [] }) => {
 
   return (
     <>
-      {blocos.map((bloco, pageIndex) => {
-        const col1 = bloco.slice(0, 11);
-        const col2 = bloco.slice(11, 22);
-        const col3 = bloco.slice(22, 33);
+      {blocos.map((grupo, pageIndex) => {
+        const col1 = grupo.slice(0, 11);
+        const col2 = grupo.slice(11, 22);
+        const col3 = grupo.slice(22, 33);
 
         const linhas = Array.from({ length: 11 }, (_, i) => {
           const esquerda = col1[i];
@@ -233,4 +230,4 @@ const RankingInstagramPDF = ({ dados = [] }) => {
   );
 };
 
-export default RankingInstagramPDF;
+export default RankingFacebookPDF;
