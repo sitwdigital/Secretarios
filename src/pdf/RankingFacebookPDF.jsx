@@ -5,11 +5,10 @@ const headerImg = "/pdf-assets/header_Relatorio_Facebook.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA.png";
 
-// ícones de status
+// ícones de status (🔥 sem manteve)
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
-  manteve: "/pdf-assets/MANTEVE.png",
 };
 
 const styles = StyleSheet.create({
@@ -86,6 +85,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
 
+  // 🔥 só mostra ganhou ou perdeu
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
   return (
@@ -130,10 +130,10 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
 const RankingFacebookPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // adicionar status
+  // 🔥 status só ganhou/perdeu
   const dadosComStatus = dados.map((p) => ({
     ...p,
-    status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : "manteve",
+    status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : null,
   }));
 
   // ordenar por seguidores

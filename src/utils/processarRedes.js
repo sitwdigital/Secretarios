@@ -1,4 +1,5 @@
-export default function processarRedes(insta, face, tw, planilha4 = []) {
+// src/utils/processarRedes.js
+export default function processarRedes(insta, face, tw, somaSeguidores = []) {
   const mapa = new Map();
 
   const somar = (arr, rede) => {
@@ -28,15 +29,16 @@ export default function processarRedes(insta, face, tw, planilha4 = []) {
 
   const lista = Array.from(mapa.values());
 
-  const rankingGanho = planilha4
-    .filter(row => row['GANHO DE SEGUIDORES']) // somente linhas válidas
+  // ✅ Usa a aba "SOMA SEGUIDORES" com cabeçalho fixo
+  const rankingGanho = somaSeguidores
+    .filter(row => row['NOME'] && row['SOMA'])
     .map(row => ({
-      nome: row['SECRETÁRIO']?.trim(),
-      ganho: parseFloat(row['GANHO DE SEGUIDORES']) || 0,
-      cargo: '', // você pode popular com outro campo se quiser
+      nome: String(row['NOME']).trim(),
+      ganho: parseFloat(row['SOMA']) || 0,
+      cargo: '',
     }))
     .sort((a, b) => b.ganho - a.ganho)
-    .slice(0, 10); // pega os 10 maiores
+    .slice(0, 10);
 
   return {
     top10: [...lista].sort((a, b) => b.total - a.total).slice(0, 10),

@@ -1,6 +1,12 @@
 // src/pdf/PDFDocument.jsx
 import React from "react";
-import { Page, Document, Image, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Page, Document, Image, StyleSheet, Text, View, Font } from "@react-pdf/renderer";
+
+Font.register({
+  family: "AMSIPRO",
+  src: "/fonts/AMSIPRO-SEMIBOLD.OTF", // ✅ usa apenas a que você tem
+  fontWeight: "semibold",
+});
 
 // import das páginas
 import RankingGanhoSeguidoresPDF from "./RankingGanhoSeguidoresPDF";
@@ -17,15 +23,16 @@ const styles = StyleSheet.create({
   },
   dataOverlay: {
     position: "absolute",
-    left: 60,   // ajuste horizontal
-    top: 370,   // ajuste vertical
-    fontSize: 22,
-    fontWeight: "bold",
+    left: 50,   
+    top: 370,   
+    fontSize: 24,
+    fontFamily: "AMSIPRO",   
+    fontWeight: "semibold",  
     color: "#000",
   },
 });
 
-// Função para adicionar fotos ao ranking de ganho
+
 const enrichRankingGanho = (rankingGanho, instagram, facebook, twitter) => {
   const todos = [...(instagram || []), ...(facebook || []), ...(twitter || [])];
 
