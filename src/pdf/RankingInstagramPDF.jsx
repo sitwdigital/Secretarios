@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingBottom: 0,
     position: "relative",
+    fontFamily: "AMSIPRO",
   },
   header: { width: "100%" },
   footer: {
@@ -28,31 +29,32 @@ const styles = StyleSheet.create({
   legenda: {
     width: "100%",
     alignItems: "center",
-    marginVertical: -32,
+    position: "absolute",  
+    bottom: 90,
+  },
+  gridContainer: {
+    flex: 1,
+    justifyContent: "flex-start", // mantém alinhado a partir do topo útil
+    paddingHorizontal: 60,
+    marginTop: 10,               
+    paddingBottom: 60,            
   },
   gridLinha: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
-    paddingHorizontal: 60,
-  },
-  gridLinhaCentro: {
-    flexDirection: "row",
-    justifyContent: "center", // 🔥 centralizar quando só tiver 1–2 colunas
-    marginBottom: 5,
-    paddingHorizontal: 60,
+    marginBottom: 12,
   },
   card: {
     width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
     borderRadius: 18,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
   },
-  posicao: { fontSize: 9, fontWeight: "bold", marginRight: 6 },
+  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
   foto: {
     width: 22,
     height: 22,
@@ -61,41 +63,37 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
   nomeCargo: { flexDirection: "column", maxWidth: 90 },
-  nome: { fontSize: 8 },
+  nome: { fontSize: 8, fontWeight: "semibold" },
   cargo: { fontSize: 6, color: "gray" },
-
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    height: 22,   
     justifyContent: "center",
     alignItems: "center",
   },
   seguidoresText: {
     fontSize: 9,
-    fontWeight: "bold",
+    fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-  },
+    marginTop: 2, // Ajuste altura letras dentro
+  }, 
 });
 
 // ====== Card
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
-
-  // escolher ícone de status (não mostra manteve)
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
   return (
     <View
       style={[
         styles.card,
-        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" }, // destaque 1º
+        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
       ]}
     >
-      {/* Nome + Foto */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
         {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
@@ -105,7 +103,6 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
       </View>
 
-      {/* Seguidores */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {iconeStatus && (
           <Image
@@ -132,39 +129,33 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
 const RankingInstagramPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // converter variacao -> status (🔥 não gera status se manteve)
   const dadosComStatus = dados.map((p) => ({
     ...p,
     status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : null,
   }));
 
-  // ordenar desc por seguidores
   const ordenados = [...dadosComStatus].sort(
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // dividir em blocos de 33 por página
+  // blocos de 24 (8 + 8 + 8)
   const blocos = [];
-  for (let i = 0; i < ordenados.length; i += 33) {
-    blocos.push(ordenados.slice(i, i + 33));
+  for (let i = 0; i < ordenados.length; i += 24) {
+    blocos.push(ordenados.slice(i, i + 24));
   }
 
   return (
     <>
       {blocos.map((bloco, pageIndex) => {
-        const col1 = bloco.slice(0, 11);
-        const col2 = bloco.slice(11, 22);
-        const col3 = bloco.slice(22, 33);
+        const col1 = bloco.slice(0, 8);
+        const col2 = bloco.slice(8, 16);
+        const col3 = bloco.slice(16, 24);
 
-        const linhas = Array.from({ length: 11 }, (_, i) => {
-          const esquerda = col1[i];
-          const centro = col2[i];
-          const direita = col3[i];
-
-          const qtdColunas = [esquerda, centro, direita].filter(Boolean).length;
-
-          return { esquerda, centro, direita, qtdColunas };
-        });
+        const linhas = Array.from({ length: 8 }, (_, i) => ({
+          esquerda: col1[i],
+          centro: col2[i],
+          direita: col3[i],
+        }));
 
         return (
           <Page
@@ -173,20 +164,13 @@ const RankingInstagramPDF = ({ dados = [] }) => {
             orientation="landscape"
             style={styles.page}
           >
-            {/* Header */}
             <Image src={headerImg} style={styles.header} />
 
-            {/* Cards */}
-            <View style={{ marginTop: 8, marginBottom: 40 }}>
+            <View style={styles.gridContainer}>
               {linhas.map((linha, i) => {
-                const posBase = pageIndex * 33;
-                const containerStyle =
-                  linha.qtdColunas < 3
-                    ? styles.gridLinhaCentro
-                    : styles.gridLinha;
-
+                const posBase = pageIndex * 24;
                 return (
-                  <View key={i} style={containerStyle}>
+                  <View key={i} style={styles.gridLinha}>
                     {linha.esquerda ? (
                       <CardPessoaPDF
                         pessoa={linha.esquerda}
@@ -199,7 +183,7 @@ const RankingInstagramPDF = ({ dados = [] }) => {
                     {linha.centro ? (
                       <CardPessoaPDF
                         pessoa={linha.centro}
-                        posicao={posBase + i + 12}
+                        posicao={posBase + i + 9}
                       />
                     ) : (
                       <View style={{ width: "40%" }} />
@@ -208,7 +192,7 @@ const RankingInstagramPDF = ({ dados = [] }) => {
                     {linha.direita ? (
                       <CardPessoaPDF
                         pessoa={linha.direita}
-                        posicao={posBase + i + 23}
+                        posicao={posBase + i + 17}
                       />
                     ) : (
                       <View style={{ width: "40%" }} />
@@ -218,12 +202,10 @@ const RankingInstagramPDF = ({ dados = [] }) => {
               })}
             </View>
 
-            {/* Legenda */}
             <View style={styles.legenda}>
-              <Image src={legendaImg} style={{ height: 15 }} />
+              <Image src={legendaImg} style={{ height: 20 }} />
             </View>
 
-            {/* Footer */}
             <Image src={footerImg} style={styles.footer} />
           </Page>
         );

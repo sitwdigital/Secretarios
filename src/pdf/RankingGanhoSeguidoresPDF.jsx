@@ -1,10 +1,10 @@
+// src/pdf/RankingGanhoSeguidoresPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
-const headerImg = "/pdf-assets/header_Relatorio_Ranking.png"; // ✅ header específico
+const headerImg = "/pdf-assets/header_Relatorio_Ranking.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
-const legendaImg = "/pdf-assets/LEGENDA_2.png"; // ✅ legenda diferente
+const legendaImg = "/pdf-assets/LEGENDA_2.png";
 
-// Ícones de status
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#fff",
     position: "relative",
+    fontFamily: "AMSIPRO",
   },
   header: { width: "100%" },
   footer: {
@@ -27,24 +28,31 @@ const styles = StyleSheet.create({
   legenda: {
     width: "100%",
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    position: "absolute",
+    bottom: 90, // 🔥 mesma altura dos outros
   },
+
+  tituloContainer: {
+    alignItems: "center",
+    marginTop: 14,
+    marginBottom: 10,
+  },
+  titulo: { fontSize: 14, fontWeight: "semibold" },
 
   grid: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 30,
-    paddingHorizontal: 40,
+    paddingHorizontal: 60,
+    marginTop: 10,
+    marginBottom: 40, // 🔥 dá espaço antes da legenda
   },
   col: {
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    gap: 8,
   },
 
+  // 🔥 NÃO mexi nos estilos dos cards
   card: {
     width: "85%",
     flexDirection: "row",
@@ -56,7 +64,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     backgroundColor: "#E1E1E5",
   },
-  posicao: { fontSize: 11, fontWeight: "bold", marginRight: 6 },
+  posicao: { fontSize: 11, fontWeight: "semibold", marginRight: 6 },
   foto: {
     width: 28,
     height: 28,
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
   nomeCargo: { flexDirection: "column", maxWidth: 120 },
-  nome: { fontSize: 9, fontWeight: "bold" },
+  nome: { fontSize: 9, fontWeight: "semibold" },
   cargo: { fontSize: 7, color: "gray" },
 
   seguidoresContainer: {
@@ -78,13 +86,12 @@ const styles = StyleSheet.create({
   },
   seguidoresText: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: "semibold",
     color: "white",
     textAlign: "center",
   },
 });
 
-// ====== Card
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
@@ -128,11 +135,9 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   );
 };
 
-// ====== Página única Ranking Ganho de Seguidores
 const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // status baseado em variacao
   const dadosComStatus = dados.map((p) => ({
     ...p,
     status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : "manteve",
@@ -143,17 +148,14 @@ const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
 
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>
-      {/* Header */}
       <Image src={headerImg} style={styles.header} />
 
-      {/* Título */}
-      <View style={{ alignItems: "center", marginTop: 12 }}>
-        <Text style={{ fontSize: 14, fontWeight: "bold" }}>
-          Soma de seguidores nas redes
-        </Text>
+      {/* título centralizado */}
+      <View style={styles.tituloContainer}>
+        <Text style={styles.titulo}>Soma de seguidores nas redes</Text>
       </View>
 
-      {/* Grid 2 colunas */}
+      {/* grid centralizado */}
       <View style={styles.grid}>
         <View style={styles.col}>
           {esquerda.map((pessoa, i) => (
@@ -167,12 +169,11 @@ const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
         </View>
       </View>
 
-      {/* Legenda */}
+      {/* legenda fixa acima do footer */}
       <View style={styles.legenda}>
         <Image src={legendaImg} style={{ height: 18 }} />
       </View>
 
-      {/* Footer */}
       <Image src={footerImg} style={styles.footer} />
     </Page>
   );

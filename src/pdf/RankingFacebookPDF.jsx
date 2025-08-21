@@ -5,7 +5,7 @@ const headerImg = "/pdf-assets/header_Relatorio_Facebook.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA.png";
 
-// ícones de status (🔥 sem manteve)
+// ícones de status
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingBottom: 0,
     position: "relative",
+    fontFamily: "AMSIPRO",
   },
   header: { width: "100%" },
   footer: {
@@ -28,31 +29,32 @@ const styles = StyleSheet.create({
   legenda: {
     width: "100%",
     alignItems: "center",
-    marginVertical: -32,
+    position: "absolute",
+    bottom: 90,
+  },
+  gridContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: 60,
+    marginTop: 10,
+    paddingBottom: 60,
   },
   gridLinha: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
-    paddingHorizontal: 60,
-  },
-  gridLinhaCentro: {
-    flexDirection: "row",
-    justifyContent: "center", // 🔥 centralizar quando tiver 1–2 colunas
-    marginBottom: 5,
-    paddingHorizontal: 60,
+    marginBottom: 12,
   },
   card: {
     width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
     borderRadius: 18,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
   },
-  posicao: { fontSize: 9, fontWeight: "bold", marginRight: 6 },
+  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
   foto: {
     width: 22,
     height: 22,
@@ -61,22 +63,21 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
   nomeCargo: { flexDirection: "column", maxWidth: 90 },
-  nome: { fontSize: 8 },
+  nome: { fontSize: 8, fontWeight: "semibold" },
   cargo: { fontSize: 6, color: "gray" },
-
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    height: 22, // altura fixa
     justifyContent: "center",
     alignItems: "center",
   },
   seguidoresText: {
     fontSize: 9,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: "semibold",
     color: "white",
+    textAlign: "center",
+    marginTop: 2, // 🔥 abaixa só o número
   },
 });
 
@@ -84,8 +85,6 @@ const styles = StyleSheet.create({
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
-
-  // 🔥 só mostra ganhou ou perdeu
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
   return (
@@ -95,6 +94,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
       ]}
     >
+      {/* Nome + Foto */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
         {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
@@ -104,6 +104,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
       </View>
 
+      {/* Seguidores */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {iconeStatus && (
           <Image
@@ -126,43 +127,37 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   );
 };
 
-// ====== Páginas do Ranking Facebook
+// ====== Ranking Facebook
 const RankingFacebookPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // 🔥 status só ganhou/perdeu
   const dadosComStatus = dados.map((p) => ({
     ...p,
     status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : null,
   }));
 
-  // ordenar por seguidores
   const ordenados = [...dadosComStatus].sort(
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // dividir em blocos de 33 (11x3 por página)
+  // 🔥 blocos de 24 (8 + 8 + 8)
   const blocos = [];
-  for (let i = 0; i < ordenados.length; i += 33) {
-    blocos.push(ordenados.slice(i, i + 33));
+  for (let i = 0; i < ordenados.length; i += 24) {
+    blocos.push(ordenados.slice(i, i + 24));
   }
 
   return (
     <>
-      {blocos.map((grupo, pageIndex) => {
-        const col1 = grupo.slice(0, 11);
-        const col2 = grupo.slice(11, 22);
-        const col3 = grupo.slice(22, 33);
+      {blocos.map((bloco, pageIndex) => {
+        const col1 = bloco.slice(0, 8);
+        const col2 = bloco.slice(8, 16);
+        const col3 = bloco.slice(16, 24);
 
-        const linhas = Array.from({ length: 11 }, (_, i) => {
-          const esquerda = col1[i];
-          const centro = col2[i];
-          const direita = col3[i];
-
-          const qtdColunas = [esquerda, centro, direita].filter(Boolean).length;
-
-          return { esquerda, centro, direita, qtdColunas };
-        });
+        const linhas = Array.from({ length: 8 }, (_, i) => ({
+          esquerda: col1[i],
+          centro: col2[i],
+          direita: col3[i],
+        }));
 
         return (
           <Page
@@ -171,20 +166,14 @@ const RankingFacebookPDF = ({ dados = [] }) => {
             orientation="landscape"
             style={styles.page}
           >
-            {/* Header */}
             <Image src={headerImg} style={styles.header} />
 
-            {/* Cards */}
-            <View style={{ marginTop: 8, marginBottom: 40 }}>
+            {/* Grid centralizado */}
+            <View style={styles.gridContainer}>
               {linhas.map((linha, i) => {
-                const posBase = pageIndex * 33;
-                const containerStyle =
-                  linha.qtdColunas < 3
-                    ? styles.gridLinhaCentro
-                    : styles.gridLinha;
-
+                const posBase = pageIndex * 24;
                 return (
-                  <View key={i} style={containerStyle}>
+                  <View key={i} style={styles.gridLinha}>
                     {linha.esquerda ? (
                       <CardPessoaPDF
                         pessoa={linha.esquerda}
@@ -197,7 +186,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
                     {linha.centro ? (
                       <CardPessoaPDF
                         pessoa={linha.centro}
-                        posicao={posBase + i + 12}
+                        posicao={posBase + i + 9}
                       />
                     ) : (
                       <View style={{ width: "40%" }} />
@@ -206,7 +195,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
                     {linha.direita ? (
                       <CardPessoaPDF
                         pessoa={linha.direita}
-                        posicao={posBase + i + 23}
+                        posicao={posBase + i + 17}
                       />
                     ) : (
                       <View style={{ width: "40%" }} />
@@ -218,7 +207,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
 
             {/* Legenda */}
             <View style={styles.legenda}>
-              <Image src={legendaImg} style={{ height: 15 }} />
+              <Image src={legendaImg} style={{ height: 20 }} />
             </View>
 
             {/* Footer */}

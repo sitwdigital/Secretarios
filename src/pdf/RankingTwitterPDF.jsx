@@ -5,7 +5,7 @@ const headerImg = "/pdf-assets/header_Relatorio_X.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA.png";
 
-// Ícones de status (🔥 sem manteve)
+// Ícones de status
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingBottom: 0,
     position: "relative",
+    fontFamily: "AMSIPRO",
   },
   header: { width: "100%" },
   footer: {
@@ -28,25 +29,32 @@ const styles = StyleSheet.create({
   legenda: {
     width: "100%",
     alignItems: "center",
-    marginVertical: -32,
+    position: "absolute",
+    bottom: 90, // sobe legenda um pouco
+  },
+  gridContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingHorizontal: 60,
+    marginTop: 10,
+    paddingBottom: 60,
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "center", // 👈 garante centralização
-    marginBottom: 5,
-    paddingHorizontal: 60,
+    justifyContent: "space-between",
+    marginBottom: 12,
   },
   card: {
     width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
     borderRadius: 18,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
   },
-  posicao: { fontSize: 9, fontWeight: "bold", marginRight: 6 },
+  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
   foto: {
     width: 22,
     height: 22,
@@ -55,22 +63,21 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
   nomeCargo: { flexDirection: "column", maxWidth: 90 },
-  nome: { fontSize: 8 },
+  nome: { fontSize: 8, fontWeight: "semibold" },
   cargo: { fontSize: 6, color: "gray" },
-
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    height: 22, // altura fixa para centralizar
     justifyContent: "center",
     alignItems: "center",
   },
   seguidoresText: {
     fontSize: 9,
-    fontWeight: "bold",
+    fontWeight: "semibold",
     color: "white",
     textAlign: "center",
+    marginTop: 2, // 🔥 desce só o número dentro do container
   },
 });
 
@@ -78,8 +85,6 @@ const styles = StyleSheet.create({
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
-
-  // escolher ícone de status (🔥 não mostra manteve)
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
   return (
@@ -89,6 +94,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
       ]}
     >
+      {/* Nome + Foto */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
         {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
@@ -98,6 +104,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
       </View>
 
+      {/* Seguidores */}
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {iconeStatus && (
           <Image
@@ -124,7 +131,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
 const RankingTwitterPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  // 🔥 não cria status "manteve"
+  // sem "manteve"
   const dadosComStatus = dados.map((p) => ({
     ...p,
     status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : null,
@@ -134,27 +141,20 @@ const RankingTwitterPDF = ({ dados = [] }) => {
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // blocos de 33
+  // 🔥 blocos de 24 (8 + 8 + 8)
   const blocos = [];
-  for (let i = 0; i < ordenados.length; i += 33) {
-    blocos.push(ordenados.slice(i, i + 33));
+  for (let i = 0; i < ordenados.length; i += 24) {
+    blocos.push(ordenados.slice(i, i + 24));
   }
 
   return (
     <>
       {blocos.map((bloco, pageIndex) => {
-        const posBase = pageIndex * 33;
+        const col1 = bloco.slice(0, 8);
+        const col2 = bloco.slice(8, 16);
+        const col3 = bloco.slice(16, 24);
 
-        // decide número de colunas
-        let colunas = 3;
-        if (bloco.length <= 11) colunas = 1;
-        else if (bloco.length <= 22) colunas = 2;
-
-        const col1 = bloco.slice(0, 11);
-        const col2 = colunas > 1 ? bloco.slice(11, 22) : [];
-        const col3 = colunas > 2 ? bloco.slice(22, 33) : [];
-
-        const linhas = Array.from({ length: 11 }, (_, i) => ({
+        const linhas = Array.from({ length: 8 }, (_, i) => ({
           esquerda: col1[i],
           centro: col2[i],
           direita: col3[i],
@@ -169,33 +169,49 @@ const RankingTwitterPDF = ({ dados = [] }) => {
           >
             <Image src={headerImg} style={styles.header} />
 
-            <View style={{ marginTop: 8, marginBottom: 40 }}>
-              {linhas.map((linha, i) => (
-                <View
-                  key={i}
-                  style={[
-                    styles.gridLinha,
-                    colunas === 1 && { justifyContent: "center" },
-                    colunas === 2 && { justifyContent: "space-evenly" },
-                  ]}
-                >
-                  {linha.esquerda && (
-                    <CardPessoaPDF pessoa={linha.esquerda} posicao={posBase + i + 1} />
-                  )}
-                  {colunas > 1 && linha.centro && (
-                    <CardPessoaPDF pessoa={linha.centro} posicao={posBase + i + 12} />
-                  )}
-                  {colunas > 2 && linha.direita && (
-                    <CardPessoaPDF pessoa={linha.direita} posicao={posBase + i + 23} />
-                  )}
-                </View>
-              ))}
+            {/* Grid centralizado */}
+            <View style={styles.gridContainer}>
+              {linhas.map((linha, i) => {
+                const posBase = pageIndex * 24;
+                return (
+                  <View key={i} style={styles.gridLinha}>
+                    {linha.esquerda ? (
+                      <CardPessoaPDF
+                        pessoa={linha.esquerda}
+                        posicao={posBase + i + 1}
+                      />
+                    ) : (
+                      <View style={{ width: "40%" }} />
+                    )}
+
+                    {linha.centro ? (
+                      <CardPessoaPDF
+                        pessoa={linha.centro}
+                        posicao={posBase + i + 9}
+                      />
+                    ) : (
+                      <View style={{ width: "40%" }} />
+                    )}
+
+                    {linha.direita ? (
+                      <CardPessoaPDF
+                        pessoa={linha.direita}
+                        posicao={posBase + i + 17}
+                      />
+                    ) : (
+                      <View style={{ width: "40%" }} />
+                    )}
+                  </View>
+                );
+              })}
             </View>
 
+            {/* Legenda */}
             <View style={styles.legenda}>
-              <Image src={legendaImg} style={{ height: 15 }} />
+              <Image src={legendaImg} style={{ height: 20 }} />
             </View>
 
+            {/* Footer */}
             <Image src={footerImg} style={styles.footer} />
           </Page>
         );

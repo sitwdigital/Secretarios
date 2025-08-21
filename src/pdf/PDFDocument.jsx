@@ -4,7 +4,7 @@ import { Page, Document, Image, StyleSheet, Text, View, Font } from "@react-pdf/
 
 Font.register({
   family: "AMSIPRO",
-  src: "/fonts/AMSIPRO-SEMIBOLD.OTF", // ✅ usa apenas a que você tem
+  src: "/fonts/AMSIPRO-SEMIBOLD.ttf", // ✅ usa apenas a que você tem
   fontWeight: "semibold",
 });
 
