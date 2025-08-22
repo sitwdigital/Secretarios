@@ -12,26 +12,15 @@ const iconesStatus = {
   perdeu: "/pdf-assets/PERDEU.png",
 };
 
-// Lista fixa de pessoas verificadas (confere com coluna SECRETÁRIO)
 const verificados = [
-  "Orleans Brandão", 
-  "Tiago Fernandes",
-  "Jandira Dias",
-  "Vinícius Ferro",
-  "Cricielle Muniz",
-  "Rubens Pereira",
-  "Yuri Arruda",
-  "Fábio Gentil",
-  "Abigail Cunha",
-  "Bira do Pindaré",
-  "Karen Taveira Barros",
-  "Adriano Sarney",
-  "Sebastião Madeira",
-  "Maurício Martins",
-  "Junior Marreca",
-  "Coronel Célio Roberto",
-  "Gabriel Tenorio",
-  "Cassiano Pereira",
+  "Orleans Brandão", "Tiago Fernandes", "Jandira Dias", "Vinícius Ferro",
+    "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
+    "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
+    "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
+    "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
+    "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
+    "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
+    "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
 ];
 
 const styles = StyleSheet.create({
