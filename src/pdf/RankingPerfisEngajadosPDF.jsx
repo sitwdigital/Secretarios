@@ -5,6 +5,16 @@ const headerImg = "/pdf-assets/Perfismaisengajados.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const iconInsta = "/pdf-assets/instagram.png";
 
+// função utilitária: gera caminho da foto a partir do nome
+const normalizarNome = (nome) =>
+  nome
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .replace(/\s+/g, "-"); // troca espaço por hífen
+
+const getFotoPath = (nome) => `/assets/fotos/${normalizarNome(nome)}.jpg`;
+
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
@@ -33,7 +43,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     position: "relative",
   },
-  // linhas horizontais de referência
   gridLine: {
     position: "absolute",
     left: 0,
@@ -53,9 +62,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   foto: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     marginBottom: 3,
   },
   bar: {
@@ -77,7 +86,7 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
   const engajados = dados.slice(0, 10); // top 10
   const max = Math.max(...engajados.map((e) => e.engajamento));
 
-  // pontos de escala do eixo Y
+  // pontos do eixo Y (automático até o máximo)
   const ySteps = [0, 0.03, 0.05, 0.07, 0.1];
 
   return (
@@ -87,9 +96,9 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
 
       <Text style={styles.title}>Perfis mais engajados no Instagram</Text>
 
-      {/* Gráfico com linhas e eixo Y */}
+      {/* Gráfico */}
       <View style={{ flexDirection: "row", marginHorizontal: 40, height: 240 }}>
-        {/* Labels do eixo Y */}
+        {/* Eixo Y com labels */}
         <View style={{ width: 30, justifyContent: "space-between" }}>
           {ySteps.slice().reverse().map((y, i) => (
             <Text key={i} style={{ fontSize: 8, color: "#444" }}>
@@ -98,7 +107,7 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
           ))}
         </View>
 
-        {/* Área do gráfico */}
+        {/* Área das barras */}
         <View style={{ flex: 1, position: "relative" }}>
           {/* linhas horizontais */}
           {ySteps.map((y, i) => (
@@ -112,28 +121,29 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
           ))}
 
           {/* Barras */}
-          <View style={{ flexDirection: "row", alignItems: "flex-end", height: "100%" }}>
-            {engajados.map((p, i) => (
-              <View key={i} style={styles.barContainer}>
-                {/* Foto em cima da barra */}
-                {p.foto ? (
-                  <Image src={p.foto} style={styles.foto} />
-                ) : (
-                  <Image src={iconInsta} style={styles.foto} />
-                )}
+          <View
+            style={{ flexDirection: "row", alignItems: "flex-end", height: "100%" }}
+          >
+            {engajados.map((p, i) => {
+              const fotoPath = getFotoPath(p.nome);
+              return (
+                <View key={i} style={styles.barContainer}>
+                  {/* Foto em cima */}
+                  <Image src={fotoPath || iconInsta} style={styles.foto} />
 
-                {/* Barra proporcional */}
-                <View
-                  style={[
-                    styles.bar,
-                    { height: (p.engajamento / max) * 160 },
-                  ]}
-                />
+                  {/* Barra proporcional */}
+                  <View
+                    style={[
+                      styles.bar,
+                      { height: (p.engajamento / max) * 160 },
+                    ]}
+                  />
 
-                {/* Nome embaixo */}
-                <Text style={styles.nome}>{p.nome}</Text>
-              </View>
-            ))}
+                  {/* Nome (quebra automática) */}
+                  <Text style={styles.nome}>{p.nome}</Text>
+                </View>
+              );
+            })}
           </View>
         </View>
       </View>
