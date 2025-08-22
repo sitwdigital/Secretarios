@@ -6,6 +6,7 @@ import Footer from './components/common/Footer';
 import UploadRedes from './components/common/UploadRedes';
 
 import RankingGanhoSeguidores from './components/sections/RankingGanhoSeguidores';
+import RankingPerfisEngajados from './components/sections/RankingPerfisEngajados'; // 👈 import novo
 import RankingInstagram from './components/sections/RankingInstagram';
 import RankingInstagram2 from './components/sections/RankingInstagram2';
 import RankingFacebook from './components/sections/RankingFacebook';
@@ -43,7 +44,7 @@ const App = ({ modoPrint = false }) => {
     }
   }, [dadosExcel, modoPrint]);
 
-  // 🖨️ Carregar dados no modoPrint
+  // 🖨 Carregar dados no modoPrint
   useEffect(() => {
     if (modoPrint) {
       const dadosSalvos = localStorage.getItem('relatorioRedes');
@@ -107,23 +108,52 @@ const App = ({ modoPrint = false }) => {
           </div>
 
           {/* SEÇÕES */}
-          <section ref={(el) => (sectionsRef.current[0] = el)} id="ranking-top10" className="py-0">
+          <section
+            ref={(el) => (sectionsRef.current[0] = el)}
+            id="ranking-top10"
+            className="py-0"
+          >
             <RankingGanhoSeguidores dados={dadosExcel.rankingGanho} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[1] = el)} id="instagram1" className="py-0">
+          {/* 👇 NOVA SEÇÃO PERFIS ENGAJADOS */}
+          <section
+            ref={(el) => (sectionsRef.current[1] = el)}
+            id="perfis-engajados"
+            className="py-0"
+          >
+            <RankingPerfisEngajados dados={dadosExcel.perfisEngajados} />
+          </section>
+
+          <section
+            ref={(el) => (sectionsRef.current[2] = el)}
+            id="instagram1"
+            className="py-0"
+          >
             <RankingInstagram dados={dadosExcel.instagram} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[2] = el)} id="instagram2" className="py-0">
+          <section
+            ref={(el) => (sectionsRef.current[3] = el)}
+            id="instagram2"
+            className="py-0"
+          >
             <RankingInstagram2 dados={dadosExcel.instagram} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[3] = el)} id="facebook" className="py-0">
+          <section
+            ref={(el) => (sectionsRef.current[4] = el)}
+            id="facebook"
+            className="py-0"
+          >
             <RankingFacebook dados={dadosExcel.facebook} />
           </section>
 
-          <section ref={(el) => (sectionsRef.current[4] = el)} id="twitter" className="py-0">
+          <section
+            ref={(el) => (sectionsRef.current[5] = el)}
+            id="twitter"
+            className="py-0"
+          >
             <RankingTwitter dados={dadosExcel.twitter} />
           </section>
 
@@ -150,4 +180,4 @@ const App = ({ modoPrint = false }) => {
   );
 };
 
-export default App;
+export default App;

@@ -4,12 +4,13 @@ import { Page, Document, Image, StyleSheet, Text, View, Font } from "@react-pdf/
 
 Font.register({
   family: "AMSIPRO",
-  src: "/fonts/AMSIPRO-SEMIBOLD.ttf", // ✅ usa apenas a que você tem
+  src: "/fonts/AMSIPRO-SEMIBOLD.ttf",
   fontWeight: "semibold",
 });
 
 // import das páginas
 import RankingGanhoSeguidoresPDF from "./RankingGanhoSeguidoresPDF";
+import RankingPerfisEngajadosPDF from "./RankingPerfisEngajadosPDF"; // ✅ nome certo agora
 import RankingInstagramPDF from "./RankingInstagramPDF";
 import RankingFacebookPDF from "./RankingFacebookPDF";
 import RankingTwitterPDF from "./RankingTwitterPDF";
@@ -23,15 +24,14 @@ const styles = StyleSheet.create({
   },
   dataOverlay: {
     position: "absolute",
-    left: 50,   
-    top: 370,   
+    left: 50,
+    top: 370,
     fontSize: 24,
-    fontFamily: "AMSIPRO",   
-    fontWeight: "semibold",  
+    fontFamily: "AMSIPRO",
+    fontWeight: "semibold",
     color: "#000",
   },
 });
-
 
 const enrichRankingGanho = (rankingGanho, instagram, facebook, twitter) => {
   const todos = [...(instagram || []), ...(facebook || []), ...(twitter || [])];
@@ -52,7 +52,7 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
 
   return (
     <Document>
-      {/* Página 1: Capa com data sobreposta */}
+      {/* Página 1: Capa */}
       <Page size="A4" orientation="landscape">
         <View style={styles.overlayContainer}>
           <Image src="/pdf-assets/cover_Relatorio.png" style={styles.fullPage} />
@@ -65,7 +65,12 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
         <RankingGanhoSeguidoresPDF dados={rankingGanhoEnriquecido} />
       )}
 
-      {/* Instagram */}
+      {/* Página 3: Perfis mais engajados */}
+      {Array.isArray(dados.perfisEngajados) && dados.perfisEngajados.length > 0 && (
+        <RankingPerfisEngajadosPDF dados={dados.perfisEngajados} />
+      )}
+
+      {/* Página 4+: Instagram */}
       {Array.isArray(dados.instagram) && dados.instagram.length > 0 && (
         <RankingInstagramPDF dados={dados.instagram} />
       )}
@@ -80,7 +85,7 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
         <RankingTwitterPDF dados={dados.twitter} />
       )}
 
-      {/* Página final: Endpage */}
+      {/* Última página: Endpage */}
       <Page size="A4" orientation="landscape">
         <Image src="/pdf-assets/endpage_Relatorio.png" style={styles.fullPage} />
       </Page>
@@ -88,4 +93,4 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
   );
 };
 
-export default PDFDocument;
+export default PDFDocument;
