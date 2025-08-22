@@ -4,12 +4,35 @@ import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 const headerImg = "/pdf-assets/header_Relatorio_Insta.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA.png";
+const seloVerificado = "/pdf-assets/verificado.png";
 
 // ícones de status
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
 };
+
+// Lista fixa de pessoas verificadas (confere com coluna SECRETÁRIO)
+const verificados = [
+  "Orleans Brandão", 
+  "Tiago Fernandes",
+  "Jandira Dias",
+  "Vinícius Ferro",
+  "Cricielle Muniz",
+  "Rubens Pereira",
+  "Yuri Arruda",
+  "Fábio Gentil",
+  "Abigail Cunha",
+  "Bira do Pindaré",
+  "Karen Taveira Barros",
+  "Adriano Sarney",
+  "Sebastião Madeira",
+  "Maurício Martins",
+  "Junior Marreca",
+  "Coronel Célio Roberto",
+  "Gabriel Tenorio",
+  "Cassiano Pereira",
+];
 
 const styles = StyleSheet.create({
   page: {
@@ -29,15 +52,15 @@ const styles = StyleSheet.create({
   legenda: {
     width: "100%",
     alignItems: "center",
-    position: "absolute",  
-    bottom: 90,
+    position: "absolute",
+    bottom: 90,
   },
   gridContainer: {
     flex: 1,
-    justifyContent: "flex-start", // mantém alinhado a partir do topo útil
+    justifyContent: "flex-start",
     paddingHorizontal: 60,
-    marginTop: 10,               
-    paddingBottom: 60,            
+    marginTop: 10,
+    paddingBottom: 60,
   },
   gridLinha: {
     flexDirection: "row",
@@ -55,20 +78,36 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
+
+  // container da foto + selo
+  fotoContainer: {
+    position: "relative",
+    marginRight: 6,
+    width: 22,
+    height: 22,
+  },
   foto: {
     width: 22,
     height: 22,
     borderRadius: 11,
-    marginRight: 6,
     objectFit: "cover",
   },
+  selo: {
+    position: "absolute",
+    bottom: -2,
+    left: -2,
+    width: 12,
+    height: 12,
+  },
+
   nomeCargo: { flexDirection: "column", maxWidth: 90 },
   nome: { fontSize: 8, fontWeight: "semibold" },
   cargo: { fontSize: 6, color: "gray" },
+
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    height: 22,   
+    height: 22,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -77,8 +116,8 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, // Ajuste altura letras dentro
-  }, 
+    marginTop: 2,
+  },
 });
 
 // ====== Card
@@ -86,6 +125,9 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
+
+  // 🔥 confere se o secretário é verificado
+  const isVerificado = verificados.includes(pessoa.nome);
 
   return (
     <View
@@ -96,7 +138,13 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
-        {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
+
+        {/* foto + selo */}
+        <View style={styles.fotoContainer}>
+          {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
+          {isVerificado && <Image src={seloVerificado} style={styles.selo} />}
+        </View>
+
         <View style={styles.nomeCargo}>
           <Text style={styles.nome}>{pessoa.nome}</Text>
           {pessoa.cargo && <Text style={styles.cargo}>{pessoa.cargo}</Text>}
@@ -138,7 +186,6 @@ const RankingInstagramPDF = ({ dados = [] }) => {
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // blocos de 24 (8 + 8 + 8)
   const blocos = [];
   for (let i = 0; i < ordenados.length; i += 24) {
     blocos.push(ordenados.slice(i, i + 24));

@@ -1,9 +1,11 @@
-// src/pdf/RankingGanhoSeguidoresPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
 const headerImg = "/pdf-assets/header_Relatorio_Ranking.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA_2.png";
+
+// novo selo
+const seloVerificado = "/pdf-assets/verificado.png";
 
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
@@ -29,22 +31,20 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     position: "absolute",
-    bottom: 90, // 🔥 mesma altura dos outros
+    bottom: 90,
   },
-
   tituloContainer: {
     alignItems: "center",
     marginTop: 14,
     marginBottom: 10,
   },
   titulo: { fontSize: 14, fontWeight: "semibold" },
-
   grid: {
     flexDirection: "row",
     justifyContent: "center",
     paddingHorizontal: 60,
     marginTop: 10,
-    marginBottom: 40, // 🔥 dá espaço antes da legenda
+    marginBottom: 40,
   },
   col: {
     flex: 1,
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // 🔥 NÃO mexi nos estilos dos cards
   card: {
     width: "85%",
     flexDirection: "row",
@@ -65,17 +64,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#E1E1E5",
   },
   posicao: { fontSize: 11, fontWeight: "semibold", marginRight: 6 },
+  fotoContainer: {
+    position: "relative",
+    marginRight: 8,
+  },
   foto: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    marginRight: 8,
     objectFit: "cover",
+  },
+  selo: {
+    position: "absolute",
+    bottom: -2,
+    left: -1,
+    width: 12,
+    height: 12,
   },
   nomeCargo: { flexDirection: "column", maxWidth: 120 },
   nome: { fontSize: 9, fontWeight: "semibold" },
   cargo: { fontSize: 7, color: "gray" },
-
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 60,
@@ -106,7 +114,15 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
-        {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
+
+        {/* container da foto + selo */}
+        <View style={styles.fotoContainer}>
+          {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
+          {pessoa.verificado && (
+            <Image src={seloVerificado} style={styles.selo} />
+          )}
+        </View>
+
         <View style={styles.nomeCargo}>
           <Text style={styles.nome}>{pessoa.nome}</Text>
           {pessoa.cargo && <Text style={styles.cargo}>{pessoa.cargo}</Text>}
@@ -150,12 +166,10 @@ const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
     <Page size="A4" orientation="landscape" style={styles.page}>
       <Image src={headerImg} style={styles.header} />
 
-      {/* título centralizado */}
       <View style={styles.tituloContainer}>
         <Text style={styles.titulo}>Soma de seguidores nas redes</Text>
       </View>
 
-      {/* grid centralizado */}
       <View style={styles.grid}>
         <View style={styles.col}>
           {esquerda.map((pessoa, i) => (
@@ -169,7 +183,6 @@ const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
         </View>
       </View>
 
-      {/* legenda fixa acima do footer */}
       <View style={styles.legenda}>
         <Image src={legendaImg} style={{ height: 18 }} />
       </View>

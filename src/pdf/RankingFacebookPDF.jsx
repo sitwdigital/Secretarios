@@ -1,4 +1,3 @@
-// src/pdf/RankingFacebookPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
 const headerImg = "/pdf-assets/header_Relatorio_Facebook.png";
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    height: 22, // altura fixa
+    height: 22, 
     justifyContent: "center",
     alignItems: "center",
   },
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, // 🔥 abaixa só o número
+    marginTop: 2, 
   },
 });
 
@@ -140,7 +139,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // 🔥 blocos de 24 (8 + 8 + 8)
+  // blocos de 24 
   const blocos = [];
   for (let i = 0; i < ordenados.length; i += 24) {
     blocos.push(ordenados.slice(i, i + 24));

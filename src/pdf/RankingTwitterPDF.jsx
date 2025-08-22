@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     position: "absolute",
-    bottom: 90, // sobe legenda um pouco
+    bottom: 90, 
   },
   gridContainer: {
     flex: 1,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, // 🔥 desce só o número dentro do container
+    marginTop: 2, // desce só o número dentro do container
   },
 });
 
@@ -141,7 +141,7 @@ const RankingTwitterPDF = ({ dados = [] }) => {
     (a, b) => (b?.seguidores ?? 0) - (a?.seguidores ?? 0)
   );
 
-  // 🔥 blocos de 24 (8 + 8 + 8)
+  // blocos de 24 (8 + 8 + 8)
   const blocos = [];
   for (let i = 0; i < ordenados.length; i += 24) {
     blocos.push(ordenados.slice(i, i + 24));
