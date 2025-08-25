@@ -32,17 +32,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  chartArea: {
-    flexDirection: "row",
+  chartWrapper: {
     marginHorizontal: 40,
-    height: 200, // apenas área das barras
+    flexDirection: "row", // eixo Y ao lado
+  },
+
+  chartArea: {
+    flex: 1,
+    height: 200,
     borderLeft: "1pt solid #ccc",
     borderBottom: "1pt solid #ccc",
-    position: "relative",
+    position: "relative", // 🔥 necessário para nomes absolute
   },
   gridLine: {
     position: "absolute",
-    left: 30, // depois do eixo Y
+    left: 0,
     right: 0,
     height: 1,
     backgroundColor: "#ddd",
@@ -51,7 +55,7 @@ const styles = StyleSheet.create({
     width: 30,
     justifyContent: "space-between",
     alignItems: "flex-end",
-    paddingRight: 2,
+    marginRight: 4,
   },
   yLabel: {
     fontSize: 8,
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
   plotArea: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "flex-end", // barras sobem a partir da linha 0%
+    alignItems: "flex-end",
   },
   barWrapper: {
     flex: 1,
@@ -80,15 +84,17 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   nomeRow: {
+    position: "absolute", 
+    bottom: -20,          
+    left: 0,             
+    right: 0,
     flexDirection: "row",
-    marginHorizontal: 40,
-    marginTop: 4,
   },
   nome: {
     flex: 1,
     fontSize: 8,
     textAlign: "center",
-    maxWidth: 60,
+    lineHeight: 1,
   },
 });
 
@@ -102,11 +108,9 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>
       <Image src={headerImg} style={styles.header} />
-
       <Text style={styles.title}>Perfis mais engajados no Instagram</Text>
 
-      {/* Gráfico (Eixo Y + Barras) */}
-      <View style={styles.chartArea}>
+      <View style={styles.chartWrapper}>
         {/* Eixo Y */}
         <View style={styles.yAxis}>
           {ySteps.slice().reverse().map((y, i) => (
@@ -117,8 +121,8 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
         </View>
 
         {/* Área do gráfico */}
-        <View style={{ flex: 1, position: "relative" }}>
-          {/* Linhas horizontais */}
+        <View style={styles.chartArea}>
+          {/* linhas */}
           {ySteps.map((y, i) => (
             <View
               key={i}
@@ -129,7 +133,7 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
             />
           ))}
 
-          {/* Barras (sem nomes aqui) */}
+          {/* Barras */}
           <View style={styles.plotArea}>
             {engajados.map((p, i) => {
               const fotoPath = getFotoPath(p.nome);
@@ -146,16 +150,22 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
               );
             })}
           </View>
-        </View>
-      </View>
 
-      {/* Nomes fixos abaixo da linha 0% */}
-      <View style={styles.nomeRow}>
-        {engajados.map((p, i) => (
-          <Text key={i} style={styles.nome}>
-            {p.nome}
-          </Text>
-        ))}
+          {/* Nomes (absolute) */}
+          <View style={styles.nomeRow}>
+            {engajados.map((p, i) => {
+              const partes = p.nome.split(" ");
+              const primeiro = partes[0];
+              const sobrenome = partes.slice(1).join(" ");
+              return (
+                <View key={i} style={{ flex: 1, alignItems: "center" }}>
+                  <Text style={styles.nome}>{primeiro}</Text>
+                  {sobrenome && <Text style={styles.nome}>{sobrenome}</Text>}
+                </View>
+              );
+            })}
+          </View>
+        </View>
       </View>
 
       <Image src={footerImg} style={styles.footer} />
