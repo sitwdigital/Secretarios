@@ -5,15 +5,14 @@ const headerImg = "/pdf-assets/Perfismaisengajados.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const iconInsta = "/pdf-assets/instagram.png";
 
-// função utilitária: gera caminho da foto a partir do nome
 const normalizarNome = (nome) =>
   nome
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // remove acentos
-    .replace(/\s+/g, "-"); // troca espaço por hífen
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
 
-const getFotoPath = (nome) => `/assets/fotos/${normalizarNome(nome)}.jpg`;
+const getFotoPath = (nome) => `/fotos_secretarios/${normalizarNome(nome)}.jpg`;
 
 const styles = StyleSheet.create({
   page: {
@@ -35,46 +34,59 @@ const styles = StyleSheet.create({
 
   chartArea: {
     flexDirection: "row",
-    alignItems: "flex-end",
     marginHorizontal: 40,
-    height: 220,
-    borderLeft: "1pt solid #ccc", // eixo Y
-    borderBottom: "1pt solid #ccc", // eixo X
-    paddingBottom: 20,
+    height: 200, // apenas área das barras
+    borderLeft: "1pt solid #ccc",
+    borderBottom: "1pt solid #ccc",
     position: "relative",
   },
   gridLine: {
     position: "absolute",
-    left: 0,
+    left: 30, // depois do eixo Y
     right: 0,
     height: 1,
     backgroundColor: "#ddd",
   },
-  yLabel: {
-    position: "absolute",
-    left: -30,
-    fontSize: 8,
-    color: "#666",
+  yAxis: {
+    width: 30,
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    paddingRight: 2,
   },
-
-  barContainer: {
-    alignItems: "center",
+  yLabel: {
+    fontSize: 8,
+    color: "#444",
+  },
+  plotArea: {
     flex: 1,
+    flexDirection: "row",
+    alignItems: "flex-end", // barras sobem a partir da linha 0%
+  },
+  barWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   foto: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     marginBottom: 3,
+    objectFit: "cover",
   },
   bar: {
-    width: 26,
+    width: 24,
     backgroundColor: "#F77737",
     borderRadius: 6,
   },
+  nomeRow: {
+    flexDirection: "row",
+    marginHorizontal: 40,
+    marginTop: 4,
+  },
   nome: {
+    flex: 1,
     fontSize: 8,
-    marginTop: 6,
     textAlign: "center",
     maxWidth: 60,
   },
@@ -83,64 +95,53 @@ const styles = StyleSheet.create({
 const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  const engajados = dados.slice(0, 10); // top 10
+  const engajados = dados.slice(0, 10);
   const max = Math.max(...engajados.map((e) => e.engajamento));
-
-  // pontos do eixo Y (automático até o máximo)
   const ySteps = [0, 0.03, 0.05, 0.07, 0.1];
 
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>
-      {/* Header */}
       <Image src={headerImg} style={styles.header} />
 
       <Text style={styles.title}>Perfis mais engajados no Instagram</Text>
 
-      {/* Gráfico */}
-      <View style={{ flexDirection: "row", marginHorizontal: 40, height: 240 }}>
-        {/* Eixo Y com labels */}
-        <View style={{ width: 30, justifyContent: "space-between" }}>
+      {/* Gráfico (Eixo Y + Barras) */}
+      <View style={styles.chartArea}>
+        {/* Eixo Y */}
+        <View style={styles.yAxis}>
           {ySteps.slice().reverse().map((y, i) => (
-            <Text key={i} style={{ fontSize: 8, color: "#444" }}>
+            <Text key={i} style={styles.yLabel}>
               {(y * 100).toFixed(0)}%
             </Text>
           ))}
         </View>
 
-        {/* Área das barras */}
+        {/* Área do gráfico */}
         <View style={{ flex: 1, position: "relative" }}>
-          {/* linhas horizontais */}
+          {/* Linhas horizontais */}
           {ySteps.map((y, i) => (
             <View
               key={i}
               style={[
                 styles.gridLine,
-                { bottom: (y / Math.max(...ySteps)) * 200 },
+                { bottom: (y / Math.max(...ySteps)) * 180 },
               ]}
             />
           ))}
 
-          {/* Barras */}
-          <View
-            style={{ flexDirection: "row", alignItems: "flex-end", height: "100%" }}
-          >
+          {/* Barras (sem nomes aqui) */}
+          <View style={styles.plotArea}>
             {engajados.map((p, i) => {
               const fotoPath = getFotoPath(p.nome);
               return (
-                <View key={i} style={styles.barContainer}>
-                  {/* Foto em cima */}
+                <View key={i} style={styles.barWrapper}>
                   <Image src={fotoPath || iconInsta} style={styles.foto} />
-
-                  {/* Barra proporcional */}
                   <View
                     style={[
                       styles.bar,
-                      { height: (p.engajamento / max) * 160 },
+                      { height: (p.engajamento / max) * 150 },
                     ]}
                   />
-
-                  {/* Nome (quebra automática) */}
-                  <Text style={styles.nome}>{p.nome}</Text>
                 </View>
               );
             })}
@@ -148,7 +149,15 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
         </View>
       </View>
 
-      {/* Footer */}
+      {/* Nomes fixos abaixo da linha 0% */}
+      <View style={styles.nomeRow}>
+        {engajados.map((p, i) => (
+          <Text key={i} style={styles.nome}>
+            {p.nome}
+          </Text>
+        ))}
+      </View>
+
       <Image src={footerImg} style={styles.footer} />
     </Page>
   );
