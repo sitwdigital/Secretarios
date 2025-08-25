@@ -28,12 +28,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     textAlign: "center",
-    marginVertical: 12,
+    marginVertical: 5,
     fontWeight: "bold",
+    marginTop: 10
   },
 
   chartWrapper: {
     marginHorizontal: 40,
+    marginTop: 40,
     flexDirection: "row", // eixo Y ao lado
   },
 
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderLeft: "1pt solid #ccc",
     borderBottom: "1pt solid #ccc",
-    position: "relative", // 🔥 necessário para nomes absolute
+    position: "relative", // necessário para nomes absolute
   },
   gridLine: {
     position: "absolute",
@@ -95,6 +97,14 @@ const styles = StyleSheet.create({
     fontSize: 8,
     textAlign: "center",
     lineHeight: 1,
+  },
+
+  descricao: {
+    marginTop: 60,
+    marginHorizontal: 180,
+    fontSize: 10,
+    textAlign: "center",
+    color: "#333",
   },
 });
 
@@ -167,6 +177,12 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
           </View>
         </View>
       </View>
+
+      {/* 🔥 Texto explicativo abaixo do gráfico */}
+      <Text style={styles.descricao}>
+        Engajamento nas redes sociais é a interação ativa dos seguidores com seu conteúdo, 
+        como curtidas, comentários, compartilhamentos e mensagens, que mostram envolvimento e interesse.
+      </Text>
 
       <Image src={footerImg} style={styles.footer} />
     </Page>
