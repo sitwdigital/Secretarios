@@ -10,10 +10,11 @@ Font.register({
 
 // import das páginas
 import RankingGanhoSeguidoresPDF from "./RankingGanhoSeguidoresPDF";
-import RankingPerfisEngajadosPDF from "./RankingPerfisEngajadosPDF"; // ✅ nome certo agora
+import RankingPerfisEngajadosPDF from "./RankingPerfisEngajadosPDF";
 import RankingInstagramPDF from "./RankingInstagramPDF";
 import RankingFacebookPDF from "./RankingFacebookPDF";
 import RankingTwitterPDF from "./RankingTwitterPDF";
+import SectionPublicacoesPDF from "./SectionPublicacoesPDF";
 
 const styles = StyleSheet.create({
   fullPage: { width: "100%", height: "100%" },
@@ -35,13 +36,9 @@ const styles = StyleSheet.create({
 
 const enrichRankingGanho = (rankingGanho, instagram, facebook, twitter) => {
   const todos = [...(instagram || []), ...(facebook || []), ...(twitter || [])];
-
   return rankingGanho.map((p) => {
     const match = todos.find((x) => x.nome === p.nome);
-    return {
-      ...p,
-      foto: match?.foto || null,
-    };
+    return { ...p, foto: match?.foto || null };
   });
 };
 
@@ -60,17 +57,22 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
         </View>
       </Page>
 
-      {/* Página 2: Ranking Ganho de Seguidores */}
+      {/* Ranking Ganho de Seguidores */}
       {rankingGanhoEnriquecido.length > 0 && (
         <RankingGanhoSeguidoresPDF dados={rankingGanhoEnriquecido} />
       )}
 
-      {/* Página 3: Perfis mais engajados */}
+      {/* Perfis mais engajados */}
       {Array.isArray(dados.perfisEngajados) && dados.perfisEngajados.length > 0 && (
         <RankingPerfisEngajadosPDF dados={dados.perfisEngajados} />
       )}
 
-      {/* Página 4+: Instagram */}
+      {/* Publicações mais engajadas */}
+      {Array.isArray(dados.publicacoesEngajadas) && dados.publicacoesEngajadas.length > 0 && (
+        <SectionPublicacoesPDF dados={dados.publicacoesEngajadas} />
+      )}
+
+      {/* Instagram */}
       {Array.isArray(dados.instagram) && dados.instagram.length > 0 && (
         <RankingInstagramPDF dados={dados.instagram} />
       )}
@@ -93,4 +95,4 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
   );
 };
 
-export default PDFDocument;
+export default PDFDocument;

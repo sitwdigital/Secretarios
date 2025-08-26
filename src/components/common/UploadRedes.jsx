@@ -54,6 +54,7 @@ const UploadRedes = ({ setDados }) => {
         const twitterRaw   = lerAba(workbook, 'TWITTER');
         const somaSeguidores = lerAba(workbook, 'SOMA SEGUIDORES');
         const engajadosRaw   = lerAba(workbook, 'PERFIS ENGAJADOS');
+        const publicacoesRaw = lerAba(workbook, 'PUBLICAÇÃO ENGAJADAS'); // 🔥 nova aba
 
         // Monta listas base com foto
         const instagram = instagramRaw.map((linha) => {
@@ -99,12 +100,22 @@ const UploadRedes = ({ setDados }) => {
         const engajados = processarEngajados(engajadosRaw);
         base.perfisEngajados = engajados;
 
+        // 🔥 Processar publicações engajadas (nova seção)
+        const publicacoesEngajadas = publicacoesRaw.map((linha) => ({
+          ITEM: linha['ITEM'],
+          NOME: nomeStr(linha['NOME']),
+          POSICAO: num(linha['POSIÇÃO']),
+          FOTO: linha['FOTO'], // já vem o caminho inteiro do Excel
+        }));
+        base.publicacoesEngajadas = publicacoesEngajadas;
+
         // ============== VARIAÇÕES ====================
         const snapshotAnterior = getLastSnapshot();
         const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
 
-        // 🔑 garantir que perfisEngajados continua no resultado final
+        // garantir que seções extras continuem
         resultado.perfisEngajados = engajados;
+        resultado.publicacoesEngajadas = publicacoesEngajadas;
 
         // Entrega pro app
         setDados(resultado);
@@ -138,4 +149,4 @@ const UploadRedes = ({ setDados }) => {
   );
 };
 
-export default UploadRedes;
+export default UploadRedes;
