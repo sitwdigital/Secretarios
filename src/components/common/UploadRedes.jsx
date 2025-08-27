@@ -101,12 +101,27 @@ const UploadRedes = ({ setDados }) => {
         base.perfisEngajados = engajados;
 
         // 🔥 Processar publicações engajadas (nova seção)
-        const publicacoesEngajadas = publicacoesRaw.map((linha) => ({
-          ITEM: linha['ITEM'],
-          NOME: nomeStr(linha['NOME']),
-          POSICAO: num(linha['POSIÇÃO']),
-          FOTO: linha['FOTO'], // já vem o caminho inteiro do Excel
-        }));
+        const publicacoesEngajadas = publicacoesRaw.map((linha) => {
+          // normaliza DATA
+          let dataFormatada = "";
+          if (linha["DATA"]) {
+            if (typeof linha["DATA"] === "number") {
+              // Excel serial → Date
+              const baseDate = new Date(1900, 0, linha["DATA"] - 1);
+              dataFormatada = baseDate.toLocaleDateString("pt-BR");
+            } else {
+              dataFormatada = String(linha["DATA"]).trim();
+            }
+          }
+
+          return {
+            ITEM: linha['ITEM'],
+            NOME: nomeStr(linha['NOME']),
+            POSICAO: num(linha['POSIÇÃO']),
+            FOTO: linha['FOTO'],
+            DATA: dataFormatada,
+          };
+        });
         base.publicacoesEngajadas = publicacoesEngajadas;
 
         // ============== VARIAÇÕES ====================
@@ -149,4 +164,4 @@ const UploadRedes = ({ setDados }) => {
   );
 };
 
-export default UploadRedes;
+export default UploadRedes;

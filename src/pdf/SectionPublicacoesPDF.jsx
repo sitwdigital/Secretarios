@@ -1,8 +1,33 @@
 // src/pdf/SectionPublicacoesPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
-const headerImg = "/pdf-assets/header_Relatorio_Insta.png";
+// header/footer
+const headerImg = "/pdf-assets/header_Relatorio_Melhores.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
+const seloVerificado = "/pdf-assets/verificado.png"; // 🔹 selo azul
+
+// Lista de verificados
+const verificados = [
+  "Orleans Brandão", "Tiago Fernandes", "Jandira Dias", "Vinícius Ferro",
+  "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
+  "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
+  "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
+  "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
+  "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
+  "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
+  "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
+];
+
+// Função utilitária: transforma nome em slug -> arquivo
+const nomeParaArquivo = (nome) => {
+  if (!nome) return null;
+  return "/fotos_secretarios/" +
+    nome
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+      .toLowerCase()
+      .replace(/\s+/g, "-") +
+    ".jpg";
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -19,36 +44,69 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     fontWeight: "bold",
   },
-  cardsRow: {
+  blocao: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginHorizontal: 20,
+    justifyContent: "space-around",
+    marginHorizontal: 30,
     marginTop: 10,
-    gap: 10,
+    padding: 10,
+    borderRadius: 8,
   },
-  card: {
-    width: 120,
-    border: "1pt solid #ddd",
+  item: {
+    flexDirection: "column",
+    alignItems: "center",
+    width: "18%", // ~20% pra caber 5 lado a lado
+    marginHorizontal: 4,
+  },
+  perfilContainer: {
+    position: "relative",
+    marginBottom: 4,
+  },
+  perfilFoto: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    objectFit: "cover",
+  },
+  selo: {
+    position: "absolute",
+    bottom: -2,
+    left: -2,
+    width: 12,
+    height: 12,
+  },
+  nome: {
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  posicao: {
+    fontSize: 9,
+    color: "#555",
+    marginBottom: 6,
+    textAlign: "center",
+  },
+  fotoContainer: {
+    position: "relative",
+    width: "100%",
+    height: 160,
     borderRadius: 6,
     overflow: "hidden",
-    backgroundColor: "#fafafa",
   },
   foto: {
     width: "100%",
-    height: 80,
+    height: "100%",
     objectFit: "cover",
   },
-  nome: {
-    fontSize: 9,
-    textAlign: "center",
-    marginTop: 4,
-    fontWeight: "bold",
-  },
-  posicao: {
+  dataOverlay: {
+    position: "absolute",
+    bottom: 4,
+    left: 6,
     fontSize: 8,
-    textAlign: "center",
-    marginBottom: 6,
-    color: "#555",
+    color: "#fff",
+    backgroundColor: "rgba(0,0,0,0.6)", 
+    paddingHorizontal: 3,
+    borderRadius: 3,
   },
 });
 
@@ -64,17 +122,39 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
       <Image src={headerImg} style={styles.header} />
       <Text style={styles.title}>Publicações mais engajadas no Instagram</Text>
 
-      <View style={styles.cardsRow}>
-        {dadosOrdenados.slice(0, 5).map((item, index) => (
-          <View key={index} style={styles.card}>
-            {/* 🚀 Aqui já vem Base64 pronto (graças ao ExportPDFButton) */}
-            <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />
-            <Text style={styles.nome}>
-              {index + 1}º {item?.NOME}
-            </Text>
-            <Text style={styles.posicao}>Engajamento: {item?.POSICAO}</Text>
-          </View>
-        ))}
+      <View style={styles.blocao}>
+        {dadosOrdenados.slice(0, 5).map((item, index) => {
+          const perfilFoto = nomeParaArquivo(item?.NOME);
+          const isVerificado = verificados.includes(item?.NOME);
+
+          return (
+            <View key={index} style={styles.item}>
+              {/* Foto redonda do perfil + selo */}
+              <View style={styles.perfilContainer}>
+                <Image src={perfilFoto || "/placeholder.png"} style={styles.perfilFoto} />
+                {isVerificado && (
+                  <Image src={seloVerificado} style={styles.selo} />
+                )}
+              </View>
+
+              {/* Nome */}
+              <Text style={styles.nome}>
+                {index + 1}º {item?.NOME}
+              </Text>
+
+              {/* Engajamento */}
+              <Text style={styles.posicao}>Engajamento: {item?.POSICAO}</Text>
+
+              {/* Imagem da publicação + data */}
+              <View style={styles.fotoContainer}>
+                <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />
+                {item?.DATA && (
+                  <Text style={styles.dataOverlay}>{item.DATA}</Text>
+                )}
+              </View>
+            </View>
+          );
+        })}
       </View>
 
       <Image src={footerImg} style={styles.footer} />
