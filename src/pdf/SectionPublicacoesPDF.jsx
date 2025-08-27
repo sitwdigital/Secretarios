@@ -1,10 +1,15 @@
 // src/pdf/SectionPublicacoesPDF.jsx
-import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 
 // header/footer
 const headerImg = "/pdf-assets/header_Relatorio_Melhores.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const seloVerificado = "/pdf-assets/verificado.png"; // 🔹 selo azul
+
+Font.register({
+  family: "AMSIPRO",
+  src: "/fonts/AMSIPRO-SEMIBOLD.ttf",
+});
 
 // Lista de verificados
 const verificados = [
@@ -33,7 +38,7 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#fff",
-    fontFamily: "Helvetica",
+    fontFamily: "AMSIPRO", // 🔹 mesmo do RankingPerfisEngajados
     paddingBottom: 40,
   },
   header: { width: "100%" },
@@ -41,14 +46,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     textAlign: "center",
-    marginVertical: 12,
+    marginVertical: 5,
     fontWeight: "bold",
+    marginTop: 10,
   },
   blocao: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginHorizontal: 30,
-    marginTop: 10,
+    marginTop: 25,
     padding: 10,
     borderRadius: 8,
   },
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     left: 6,
     fontSize: 8,
     color: "#fff",
-    backgroundColor: "rgba(0,0,0,0.6)", 
+    backgroundColor: "rgba(0,0,0,0.6)",
     paddingHorizontal: 3,
     borderRadius: 3,
   },
@@ -120,6 +126,7 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>
       <Image src={headerImg} style={styles.header} />
+      {/*  Título */}
       <Text style={styles.title}>Publicações mais engajadas no Instagram</Text>
 
       <View style={styles.blocao}>
@@ -129,7 +136,6 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
 
           return (
             <View key={index} style={styles.item}>
-              {/* Foto redonda do perfil + selo */}
               <View style={styles.perfilContainer}>
                 <Image src={perfilFoto || "/placeholder.png"} style={styles.perfilFoto} />
                 {isVerificado && (
@@ -137,15 +143,12 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
                 )}
               </View>
 
-              {/* Nome */}
               <Text style={styles.nome}>
                 {index + 1}º {item?.NOME}
               </Text>
 
-              {/* Engajamento */}
               <Text style={styles.posicao}>Engajamento: {item?.POSICAO}</Text>
 
-              {/* Imagem da publicação + data */}
               <View style={styles.fotoContainer}>
                 <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />
                 {item?.DATA && (

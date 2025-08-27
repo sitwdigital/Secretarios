@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   dataOverlay: {
     position: "absolute",
     left: 50,
-    top: 370,
+    top: 350,
     fontSize: 24,
     fontFamily: "AMSIPRO",
     fontWeight: "semibold",

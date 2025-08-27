@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
   },
   tituloContainer: {
     alignItems: "center",
-    marginTop: 14,
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 25,
   },
-  titulo: { fontSize: 14, fontWeight: "semibold" },
+  titulo: { fontSize: 16, fontWeight: "bold", marginVertical: 5, textAlign: "center",},
   grid: {
     flexDirection: "row",
     justifyContent: "center",
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   selo: {
     position: "absolute",
     bottom: -2,
+    marginTop: 60,
     left: -1,
     width: 12,
     height: 12,
