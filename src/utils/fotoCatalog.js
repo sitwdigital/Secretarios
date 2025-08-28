@@ -29,6 +29,7 @@ for (const path in imported) {
 // ex.: "franca-do-macaquinho" usa a mesma foto de "franca"
 const ALIASES = {
   'franca-macaquinho': 'franca',
+  'lucilea-goncalves': 'lucilea',
 };
 
 export function fotoPorNome(nome) {

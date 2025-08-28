@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 10,
   },
   posicao: {
     fontSize: 9,
@@ -146,8 +147,6 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
               <Text style={styles.nome}>
                 {index + 1}º {item?.NOME}
               </Text>
-
-              <Text style={styles.posicao}>Engajamento: {item?.POSICAO}</Text>
 
               <View style={styles.fotoContainer}>
                 <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />

@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 60,
-    paddingHorizontal: 14,
-    paddingVertical: 5,
+    height: 22,
+    paddingVertical: 0,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
+    marginTop: 2, 
   },
 });
 
