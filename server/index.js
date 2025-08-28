@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 4000;
 
 // ==== Necessário para pegar caminho absoluto (quando buildado) ====
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const __dirname = path.dirname(__filename);
 
 // 🔓 Libera CORS para qualquer origem
 app.use((req, res, next) => {
