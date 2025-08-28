@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 // ===== Proxy para imagens do Google Drive =====
 app.get("/proxy", async (req, res) => {
   try {
-    const url = req.query.url;
+    const url = req.query.url; // Ex: ?url=https://drive.google.com/uc?id=ID
     if (!url) return res.status(400).send("URL obrigatória");
 
     const response = await fetch(url);
@@ -43,12 +43,12 @@ app.get("/proxy", async (req, res) => {
 // ===== Servir React buildado (dist/) =====
 app.use(express.static(path.join(__dirname, "../dist")));
 
-// 🔥 Aqui está a diferença: no Express 5 use "/*"
-app.get("/*", (req, res) => {
+// 🔥 Catch-all para React Router, mas sem afetar o /proxy
+app.get(/^(?!\/proxy).*$/, (req, res) => {
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 // ===== Start server =====
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT} `);
 });
