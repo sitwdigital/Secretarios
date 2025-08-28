@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "lint": "eslint .",
-  "preview": "vite preview",
-  "server": "node server/index.js",
-  "all": "concurrently \"npm run server\" \"npm run dev\""
- },
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "start": "node server/index.js",
+    "all": "concurrently \"npm run server\" \"npm run dev\""
+  },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.0",
     "cors": "^2.8.5",
@@ -40,8 +41,8 @@
     "tailwindcss": "^3.4.1",
     "vite": "^7.0.4"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
+  "description": "Sistema completo (frontend + backend) para relatório de secretários.",
+  "main": "server/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sitwdigital/Secretarios.git"

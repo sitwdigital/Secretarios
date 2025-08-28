@@ -1,9 +1,15 @@
 // server/index.js
 import express from "express";
 import fetch from "node-fetch";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+
+// ==== Necessário para pegar caminho absoluto (quando buildado) ====
+const __filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
 
 // 🔓 Libera CORS para qualquer origem
 app.use((req, res, next) => {
@@ -11,7 +17,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy para imagens do Google Drive
+// ===== Proxy para imagens do Google Drive =====
 app.get("/proxy", async (req, res) => {
   try {
     const url = req.query.url; // Ex: ?url=https://drive.google.com/uc?id=ID
@@ -22,10 +28,11 @@ app.get("/proxy", async (req, res) => {
       return res.status(response.status).send("Erro ao buscar imagem");
     }
 
-    // passa o content-type (image/jpeg, image/png etc)
-    res.setHeader("Content-Type", response.headers.get("content-type") || "image/jpeg");
+    res.setHeader(
+      "Content-Type",
+      response.headers.get("content-type") || "image/jpeg"
+    );
 
-    // envia direto o stream da imagem
     response.body.pipe(res);
   } catch (err) {
     console.error("Erro no proxy:", err);
@@ -33,6 +40,15 @@ app.get("/proxy", async (req, res) => {
   }
 });
 
+// ===== Servir os arquivos do React buildado (dist/) =====
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// Para qualquer rota do React Router -> retorna index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
+});
+
+// ===== Start server =====
 app.listen(PORT, () => {
-  console.log(`✅ Proxy rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT} `);
 });
