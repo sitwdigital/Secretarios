@@ -1,4 +1,3 @@
-// src/utils/imgToBase64.js
 export async function imgToBase64(url, maxWidth = 800, quality = 0.8) {
   try {
     if (!url) return null;
@@ -10,8 +9,13 @@ export async function imgToBase64(url, maxWidth = 800, quality = 0.8) {
 
     let proxiedUrl = url;
     if (id) {
-      // 👉 passa pelo proxy para evitar CORS
-      proxiedUrl = `http://localhost:4000/proxy?url=https://drive.google.com/uc?id=${id}`;
+      // 👉 Detecta se está em local ou produção
+      const baseUrl =
+        window.location.hostname.includes("localhost")
+          ? "http://localhost:4000"
+          : "https://secretarios.onrender.com";
+
+      proxiedUrl = `${baseUrl}/proxy?url=https://drive.google.com/uc?id=${id}`;
     }
 
     const res = await fetch(proxiedUrl);
@@ -20,7 +24,7 @@ export async function imgToBase64(url, maxWidth = 800, quality = 0.8) {
     const blob = await res.blob();
     const img = await createImageBitmap(blob);
 
-    // 🔹 Calcula escala se a largura for maior que maxWidth
+    // 🔹 Redimensiona se necessário
     const scale = Math.min(1, maxWidth / img.width);
     const canvas = document.createElement("canvas");
     canvas.width = img.width * scale;

@@ -1,4 +1,3 @@
-// src/pdf/SectionPublicacoesPDF.jsx
 import { Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 
 // header/footer
@@ -23,22 +22,21 @@ const verificados = [
   "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
 ];
 
-// Função utilitária: transforma nome em slug -> arquivo
-const nomeParaArquivo = (nome) => {
-  if (!nome) return null;
-  return "/fotos_secretarios/" +
-    nome
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
-      .toLowerCase()
-      .replace(/\s+/g, "-") +
-    ".jpg";
+// Função utilitária: monta URL do proxy
+const proxyUrl = (url) => {
+  if (!url) return "/placeholder.png";
+  const base =
+    typeof window !== "undefined" && window.location.hostname.includes("localhost")
+      ? "http://localhost:4000"
+      : "https://secretarios.onrender.com";
+  return `${base}/proxy?url=${encodeURIComponent(url)} `;
 };
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#fff",
-    fontFamily: "AMSIPRO", // 🔹 mesmo do RankingPerfisEngajados
+    fontFamily: "AMSIPRO",
     paddingBottom: 40,
   },
   header: { width: "100%" },
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "column",
     alignItems: "center",
-    width: "18%", // ~20% pra caber 5 lado a lado
+    width: "18%",
     marginHorizontal: 4,
   },
   perfilContainer: {
@@ -126,12 +124,11 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>
       <Image src={headerImg} style={styles.header} />
-      {/*  Título */}
       <Text style={styles.title}>Publicações mais engajadas no Instagram</Text>
 
       <View style={styles.blocao}>
         {dadosOrdenados.slice(0, 5).map((item, index) => {
-          const perfilFoto = nomeParaArquivo(item?.NOME);
+          const perfilFoto = proxyUrl(item?.FOTO); // 🔥 sempre via proxy
           const isVerificado = verificados.includes(item?.NOME);
 
           return (
@@ -150,7 +147,7 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
               <Text style={styles.posicao}>Engajamento: {item?.POSICAO}</Text>
 
               <View style={styles.fotoContainer}>
-                <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />
+                <Image src={proxyUrl(item?.FOTO)} style={styles.foto} />
                 {item?.DATA && (
                   <Text style={styles.dataOverlay}>{item.DATA}</Text>
                 )}
