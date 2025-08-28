@@ -7,11 +7,11 @@ import { fileURLToPath } from "url";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// ==== Necessário para pegar caminho absoluto (quando buildado) ====
+// ==== Caminho absoluto ====
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 🔓 Libera CORS para qualquer origem
+// 🔓 Libera CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   next();
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 // ===== Proxy para imagens do Google Drive =====
 app.get("/proxy", async (req, res) => {
   try {
-    const url = req.query.url; // Ex: ?url=https://drive.google.com/uc?id=ID
+    const url = req.query.url;
     if (!url) return res.status(400).send("URL obrigatória");
 
     const response = await fetch(url);
@@ -40,15 +40,15 @@ app.get("/proxy", async (req, res) => {
   }
 });
 
-// ===== Servir os arquivos do React buildado (dist/) =====
+// ===== Servir React buildado (dist/) =====
 app.use(express.static(path.join(__dirname, "../dist")));
 
-// Para qualquer rota do React Router -> retorna index.html
-app.get("*", (req, res) => {
+// 🔥 Aqui está a diferença: no Express 5 use "/*"
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 // ===== Start server =====
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT} `);
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
