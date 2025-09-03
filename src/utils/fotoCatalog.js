@@ -28,7 +28,7 @@ for (const path in imported) {
 // Aliases opcionais (nomes “estranhos” => arquivo)
 // ex.: "franca-do-macaquinho" usa a mesma foto de "franca"
 const ALIASES = {
-  'franca-macaquinho': 'franca',
+  'franca-do-macaquinho': 'franca',
   'lucilea-goncalves': 'lucilea',
 };
 
