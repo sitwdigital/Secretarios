@@ -22,25 +22,33 @@ export function orderAndIndex(list = [], scoreFn = () => 0) {
 
 /**
  * Compara posições de dois mapas (prevPosMap e currPosMap) e devolve Map slug->delta.
- * delta = posAnterior - posAtual (positivo = subiu; negativo = desceu; 0 = manteve/novo)
+ * delta = posAnterior - posAtual (positivo = subiu; negativo = desceu).
+ * Se não existia antes → marca como null (novo candidato).
  */
 export function computeDelta(prevPosMap = new Map(), currPosMap = new Map()) {
   const deltaMap = new Map();
   for (const [slug, currPos] of currPosMap.entries()) {
     const prevPos = prevPosMap.get(slug);
-    const delta = prevPos ? (prevPos - currPos) : 0;
-    deltaMap.set(slug, delta);
+    if (prevPos) {
+      deltaMap.set(slug, prevPos - currPos); // existente → delta normal
+    } else {
+      deltaMap.set(slug, null); // 👈 novo candidato
+    }
   }
   return deltaMap;
 }
 
 /**
- * Aplica (in-place) a propriedade "variacao" na lista base, usando um Map slug->delta.
+ * Aplica (in-place) a propriedade "variacao" e a flag "novo"
+ * na lista base, usando um Map slug->delta.
  */
 export function applyDeltaInPlace(list = [], deltaMap = new Map()) {
   list.forEach((p) => {
-    const slug = slugifyNome(p?.nome ?? ''), delta = deltaMap.get(slug);
+    const slug = slugifyNome(p?.nome ?? "");
+    const delta = deltaMap.get(slug);
+
     p.variacao = delta ?? 0;
+    p.novo = delta === null; // 👈 flag para novos candidatos
   });
 }
 
@@ -86,5 +94,5 @@ export function aplicarVariacoesEmTudo(dadosAtuais = {}, snapshotAnterior = {}) 
   const deltaTW = computeDelta(prevTWPos, currTWPos);
   applyDeltaInPlace(twitter, deltaTW);
 
-  return dadosAtuais;
+  return dadosAtuais;
 }

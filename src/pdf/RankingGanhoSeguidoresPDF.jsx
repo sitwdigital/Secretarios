@@ -1,12 +1,14 @@
+// src/pdf/RankingGanhoSeguidoresPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
 const headerImg = "/pdf-assets/header_Relatorio_Ranking.png";
 const footerImg = "/pdf-assets/footer_Relatorio.png";
 const legendaImg = "/pdf-assets/LEGENDA_2.png";
 
-// novo selo
+// selo de verificação
 const seloVerificado = "/pdf-assets/verificado.png";
 
+// ícones de status
 const iconesStatus = {
   ganhou: "/pdf-assets/GANHOU.png",
   perdeu: "/pdf-assets/PERDEU.png",
@@ -38,7 +40,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 25,
   },
-  titulo: { fontSize: 16, fontWeight: "bold", marginVertical: 5, textAlign: "center",},
+  titulo: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginVertical: 5,
+    textAlign: "center",
+  },
   grid: {
     flexDirection: "row",
     justifyContent: "center",
@@ -51,7 +58,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
   },
-
   card: {
     width: "85%",
     flexDirection: "row",
@@ -89,7 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     minWidth: 60,
     height: 22,
-    paddingVertical: 0,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -102,10 +107,22 @@ const styles = StyleSheet.create({
   },
 });
 
+// ====== Card Pessoa
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
-  const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
+
+  // 👉 Lógica para escolher ícone
+  let statusKey = "manteve";
+  if (pessoa.novo) {
+    statusKey = "ganhou"; // candidato novo sempre aparece como ganhou
+  } else if (pessoa.variacao > 0) {
+    statusKey = "ganhou";
+  } else if (pessoa.variacao < 0) {
+    statusKey = "perdeu";
+  }
+
+  const iconeStatus = iconesStatus[statusKey];
 
   return (
     <View
@@ -117,7 +134,6 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
 
-        {/* container da foto + selo */}
         <View style={styles.fotoContainer}>
           {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
           {pessoa.verificado && (
@@ -153,16 +169,12 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   );
 };
 
+// ====== Ranking Ganho Seguidores
 const RankingGanhoSeguidoresPDF = ({ dados = [] }) => {
   if (!Array.isArray(dados) || dados.length === 0) return null;
 
-  const dadosComStatus = dados.map((p) => ({
-    ...p,
-    status: p.variacao > 0 ? "ganhou" : p.variacao < 0 ? "perdeu" : "manteve",
-  }));
-
-  const esquerda = dadosComStatus.slice(0, 5);
-  const direita = dadosComStatus.slice(5, 10);
+  const esquerda = dados.slice(0, 5);
+  const direita = dados.slice(5, 10);
 
   return (
     <Page size="A4" orientation="landscape" style={styles.page}>

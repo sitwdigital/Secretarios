@@ -48,6 +48,9 @@ const RankingGanhoSeguidores = ({ dados = [], modoPrint = false }) => {
 
   // resolve delta priorizando o campo "variacao" já calculado (servidor/print)
   const resolveDelta = (pessoa, posAtual) => {
+    // 👇 prioridade: se for novo, sempre ganha
+    if (pessoa?.novo) return 1;
+
     const v = pessoa?.variacao;
     if (typeof v === 'number' && Number.isFinite(v)) {
       const s = Math.sign(v);

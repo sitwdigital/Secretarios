@@ -1,3 +1,5 @@
+// src/utils/rankingDiff.js
+
 export function slugifyNome(str = '') {
   return String(str)
     .normalize('NFD')
@@ -9,27 +11,38 @@ export function slugifyNome(str = '') {
 }
 
 export function orderAndIndex(list, getScore) {
-  const ordered = [...list].sort((a, b) => (getScore(b) - getScore(a)));
+  const ordered = [...list].sort((a, b) => getScore(b) - getScore(a));
   const posMap = new Map();
   ordered.forEach((p, i) => posMap.set(slugifyNome(p.nome), i + 1));
   return { ordered, posMap };
 }
 
-
 export function computeDelta(prevPosMap, currPosMap) {
   const deltaMap = new Map();
   for (const [slug, currPos] of currPosMap.entries()) {
     const prevPos = prevPosMap?.get(slug);
-    const delta = prevPos ? (prevPos - currPos) : 0; // se não existia, 0
-    deltaMap.set(slug, delta);
+
+    if (prevPos !== undefined) {
+      // candidato já existia → calcula diferença de posição
+      deltaMap.set(slug, prevPos - currPos);
+    } else {
+      // candidato novo → marca como null
+      deltaMap.set(slug, null);
+    }
   }
   return deltaMap;
 }
 
-// aplica a propriedade "variacao" no array de pessoas de acordo com deltaMap (por slug)
+// aplica variacao + flag "novo"
 export function applyDelta(list, deltaMap) {
   return list.map((p) => {
     const slug = slugifyNome(p.nome);
-    return { ...p, variacao: deltaMap.get(slug) ?? 0 };
+    const delta = deltaMap.get(slug);
+
+    return {
+      ...p,
+      variacao: delta ?? 0,   // diferença de posição
+      novo: delta === null,   // flag para candidatos novos
+    };
   });
 }
