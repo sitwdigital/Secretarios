@@ -1,3 +1,4 @@
+// src/pdf/RankingFacebookPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
 const headerImg = "/pdf-assets/header_Relatorio_Facebook.png";
@@ -40,11 +41,10 @@ const styles = StyleSheet.create({
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around", // 🔹 garante espaçamento uniforme
     marginBottom: 12,
   },
   card: {
-    width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -52,8 +52,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     marginHorizontal: 4,
+
+    // 🔹 largura fixa para evitar desalinhamento
+    width: 230,
+    flexShrink: 0,
+    flexGrow: 0,
   },
-  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
+  // 🔹 ajuste na posição para manter alinhamento
+  posicao: {
+    fontSize: 9,
+    fontWeight: "semibold",
+    marginRight: 6,
+    minWidth: 20,
+    textAlign: "right",
+    flexShrink: 0,
+  },
   foto: {
     width: 22,
     height: 22,
@@ -67,7 +80,7 @@ const styles = StyleSheet.create({
   seguidoresContainer: {
     borderRadius: 20,
     minWidth: 55,
-    height: 22, 
+    height: 22,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -76,7 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, 
+    marginTop: 2,
   },
 });
 
@@ -179,7 +192,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 1}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.centro ? (
@@ -188,7 +201,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 9}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.direita ? (
@@ -197,7 +210,7 @@ const RankingFacebookPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 17}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
                   </View>
                 );

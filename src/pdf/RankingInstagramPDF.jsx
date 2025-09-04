@@ -14,13 +14,13 @@ const iconesStatus = {
 
 const verificados = [
   "Orleans Brandão", "Tiago Fernandes", "Jandira Dias", "Vinícius Ferro",
-    "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
-    "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
-    "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
-    "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
-    "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
-    "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
-    "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
+  "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
+  "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
+  "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
+  "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
+  "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
+  "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
+  "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
 ];
 
 const styles = StyleSheet.create({
@@ -53,11 +53,10 @@ const styles = StyleSheet.create({
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around", // 🔹 garante alinhamento uniforme
     marginBottom: 12,
   },
   card: {
-    width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -65,10 +64,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     marginHorizontal: 4,
-  },
-  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
 
-  // container da foto + selo
+    // 🔹 largura fixa para não desalinha
+    width: 230, 
+    flexShrink: 0,
+    flexGrow: 0,
+  },
+  // 🔹 Mantida exatamente como estava
+  posicao: {
+    fontSize: 9,
+    fontWeight: "semibold",
+    marginRight: 6,
+    minWidth: 20,
+    textAlign: "right",
+    flexShrink: 0,
+  },
+
   fotoContainer: {
     position: "relative",
     marginRight: 6,
@@ -114,8 +125,6 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
-
-  // 🔥 confere se o secretário é verificado
   const isVerificado = verificados.includes(pessoa.nome);
 
   return (
@@ -128,7 +137,6 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
 
-        {/* foto + selo */}
         <View style={styles.fotoContainer}>
           {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
           {isVerificado && <Image src={seloVerificado} style={styles.selo} />}
@@ -213,7 +221,7 @@ const RankingInstagramPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 1}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.centro ? (
@@ -222,7 +230,7 @@ const RankingInstagramPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 9}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.direita ? (
@@ -231,7 +239,7 @@ const RankingInstagramPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 17}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
                   </View>
                 );

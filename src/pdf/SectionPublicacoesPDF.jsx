@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   fotoContainer: {
     position: "relative",
     width: "100%",
-    height: 160,
+    height: 200,
     borderRadius: 6,
     overflow: "hidden",
   },

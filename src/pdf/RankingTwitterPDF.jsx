@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     position: "absolute",
-    bottom: 90, 
+    bottom: 90,
   },
   gridContainer: {
     flex: 1,
@@ -41,11 +41,10 @@ const styles = StyleSheet.create({
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around", // 🔹 garante espaçamento igual
     marginBottom: 12,
   },
   card: {
-    width: "40%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -53,8 +52,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     marginHorizontal: 4,
+
+    // 🔹 largura fixa para padronizar todos os cards
+    width: 230,
+    flexShrink: 0,
+    flexGrow: 0,
   },
-  posicao: { fontSize: 9, fontWeight: "semibold", marginRight: 6 },
+  // 🔹 ajuste no número da posição
+  posicao: {
+    fontSize: 9,
+    fontWeight: "semibold",
+    marginRight: 6,
+    minWidth: 20,       // reserva espaço fixo
+    textAlign: "right", // sempre alinhado à direita
+    flexShrink: 0,
+  },
   foto: {
     width: 22,
     height: 22,
@@ -77,7 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, // desce só o número dentro do container
+    marginTop: 2,
   },
 });
 
@@ -181,7 +193,7 @@ const RankingTwitterPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 1}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.centro ? (
@@ -190,7 +202,7 @@ const RankingTwitterPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 9}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
 
                     {linha.direita ? (
@@ -199,7 +211,7 @@ const RankingTwitterPDF = ({ dados = [] }) => {
                         posicao={posBase + i + 17}
                       />
                     ) : (
-                      <View style={{ width: "40%" }} />
+                      <View style={styles.card} />
                     )}
                   </View>
                 );
