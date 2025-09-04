@@ -131,7 +131,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
     <View
       style={[
         styles.card,
-        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
+        { backgroundColor:"#E1E1E5" },
       ]}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -158,7 +158,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         <View
           style={[
             styles.seguidoresContainer,
-            { backgroundColor: isPrimeiro ? "#F7901E" : "#52586E" },
+            { backgroundColor:"#52586E" },
           ]}
         >
           <Text style={styles.seguidoresText}>

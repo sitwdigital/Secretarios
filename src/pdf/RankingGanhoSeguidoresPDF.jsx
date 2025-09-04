@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 20,
     marginBottom: 8,
-    backgroundColor: "#E1E1E5",
+    backgroundColor: "#E1E1E5", // 🔹 sempre cinza, sem amarelo
   },
   posicao: { fontSize: 11, fontWeight: "semibold", marginRight: 6 },
   fotoContainer: {
@@ -103,14 +103,13 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     textAlign: "center",
-    marginTop: 2, 
+    marginTop: 2,
   },
 });
 
 // ====== Card Pessoa
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
-  const isPrimeiro = posicao === 1;
 
   // 👉 Lógica para escolher ícone
   let statusKey = "manteve";
@@ -125,12 +124,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   const iconeStatus = iconesStatus[statusKey];
 
   return (
-    <View
-      style={[
-        styles.card,
-        { backgroundColor: isPrimeiro ? "#FEBD11" : "#E1E1E5" },
-      ]}
-    >
+    <View style={styles.card}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.posicao}>{posicao}º</Text>
 
@@ -157,7 +151,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         <View
           style={[
             styles.seguidoresContainer,
-            { backgroundColor: isPrimeiro ? "#F7901E" : "#52586E" },
+            { backgroundColor: "#52586E" }, // 🔹 todos iguais
           ]}
         >
           <Text style={styles.seguidoresText}>
