@@ -13,14 +13,33 @@ const iconesStatus = {
 };
 
 const verificados = [
-  "Orleans Brandão", "Tiago Fernandes", "Jandira Dias", "Vinícius Ferro",
-  "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
-  "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
-  "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
-  "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
-  "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
-  "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
-  "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa"
+  "Fábio Gentil",
+  "Yuri Arruda",
+  "Orleans Brandão",
+  "França do Macaquinho",
+  "Abigail Cunha",
+  "Karen Barros",
+  "Adriano Sarney",
+  "Tiago Fernandes",
+  "Cricielle Muniz",
+  "Sebastião Madeira",
+  "Maurício Martins",
+  "Junior Marreca",
+  "Coronel Célio Roberto",
+  "Gabriel Tenorio",
+  "Diego Rolim",
+  "Cassiano Pereira",
+  "Rubens Pereira",
+  "Pedro Chagas",
+  "Natassia Weba",
+  "Sérgio Macedo",
+  "Zé Reinaldo Tavares",
+  "Marcello Dualibe",
+  "Anderson Ferreira",
+  "Vinícius Ferro",
+  "Cauê Aragão",
+  "Alberto Bastos",
+  "Washington Oliveira"
 ];
 
 const styles = StyleSheet.create({
@@ -53,7 +72,7 @@ const styles = StyleSheet.create({
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "space-around", // 🔹 garante alinhamento uniforme
+    justifyContent: "space-around", 
     marginBottom: 12,
   },
   card: {
@@ -64,16 +83,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     marginHorizontal: 4,
-
-    // 🔹 largura fixa para não desalinha
     width: 230, 
     flexShrink: 0,
     flexGrow: 0,
   },
-  // 🔹 Mantida exatamente como estava
+
   posicao: {
     fontSize: 9,
-    fontWeight: "semibold",
+    fontWeight: "bold",
     marginRight: 6,
     minWidth: 20,
     textAlign: "right",
@@ -125,7 +142,14 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
-  const isVerificado = verificados.includes(pessoa.nome);
+
+  // 🔹 Normaliza para garantir correspondência mesmo se vier "Franca do Macaquinho"
+  const normalizar = (str = "") =>
+    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+  const isVerificado = verificados
+    .map((v) => normalizar(v))
+    .includes(normalizar(pessoa.nome));
 
   return (
     <View

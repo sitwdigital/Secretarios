@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   // 🔹 ajuste no número da posição
   posicao: {
     fontSize: 9,
-    fontWeight: "semibold",
+    fontWeight: "bold",
     marginRight: 6,
     minWidth: 20,       // reserva espaço fixo
     textAlign: "right", // sempre alinhado à direita

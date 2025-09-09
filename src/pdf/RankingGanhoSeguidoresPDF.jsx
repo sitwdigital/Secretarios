@@ -67,9 +67,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 20,
     marginBottom: 8,
-    backgroundColor: "#E1E1E5", // 🔹 sempre cinza, sem amarelo
+    backgroundColor: "#E1E1E5",
   },
-  posicao: { fontSize: 11, fontWeight: "semibold", marginRight: 6 },
+  // 🔹 Ajuste: posição com largura fixa → sempre alinhada
+  posicao: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginRight: 6,
+    minWidth: 20,       // garante espaço fixo
+    textAlign: "right", // números alinhados à direita
+    flexShrink: 0,
+  },
   fotoContainer: {
     position: "relative",
     marginRight: 8,
@@ -88,13 +96,14 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
   },
-  nomeCargo: { flexDirection: "column", maxWidth: 120 },
+  // 🔹 Ajuste: largura máxima reduzida para alinhar melhor
+  nomeCargo: { flexDirection: "column", maxWidth: 100 },
   nome: { fontSize: 9, fontWeight: "semibold" },
   cargo: { fontSize: 7, color: "gray" },
   seguidoresContainer: {
     borderRadius: 20,
-    minWidth: 60,
-    height: 22,
+    minWidth: 55,
+    height: 22, // altura fixa
     justifyContent: "center",
     alignItems: "center",
   },
@@ -111,10 +120,9 @@ const styles = StyleSheet.create({
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
 
-  // 👉 Lógica para escolher ícone
   let statusKey = "manteve";
   if (pessoa.novo) {
-    statusKey = "ganhou"; // candidato novo sempre aparece como ganhou
+    statusKey = "ganhou";
   } else if (pessoa.variacao > 0) {
     statusKey = "ganhou";
   } else if (pessoa.variacao < 0) {
@@ -151,7 +159,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         <View
           style={[
             styles.seguidoresContainer,
-            { backgroundColor: "#52586E" }, // 🔹 todos iguais
+            { backgroundColor: "#52586E" },
           ]}
         >
           <Text style={styles.seguidoresText}>

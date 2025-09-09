@@ -12,14 +12,13 @@ export default function processarRedes(insta, face, tw, somaSeguidores = []) {
 
   // Lista fixa de verificados (já normalizada)
   const verificados = [
-    "Orleans Brandão", "Tiago Fernandes", "Jandira Dias", "Vinícius Ferro",
-    "Cricielle Muniz", "Rubens Pereira", "Yuri Arruda", "Fábio Gentil",
-    "Abigail Cunha", "Bira do Pindaré", "Karen Taveira Barros",
-    "Adriano Sarney", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
-    "Coronel Célio Roberto", "Gabriel Tenorio", "Cassiano Pereira",
-    "Wolmer Araújo", "Natassia Weba", "Sérgio Macedo", "Raul Cancian",
-    "Zé Reinaldo Tavares", "Anderson Ferreira", "Cauê Aragão", "Raysa Maciel",
-    "Alberto Bastos", "Washigtong Oliveira", "Leandro Costa",
+    "Fábio Gentil","Yuri Arruda","Orleans Brandão","França do Macaquinho",
+    "Abigail Cunha", "Karen Barros","Adriano Sarney","Tiago Fernandes",
+    "Cricielle Muniz","Sebastião Madeira","Maurício Martins","Junior Marreca",
+    "Coronel Célio Roberto","Gabriel Tenorio","Diego Rolim","Cassiano Pereira",
+    "Rubens Pereira","Pedro Chagas","Natassia Weba","Sérgio Macedo",
+    "Zé Reinaldo Tavares","Marcello Dualibe","Anderson Ferreira",
+    "Vinícius Ferro","Cauê Aragão","Alberto Bastos","Washington Oliveira"
   ].map(normalizarNome);
 
   // Função para acumular seguidores (SECRETÁRIO → Instagram/Facebook/Twitter)
