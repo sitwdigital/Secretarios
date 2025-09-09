@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   gridLinha: {
     flexDirection: "row",
-    justifyContent: "space-around", 
+    justifyContent: "space-around",
     marginBottom: 12,
   },
   card: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     marginHorizontal: 4,
-    width: 230, 
+    width: 230,
     flexShrink: 0,
     flexGrow: 0,
   },
@@ -137,19 +137,38 @@ const styles = StyleSheet.create({
   },
 });
 
+// 🔹 Corrige apenas a exibição do nome (ex.: "Franca..." -> "França...")
+function corrigirNome(nome = "") {
+  const norm = nome
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+  if (norm === "franca do macaquinho") return "França do Macaquinho";
+  return nome;
+}
+
 // ====== Card
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
   const isPrimeiro = posicao === 1;
   const iconeStatus = pessoa.status ? iconesStatus[pessoa.status] : null;
 
-  // 🔹 Normaliza para garantir correspondência mesmo se vier "Franca do Macaquinho"
-  const normalizar = (str = "") =>
-    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-
+  // ✅ Checa verificado de forma acento-insensível (mantendo sua lista original)
   const isVerificado = verificados
-    .map((v) => normalizar(v))
-    .includes(normalizar(pessoa.nome));
+    .map((v) =>
+      v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+    )
+    .includes(
+      (pessoa.nome || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+    );
+
+  // usar o nome corrigido só para exibir
+  const nomeExibicao = corrigirNome(pessoa.nome);
 
   return (
     <View
@@ -167,7 +186,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
 
         <View style={styles.nomeCargo}>
-          <Text style={styles.nome}>{pessoa.nome}</Text>
+          <Text style={styles.nome}>{nomeExibicao}</Text>
           {pessoa.cargo && <Text style={styles.cargo}>{pessoa.cargo}</Text>}
         </View>
       </View>
