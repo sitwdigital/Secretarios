@@ -18,7 +18,9 @@ export default function processarRedes(insta, face, tw, somaSeguidores = []) {
     "Coronel Célio Roberto","Gabriel Tenorio","Diego Rolim","Cassiano Pereira",
     "Rubens Pereira","Pedro Chagas","Natassia Weba","Sérgio Macedo",
     "Zé Reinaldo Tavares","Marcello Dualibe","Anderson Ferreira",
-    "Vinícius Ferro","Cauê Aragão","Alberto Bastos","Washington Oliveira"
+    "Vinícius Ferro","Cauê Aragão","Alberto Bastos","Washington Oliveira",
+    "Paulo Case Fernandes","Bira do Pindaré","Raul Cancian","Celso Dias",  
+    "Leandro Costa"
   ].map(normalizarNome);
 
   // Função para acumular seguidores (SECRETÁRIO → Instagram/Facebook/Twitter)
