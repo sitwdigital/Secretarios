@@ -116,6 +116,23 @@ const styles = StyleSheet.create({
   },
 });
 
+// 🔹 Corrige apenas a exibição do nome (ex.: "Franca..." -> "França...")
+function corrigirNome(nome = "") {
+  const norm = String(nome)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+  const mapa = {
+    "franca do macaquinho": "França do Macaquinho",
+    "gabriel tenorio": "Gabriel Tenório",
+    "paulo case fernandes": "Paulo Casé Fernandes",
+  };
+
+  return mapa[norm] || nome;
+}
+
 // ====== Card Pessoa
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
@@ -131,6 +148,9 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
 
   const iconeStatus = iconesStatus[statusKey];
 
+  // usa o nome corrigido apenas para exibir
+  const nomeExibicao = corrigirNome(pessoa.nome);
+
   return (
     <View style={styles.card}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -144,7 +164,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         </View>
 
         <View style={styles.nomeCargo}>
-          <Text style={styles.nome}>{pessoa.nome}</Text>
+          <Text style={styles.nome}>{nomeExibicao}</Text>
           {pessoa.cargo && <Text style={styles.cargo}>{pessoa.cargo}</Text>}
         </View>
       </View>

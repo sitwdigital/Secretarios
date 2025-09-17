@@ -144,13 +144,19 @@ const styles = StyleSheet.create({
 
 // 🔹 Corrige apenas a exibição do nome (ex.: "Franca..." -> "França...")
 function corrigirNome(nome = "") {
-  const norm = nome
+  const norm = String(nome)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
-  if (norm === "franca do macaquinho") return "França do Macaquinho";
-  return nome;
+
+  const mapa = {
+    "franca do macaquinho": "França do Macaquinho",
+    "gabriel tenorio": "Gabriel Tenório",
+    "paulo case fernandes": "Paulo Casé Fernandes",
+  };
+
+  return mapa[norm] || nome;
 }
 
 // ====== Card
