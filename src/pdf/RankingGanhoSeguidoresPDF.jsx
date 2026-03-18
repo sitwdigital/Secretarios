@@ -128,9 +128,10 @@ function corrigirNome(nome = "") {
     "franca do macaquinho": "França do Macaquinho",
     "gabriel tenorio": "Gabriel Tenório",
     "paulo case fernandes": "Paulo Casé Fernandes",
+    "coronel augusta andrade": "Coronel Augusta\nAndrade",
   };
 
-  return mapa[norm] || nome;
+  return mapa[norm] || nome;
 }
 
 // ====== Card Pessoa
