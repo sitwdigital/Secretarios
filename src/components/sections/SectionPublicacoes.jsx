@@ -1,5 +1,5 @@
 // src/components/sections/SectionPublicacoes.jsx
-import HeaderImage from "/src/assets/header_Relatorio_Insta.svg"; 
+import HeaderImage from "/src/assets/header_Relatorio_Insta.svg";
 import FooterImage from "/src/assets/footer_Relatorio.svg";
 
 // 🔧 Função que corrige links do Google Drive

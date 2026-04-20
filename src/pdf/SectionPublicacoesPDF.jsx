@@ -13,14 +13,14 @@ Font.register({
 
 // Lista de verificados
 const verificados = [
-  "Fábio Gentil","Yuri Arruda","Orleans Brandão","França do Macaquinho",
-  "Abigail Cunha", "Karen Barros","Adriano Sarney","Tiago Fernandes",
-  "Cricielle Muniz","Sebastião Madeira","Maurício Martins","Junior Marreca",
-  "Coronel Célio Roberto","Gabriel Tenorio","Diego Rolim","Cassiano Pereira",
-  "Rubens Pereira","Pedro Chagas","Natassia Weba","Sérgio Macedo",
-  "Zé Reinaldo Tavares","Marcello Dualibe","Anderson Ferreira",
-  "Vinícius Ferro","Cauê Aragão","Alberto Bastos","Washington Oliveira",
-  "Paulo Case Fernandes","Bira do Pindaré","Raul Cancian","Celso Dias",  
+  "Fábio Gentil", "Yuri Arruda", "Orleans Brandão", "França do Macaquinho",
+  "Abigail Cunha", "Karen Barros", "Adriano Sarney", "Tiago Fernandes",
+  "Cricielle Muniz", "Sebastião Madeira", "Maurício Martins", "Junior Marreca",
+  "Coronel Célio Roberto", "Gabriel Tenorio", "Diego Rolim", "Cassiano Pereira",
+  "Rubens Pereira", "Pedro Chagas", "Natassia Weba", "Sérgio Macedo",
+  "Zé Reinaldo Tavares", "Marcello Dualibe", "Anderson Ferreira",
+  "Vinícius Ferro", "Cauê Aragão", "Alberto Bastos", "Washington Oliveira",
+  "Paulo Case Fernandes", "Bira do Pindaré", "Raul Cancian", "Celso Dias",
   "Leandro Costa"
 ];
 
