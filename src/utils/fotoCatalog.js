@@ -29,7 +29,12 @@ for (const path in imported) {
 // ex.: "franca-do-macaquinho" usa a mesma foto de "franca"
 const ALIASES = {
   'lucilea-goncalves': 'lucilea',
-  
+
+  // Quando vier da planilha como "Olindina Medeiros ( inativo )"
+  'olindina-medeiros-inativo': 'olindina-mendeiros',
+
+  // Caso em algum momento venha sem o "( inativo )"
+  'olindina-medeiros': 'olindina-mendeiros',
 };
 
 export function fotoPorNome(nome) {
