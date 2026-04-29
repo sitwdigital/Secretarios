@@ -137,7 +137,15 @@ const CardPessoa = ({ pessoa, posicao, getIcone }) => {
         />
         <div>
           <p className="font-semibold text-sm max-w-[160px] whitespace-normal break-words leading-tight">
-            {pessoa?.nome}
+            {pessoa?.nome?.includes('(') ? (
+              <>
+                {pessoa.nome.split('(')[0]}
+                <br />
+                ({pessoa.nome.split('(')[1]}
+              </>
+            ) : (
+              pessoa?.nome
+            )}
           </p>
           {pessoa?.cargo && (
             <p className="text-xs text-gray-500 max-w-[160px] whitespace-normal break-words leading-tight">

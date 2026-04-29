@@ -129,6 +129,7 @@ function corrigirNome(nome = "") {
     "gabriel tenorio": "Gabriel Tenório",
     "paulo case fernandes": "Paulo Casé Fernandes",
     "coronel augusta andrade": "Coronel Augusta\nAndrade",
+    "olindina medeiros ( inativo )": "Olindina Medeiros\n( inativo )",
   };
 
   return mapa[norm] || nome;

@@ -93,6 +93,24 @@ const styles = StyleSheet.create({
   },
 });
 
+function corrigirNome(nome = "") {
+  const norm = String(nome)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+  const mapa = {
+    "franca do macaquinho": "França do Macaquinho",
+    "gabriel tenorio": "Gabriel Tenório",
+    "paulo case fernandes": "Paulo Casé Fernandes",
+    "coronel augusta andrade": "Coronel Augusta\nAndrade",
+    "olindina medeiros ( inativo )": "Olindina Medeiros\n( inativo )",
+  };
+
+  return mapa[norm] || nome;
+}
+
 // ====== Card
 const CardPessoaPDF = ({ pessoa, posicao }) => {
   if (!pessoa) return null;
@@ -111,7 +129,7 @@ const CardPessoaPDF = ({ pessoa, posicao }) => {
         <Text style={styles.posicao}>{posicao}º</Text>
         {pessoa.foto && <Image src={pessoa.foto} style={styles.foto} />}
         <View style={styles.nomeCargo}>
-          <Text style={styles.nome}>{pessoa.nome}</Text>
+          <Text style={styles.nome}>{corrigirNome(pessoa.nome)}</Text>
           {pessoa.cargo && <Text style={styles.cargo}>{pessoa.cargo}</Text>}
         </View>
       </View>

@@ -108,7 +108,17 @@ const RankingGanhoSeguidores = ({ dados = [], modoPrint = false }) => {
                     className="w-12 h-12 rounded-full object-cover border-2 border-white"
                   />
                   <div>
-                    <p className="font-semibold text-sm">{esquerda[i].nome}</p>
+                    <p className="font-semibold text-sm">
+                      {esquerda[i].nome?.includes('(') ? (
+                        <>
+                          {esquerda[i].nome.split('(')[0]}
+                          <br />
+                          ({esquerda[i].nome.split('(')[1]}
+                        </>
+                      ) : (
+                        esquerda[i].nome
+                      )}
+                    </p>
                     {esquerda[i].cargo && (
                       <p className="text-xs text-gray-500">{esquerda[i].cargo}</p>
                     )}
@@ -134,7 +144,17 @@ const RankingGanhoSeguidores = ({ dados = [], modoPrint = false }) => {
                     className="w-12 h-12 rounded-full object-cover border-2 border-white"
                   />
                   <div>
-                    <p className="font-semibold text-sm">{direita[i].nome}</p>
+                    <p className="font-semibold text-sm">
+                      {direita[i].nome?.includes('(') ? (
+                        <>
+                          {direita[i].nome.split('(')[0]}
+                          <br />
+                          ({direita[i].nome.split('(')[1]}
+                        </>
+                      ) : (
+                        direita[i].nome
+                      )}
+                    </p>
                     {direita[i].cargo && (
                       <p className="text-xs text-gray-500">{direita[i].cargo}</p>
                     )}

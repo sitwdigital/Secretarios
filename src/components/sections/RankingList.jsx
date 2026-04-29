@@ -88,7 +88,15 @@ const RankingList = ({ dados = [], campo = '', modoPrint = false }) => {
               </div>
               <div>
                 <p className="text-lg font-semibold">
-                  {index + 1}º {pessoa?.nome}
+                  {index + 1}º {pessoa?.nome?.includes('(') ? (
+                    <>
+                      {pessoa.nome.split('(')[0]}
+                      <br />
+                      ({pessoa.nome.split('(')[1]}
+                    </>
+                  ) : (
+                    pessoa?.nome
+                  )}
                 </p>
                 <p className="text-sm text-gray-500">
                   {pessoa?.cargo || 'Cargo não informado'}
