@@ -139,7 +139,9 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
           return (
             <View key={index} style={styles.item}>
               <View style={styles.perfilContainer}>
-                <Image src={perfilFoto || "/placeholder.png"} style={styles.perfilFoto} />
+                {perfilFoto && (
+                  <Image src={perfilFoto} style={styles.perfilFoto} />
+                )}
                 {isVerificado && (
                   <Image src={seloVerificado} style={styles.selo} />
                 )}
@@ -149,8 +151,14 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
                 {index + 1}º {item?.NOME}
               </Text>
 
-              <View style={styles.fotoContainer}>
-                <Image src={item?.FOTO || "/placeholder.png"} style={styles.foto} />
+              <View style={[styles.fotoContainer, { backgroundColor: "#f0f0f0" }]}>
+                {item?.FOTO ? (
+                  <Image src={item.FOTO} style={styles.foto} />
+                ) : (
+                  <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ fontSize: 8, color: "#999" }}>[Sem Imagem]</Text>
+                  </View>
+                )}
                 {item?.DATA && (
                   <Text style={styles.dataOverlay}>{item.DATA}</Text>
                 )}

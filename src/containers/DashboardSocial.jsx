@@ -54,7 +54,7 @@ const DashboardSocial = () => {
           <RankingRedeSocial rede="Twitter" dados={dados} />
 
           {/* Botão de exportação PDF */}
-          <ExportPDFButton />
+          <ExportPDFButton dados={dados} />
         </div>
       )}
     </div>

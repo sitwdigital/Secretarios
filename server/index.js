@@ -19,24 +19,37 @@ app.use((req, res, next) => {
 
 // ===== Proxy para imagens do Google Drive =====
 app.get("/proxy", async (req, res) => {
-  try {
-    const url = req.query.url; // Ex: ?url=https://drive.google.com/uc?id=ID
-    if (!url) return res.status(400).send("URL obrigatória");
+  const targetUrl = req.query.url;
+  
+  if (!targetUrl) {
+    return res.status(400).send("URL obrigatória");
+  }
 
-    const response = await fetch(url);
+  try {
+    console.log(`[Proxy Local] Buscando: ${targetUrl.substring(0, 80)}...`);
+    
+    const response = await fetch(targetUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+      }
+    });
+
     if (!response.ok) {
-      return res.status(response.status).send("Erro ao buscar imagem");
+      console.error(`[Proxy Local] Erro na resposta: ${response.status} ${response.statusText}`);
+      return res.status(response.status).send(`Erro ao buscar imagem: ${response.statusText}`);
     }
 
-    res.setHeader(
-      "Content-Type",
-      response.headers.get("content-type") || "image/jpeg"
-    );
+    const contentType = response.headers.get("content-type");
+    console.log(`[Proxy Local] Content-Type: ${contentType}`);
+
+    // Garante que o cabeçalho de tipo de conteúdo seja repassado
+    res.setHeader("Content-Type", contentType || "image/jpeg");
+    res.setHeader("Cache-Control", "public, max-age=86400"); // Cache de 1 dia
 
     response.body.pipe(res);
   } catch (err) {
-    console.error("Erro no proxy:", err);
-    res.status(500).send("Erro no proxy");
+    console.error("[Proxy Local] Erro fatal:", err.message);
+    res.status(500).send("Erro interno no proxy");
   }
 });
 

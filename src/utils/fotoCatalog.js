@@ -1,4 +1,4 @@
-    // src/utils/fotoCatalog.js
+// src/utils/fotoCatalog.js
 // Carrega T-O-D-A-S as imagens da pasta, já com URL que o <img> entende
 const imported = import.meta.glob('../assets/fotos/*.{png,jpg,jpeg,webp,svg}', {
   eager: true,
@@ -41,5 +41,5 @@ export function fotoPorNome(nome) {
   if (!nome) return null;
   const key = slugifyNome(nome);
   const alias = ALIASES[key];
-  return imageMap[alias || key] || null;
+  return imageMap[alias || key] || null;
 }
