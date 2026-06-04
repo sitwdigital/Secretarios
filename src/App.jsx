@@ -35,14 +35,123 @@ const App = ({ modoPrint = false }) => {
     }
   }, []);
 
-  // 🔄 Ao fazer upload
+  const [historyList, setHistoryList] = useState([]);
+  const [selectedReportId, setSelectedReportId] = useState("");
+  const [showUpload, setShowUpload] = useState(false);
+
+  // 🧹 Limpar chave antiga duplicada para liberar espaço no localStorage
+  useEffect(() => {
+    try {
+      localStorage.removeItem('relatorioSecretarias');
+    } catch (e) {
+      console.warn('Erro ao limpar chave antiga:', e);
+    }
+  }, []);
+
+  // 🔄 Carregar dados iniciais e histórico de relatórios
+  useEffect(() => {
+    if (modoPrint) return;
+
+    const carregarDadosIniciais = async () => {
+      setLoading(true);
+      try {
+        // Tenta buscar o último relatório do banco de dados MySQL
+        const response = await fetch('/api/latest');
+        if (response.ok) {
+          const data = await response.json();
+          setDadosExcel(data);
+          if (data.data_upload) {
+            setDataUpload(new Date(data.data_upload));
+          } else {
+            setDataUpload(new Date());
+          }
+          console.log("✅ Último relatório carregado da VPS");
+        } else {
+          // Fallback se não houver dados no banco
+          const dadosSalvos = localStorage.getItem('relatorioRedes');
+          if (dadosSalvos) {
+            setDadosExcel(JSON.parse(dadosSalvos));
+            setDataUpload(new Date());
+          }
+        }
+      } catch (err) {
+        console.warn("Erro ao buscar último relatório do banco, usando fallback local:", err);
+        const dadosSalvos = localStorage.getItem('relatorioRedes');
+        if (dadosSalvos) {
+          setDadosExcel(JSON.parse(dadosSalvos));
+          setDataUpload(new Date());
+        }
+      } finally {
+        setLoading(false);
+      }
+
+      // Busca histórico de uploads para o dropdown
+      try {
+        const response = await fetch('/api/history');
+        if (response.ok) {
+          const history = await response.json();
+          setHistoryList(history);
+        }
+      } catch (err) {
+        console.warn("Erro ao buscar histórico do banco:", err);
+      }
+    };
+
+    carregarDadosIniciais();
+  }, [modoPrint]);
+
+  // 🔄 Ao fazer upload de uma nova planilha
   const handleUpload = (dados) => {
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setDadosExcel(dados);
       setDataUpload(new Date());
       setLoading(false);
+      setShowUpload(false);
+      
+      // Recarrega o seletor de histórico
+      try {
+        const response = await fetch('/api/history');
+        if (response.ok) {
+          const history = await response.json();
+          setHistoryList(history);
+        }
+      } catch (err) {
+        console.warn("Erro ao recarregar histórico:", err);
+      }
     }, 1000);
+  };
+
+  // 🔄 Ao selecionar um relatório do histórico
+  const handleSelectReport = async (id) => {
+    setLoading(true);
+    try {
+      let url = '/api/latest';
+      if (id) {
+        url = `/api/report/${id}`;
+        setSelectedReportId(id);
+      } else {
+        setSelectedReportId("");
+      }
+      
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        setDadosExcel(data);
+        if (data.data_upload) {
+          setDataUpload(new Date(data.data_upload));
+        } else {
+          setDataUpload(new Date());
+        }
+      } else {
+        alert("Não foi possível carregar o relatório.");
+      }
+    } catch (err) {
+      console.error("Erro de rede ao carregar relatório:", err);
+      alert("Erro de conexão ao carregar relatório.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 🔄 Salvar dados no localStorage após upload (modo normal)
@@ -52,7 +161,7 @@ const App = ({ modoPrint = false }) => {
         const dados = JSON.stringify(dadosExcel);
         localStorage.setItem('relatorioRedes', dados);
       } catch (e) {
-        console.warn('Aviso: Limite do localStorage excedido. O relatório não foi salvo no navegador, mas continuará funcionando nesta sessão:', e);
+        console.warn('Aviso: Limite do localStorage excedido ao salvar relatorioRedes:', e);
       }
     }
   }, [dadosExcel, modoPrint]);
@@ -83,14 +192,61 @@ const App = ({ modoPrint = false }) => {
 
   return (
     <div className="bg-gray-100 text-gray-900 font-sans min-h-screen">
+      {/* Barra de Histórico e Upload (Visível somente em produção, fora do print e quando há dados) */}
+      {!modoPrint && dadosExcel && (
+        <div className="bg-[#204181] border-b border-blue-900 py-3 px-4 shadow-md sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Logo do Header embutido para economizar espaço */}
+            <div className="flex items-center gap-6">
+              <span className="text-white text-lg font-bold tracking-wide">Secretários</span>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-blue-200 uppercase font-semibold">Histórico:</span>
+                <select
+                  value={selectedReportId}
+                  onChange={(e) => handleSelectReport(e.target.value)}
+                  className="bg-blue-950 border border-blue-800 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 outline-none cursor-pointer"
+                >
+                  <option value="">-- Último Relatório Salvo --</option>
+                  {historyList.map((h) => (
+                    <option key={h.id} value={h.id}>
+                      Relatório de {new Date(h.data_upload).toLocaleDateString('pt-BR')} às {new Date(h.data_upload).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <button
+                onClick={() => setShowUpload(!showUpload)}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow"
+              >
+                {showUpload ? 'Ocultar Caixa de Upload' : 'Enviar Nova Planilha (Excel)'}
+              </button>
+            </div>
+          </div>
+
+          {showUpload && (
+            <div className="max-w-md mx-auto mt-3 p-4 border border-blue-800 rounded-lg bg-blue-950 shadow-inner text-white">
+              <h3 className="text-sm font-bold mb-2 text-blue-200">Upload de arquivo Excel (.xlsx)</h3>
+              <UploadRedes setDados={handleUpload} />
+            </div>
+          )}
+        </div>
+      )}
+
       {!modoPrint && !dadosExcel && !loading && (
         <>
           <Header />
           <main className="flex flex-col items-center justify-center min-h-[80vh] px-4">
-            <h1 className="text-2xl font-bold mb-6 text-center">
-              Faça o upload do arquivo Excel (.xlsx) para ver o ranking
+            <h1 className="text-2xl font-bold mb-6 text-center text-[#204181]">
+              Nenhum dado cadastrado no banco de dados.
             </h1>
-            <div className="w-full max-w-md">
+            <p className="text-gray-600 mb-6 text-center max-w-md">
+              Envie a primeira planilha Excel (.xlsx) para popular o banco de dados e gerar o primeiro relatório.
+            </p>
+            <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg border">
               <UploadRedes setDados={handleUpload} />
             </div>
           </main>

@@ -157,6 +157,25 @@ const UploadRedes = ({ setDados }) => {
           console.warn('Aviso: Limite do localStorage excedido ao salvar lastSnapshot:', e);
         }
 
+        // Salvar no Banco de Dados da VPS
+        try {
+          console.log('📤 Enviando dados para o banco de dados...');
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(resultado),
+          });
+          if (!response.ok) {
+            console.error('Erro ao salvar relatório no banco de dados:', await response.text());
+          } else {
+            console.log('✅ Relatório gravado com sucesso no Banco de Dados MySQL!');
+          }
+        } catch (dbErr) {
+          console.error('Erro de rede ao conectar com o banco de dados:', dbErr);
+        }
+
       } catch (err) {
         console.error('Erro ao ler o Excel:', err);
         alert('Não foi possível processar o arquivo. Confira os nomes das abas e o formato.');
