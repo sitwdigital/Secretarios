@@ -8,7 +8,7 @@ const ExportPDFButton = ({ dados: dadosProp }) => {
   const [dadosProntos, setDadosProntos] = useState(null);
 
   // Prioridade: dados via prop > localStorage
-  const local = localStorage.getItem("relatorioSecretarias");
+  const local = localStorage.getItem("relatorioRedes");
   const dadosBase = dadosProp || (local ? JSON.parse(local) : null);
   const dataRelatorio = new Date().toLocaleDateString("pt-BR");
 

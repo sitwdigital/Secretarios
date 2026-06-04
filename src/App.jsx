@@ -26,6 +26,15 @@ const App = ({ modoPrint = false }) => {
   const sectionsRef = useRef([]);
   const endPageRef = useRef(null);
 
+  // 🧹 Limpar chave antiga duplicada para liberar espaço no localStorage
+  useEffect(() => {
+    try {
+      localStorage.removeItem('relatorioSecretarias');
+    } catch (e) {
+      console.warn('Erro ao limpar chave antiga:', e);
+    }
+  }, []);
+
   // 🔄 Ao fazer upload
   const handleUpload = (dados) => {
     setLoading(true);
@@ -39,20 +48,27 @@ const App = ({ modoPrint = false }) => {
   // 🔄 Salvar dados no localStorage após upload (modo normal)
   useEffect(() => {
     if (!modoPrint && dadosExcel) {
-      const dados = JSON.stringify(dadosExcel);
-      localStorage.setItem('relatorioRedes', dados);
-      localStorage.setItem('relatorioSecretarias', dados);
+      try {
+        const dados = JSON.stringify(dadosExcel);
+        localStorage.setItem('relatorioRedes', dados);
+      } catch (e) {
+        console.warn('Aviso: Limite do localStorage excedido. O relatório não foi salvo no navegador, mas continuará funcionando nesta sessão:', e);
+      }
     }
   }, [dadosExcel, modoPrint]);
 
   // 🖨 Carregar dados no modoPrint
   useEffect(() => {
     if (modoPrint) {
-      const dadosSalvos = localStorage.getItem('relatorioRedes');
-      if (dadosSalvos) {
-        const parsed = JSON.parse(dadosSalvos);
-        setDadosExcel(parsed);
-        setDataUpload(new Date());
+      try {
+        const dadosSalvos = localStorage.getItem('relatorioRedes');
+        if (dadosSalvos) {
+          const parsed = JSON.parse(dadosSalvos);
+          setDadosExcel(parsed);
+          setDataUpload(new Date());
+        }
+      } catch (e) {
+        console.error('Erro ao ler do localStorage no modo print:', e);
       }
     }
   }, [modoPrint]);

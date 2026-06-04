@@ -25,10 +25,18 @@ function getLastSnapshot() {
   }
 }
 
-function saveSnapshot(data) {
+function saveSnapshot(resultado) {
   try {
-    localStorage.setItem('lastSnapshot', JSON.stringify(data));
-  } catch {}
+    const minified = {
+      instagram: (resultado.instagram || []).map(p => ({ nome: p.nome, seguidores: p.seguidores })),
+      facebook: (resultado.facebook || []).map(p => ({ nome: p.nome, seguidores: p.seguidores })),
+      twitter: (resultado.twitter || []).map(p => ({ nome: p.nome, seguidores: p.seguidores })),
+      rankingGanho: (resultado.rankingGanho || []).map(p => ({ nome: p.nome, ganho: p.ganho }))
+    };
+    localStorage.setItem('lastSnapshot', JSON.stringify(minified));
+  } catch (e) {
+    console.warn('Erro ao salvar lastSnapshot:', e);
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -136,10 +144,18 @@ const UploadRedes = ({ setDados }) => {
         setDados(resultado);
 
         // Persistência
-        const json = JSON.stringify(resultado);
-        localStorage.setItem('relatorioSecretarias', json);
-        localStorage.setItem('relatorioRedes', json);
-        saveSnapshot(resultado);
+        try {
+          const json = JSON.stringify(resultado);
+          localStorage.setItem('relatorioRedes', json);
+        } catch (e) {
+          console.warn('Aviso: Limite do localStorage excedido ao salvar relatorioRedes:', e);
+        }
+
+        try {
+          saveSnapshot(resultado);
+        } catch (e) {
+          console.warn('Aviso: Limite do localStorage excedido ao salvar lastSnapshot:', e);
+        }
 
       } catch (err) {
         console.error('Erro ao ler o Excel:', err);
