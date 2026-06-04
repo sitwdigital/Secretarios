@@ -160,7 +160,7 @@ const UploadRedes = ({ setDados }) => {
         // Salvar no Banco de Dados da VPS
         try {
           console.log('📤 Enviando dados para o banco de dados...');
-          const response = await fetch('/api/upload', {
+          const response = await fetch('api/upload', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

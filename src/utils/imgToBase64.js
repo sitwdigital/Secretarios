@@ -15,11 +15,11 @@ export async function imgToBase64(url, maxWidth = 800, quality = 0.8) {
     }
 
     // 2. Escolha do Proxy baseado no ambiente
-    // Local: http://localhost:4000/proxy
-    // Produção (Vercel/Outros): /api/proxy-image ou /proxy no mesmo domínio
+    // Local: http://localhost:7000/proxy
+    // Produção (VPS): /secretarios/proxy
     const isLocal = window.location.hostname.includes("localhost");
-    const proxyBase = isLocal ? "http://localhost:4000" : window.location.origin;
-    const proxiedUrl = `${proxyBase}${isLocal ? "/proxy" : "/api/proxy-image"}?url=${encodeURIComponent(targetUrl)}`;
+    const proxyBase = isLocal ? "http://localhost:7000" : window.location.origin + "/secretarios";
+    const proxiedUrl = `${proxyBase}/proxy?url=${encodeURIComponent(targetUrl)}`;
 
     console.log(`[imgToBase64] Convertendo: ${id ? "Drive ID: " + id : url}`);
 

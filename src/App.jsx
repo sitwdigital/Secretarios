@@ -56,7 +56,7 @@ const App = ({ modoPrint = false }) => {
       setLoading(true);
       try {
         // Tenta buscar o último relatório do banco de dados MySQL
-        const response = await fetch('/api/latest');
+        const response = await fetch('api/latest');
         if (response.ok) {
           const data = await response.json();
           setDadosExcel(data);
@@ -87,7 +87,7 @@ const App = ({ modoPrint = false }) => {
 
       // Busca histórico de uploads para o dropdown
       try {
-        const response = await fetch('/api/history');
+        const response = await fetch('api/history');
         if (response.ok) {
           const history = await response.json();
           setHistoryList(history);
@@ -111,7 +111,7 @@ const App = ({ modoPrint = false }) => {
       
       // Recarrega o seletor de histórico
       try {
-        const response = await fetch('/api/history');
+        const response = await fetch('api/history');
         if (response.ok) {
           const history = await response.json();
           setHistoryList(history);
@@ -126,9 +126,9 @@ const App = ({ modoPrint = false }) => {
   const handleSelectReport = async (id) => {
     setLoading(true);
     try {
-      let url = '/api/latest';
+      let url = 'api/latest';
       if (id) {
-        url = `/api/report/${id}`;
+        url = `api/report/${id}`;
         setSelectedReportId(id);
       } else {
         setSelectedReportId("");
