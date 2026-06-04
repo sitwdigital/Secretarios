@@ -7,9 +7,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
 
 
+const isLocal = window.location.hostname.includes("localhost");
+const basename = isLocal ? "/" : "/secretarios";
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<App />} />
       </Routes>
