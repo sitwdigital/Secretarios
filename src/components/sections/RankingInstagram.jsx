@@ -129,7 +129,7 @@ const CardPessoa = ({ pessoa, posicao, getIcone }) => {
       <div className="flex items-center gap-3">
         <div className="text-lg font-extrabold w-6 text-right">{posicao}º</div>
         <img
-          src={pessoa?.foto || '/placeholder.png'}
+          src={pessoa?.foto || '/secretarios/pdf-assets/logo.png'}
           alt={pessoa?.nome}
           className={`rounded-full object-cover border-2 ${
             isPrimeiro ? 'w-10 h-10 border-[#F7901E]' : 'w-10 h-10 border-white'

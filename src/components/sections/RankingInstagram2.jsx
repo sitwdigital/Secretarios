@@ -113,7 +113,7 @@ const CardPessoa = ({ pessoa, posicao, getIcone }) => (
     <div className="flex items-center gap-3">
       <div className="text-lg font-extrabold w-6 text-right">{posicao}º</div>
       <img
-        src={pessoa?.foto || '/placeholder.png'}
+        src={pessoa?.foto || '/secretarios/pdf-assets/logo.png'}
         alt={pessoa?.nome}
         className="w-10 h-10 rounded-full object-cover border-2 border-white"
       />

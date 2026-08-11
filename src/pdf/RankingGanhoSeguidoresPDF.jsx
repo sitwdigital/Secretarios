@@ -1,18 +1,18 @@
 // src/pdf/RankingGanhoSeguidoresPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
-const headerImg = "/pdf-assets/header_Relatorio_Ranking.png";
-const footerImg = "/pdf-assets/footer_Relatorio.png";
-const legendaImg = "/pdf-assets/LEGENDA_2.png";
+const headerImg = "/secretarios/pdf-assets/header_Relatorio_Ranking.png";
+const footerImg = "/secretarios/pdf-assets/footer_Relatorio.png";
+const legendaImg = "/secretarios/pdf-assets/LEGENDA_2.png";
 
 // selo de verificação
-const seloVerificado = "/pdf-assets/verificado.png";
+const seloVerificado = "/secretarios/pdf-assets/verificado.png";
 
 // ícones de status
 const iconesStatus = {
-  ganhou: "/pdf-assets/GANHOU.png",
-  perdeu: "/pdf-assets/PERDEU.png",
-  manteve: "/pdf-assets/MANTEVE.png",
+  ganhou: "/secretarios/pdf-assets/GANHOU.png",
+  perdeu: "/secretarios/pdf-assets/PERDEU.png",
+  manteve: "/secretarios/pdf-assets/MANTEVE.png",
 };
 
 const styles = StyleSheet.create({

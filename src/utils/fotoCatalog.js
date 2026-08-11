@@ -41,5 +41,8 @@ export function fotoPorNome(nome) {
   if (!nome) return null;
   const key = slugifyNome(nome);
   const alias = ALIASES[key];
-  return imageMap[alias || key] || null;
+  
+  const isLocal = window.location.hostname.includes("localhost");
+  const base = isLocal ? "http://localhost:7000" : window.location.origin + "/secretarios";
+  return `${base}/api/foto/${alias || key}`;
 }

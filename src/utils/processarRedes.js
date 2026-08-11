@@ -1,4 +1,6 @@
 // src/utils/processarRedes.js
+import { corrigirNome } from './nomeHelper';
+
 function normalizarNome(nome) {
   return String(nome || "")
     .normalize("NFD")                 // separa acentos (ex.: "é" -> "é")
@@ -26,9 +28,9 @@ export default function processarRedes(insta, face, tw, somaSeguidores = []) {
   // Função para acumular seguidores (SECRETÁRIO → Instagram/Facebook/Twitter)
   const somar = (arr, rede) => {
     arr.forEach(item => {
-      const nomeOriginal = String(item['SECRETÁRIO'] || "").trim();
+      const nomeOriginal = corrigirNome(String(item.nome || item['SECRETÁRIO'] || item['SECRETÁRIOS'] || "").trim());
       const nomeNorm = normalizarNome(nomeOriginal);
-      const seguidores = parseFloat(item['SEGUIDORES']) || 0;
+      const seguidores = parseFloat(item.seguidores || item['SEGUIDORES'] || item['SEGUIDOR']) || 0;
       if (!nomeNorm) return;
 
       if (!mapa.has(nomeNorm)) {
@@ -54,15 +56,19 @@ export default function processarRedes(insta, face, tw, somaSeguidores = []) {
 
   const lista = Array.from(mapa.values());
 
-  // Ranking de ganho de seguidores (planilha SOMA SEGUIDORES → usa coluna NOME)
+  // Ranking de ganho de seguidores (planilha SOMA SEGUIDORES)
   const rankingGanho = somaSeguidores
-    .filter(row => row['NOME'] && row['SOMA'])
     .map(row => {
-      const nomeOriginal = String(row['NOME']).trim();
-      const nomeNorm = normalizarNome(nomeOriginal);
+      const nomeOriginal = corrigirNome(String(row['NOME'] || row['SECRETÁRIO'] || row['SECRETÁRIOS'] || "").trim());
+      const ganho = parseFloat(row['SOMA'] || row['GANHO'] || row['SEGUIDORES']) || 0;
+      return { nomeOriginal, ganho };
+    })
+    .filter(x => x.nomeOriginal && x.ganho > 0)
+    .map(x => {
+      const nomeNorm = normalizarNome(x.nomeOriginal);
       return {
-        nome: nomeOriginal,
-        ganho: parseFloat(row['SOMA']) || 0,
+        nome: x.nomeOriginal,
+        ganho: x.ganho,
         cargo: '',
         verificado: verificados.includes(nomeNorm),
       };

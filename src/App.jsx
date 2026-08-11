@@ -56,7 +56,7 @@ const App = ({ modoPrint = false }) => {
       setLoading(true);
       try {
         // Tenta buscar o último relatório do banco de dados MySQL
-        const response = await fetch('api/latest');
+        const response = await fetch('/secretarios/api/latest');
         if (response.ok) {
           const data = await response.json();
           setDadosExcel(data);
@@ -87,7 +87,7 @@ const App = ({ modoPrint = false }) => {
 
       // Busca histórico de uploads para o dropdown
       try {
-        const response = await fetch('api/history');
+        const response = await fetch('/secretarios/api/history');
         if (response.ok) {
           const history = await response.json();
           setHistoryList(history);
@@ -111,7 +111,7 @@ const App = ({ modoPrint = false }) => {
       
       // Recarrega o seletor de histórico
       try {
-        const response = await fetch('api/history');
+        const response = await fetch('/secretarios/api/history');
         if (response.ok) {
           const history = await response.json();
           setHistoryList(history);
@@ -126,9 +126,9 @@ const App = ({ modoPrint = false }) => {
   const handleSelectReport = async (id) => {
     setLoading(true);
     try {
-      let url = 'api/latest';
+      let url = '/secretarios/api/latest';
       if (id) {
-        url = `api/report/${id}`;
+        url = `/secretarios/api/report/${id}`;
         setSelectedReportId(id);
       } else {
         setSelectedReportId("");
@@ -230,7 +230,7 @@ const App = ({ modoPrint = false }) => {
           {showUpload && (
             <div className="max-w-md mx-auto mt-3 p-4 border border-blue-800 rounded-lg bg-blue-950 shadow-inner text-white">
               <h3 className="text-sm font-bold mb-2 text-blue-200">Upload de arquivo Excel (.xlsx)</h3>
-              <UploadRedes setDados={handleUpload} />
+              <UploadRedes setDados={handleUpload} snapshotAnterior={dadosExcel} />
             </div>
           )}
         </div>
@@ -247,7 +247,7 @@ const App = ({ modoPrint = false }) => {
               Envie a primeira planilha Excel (.xlsx) para popular o banco de dados e gerar o primeiro relatório.
             </p>
             <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg border">
-              <UploadRedes setDados={handleUpload} />
+              <UploadRedes setDados={handleUpload} snapshotAnterior={dadosExcel} />
             </div>
           </main>
         </>

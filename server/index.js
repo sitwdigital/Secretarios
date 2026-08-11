@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import db from "./db.js";
+import fs from "fs";
 
 // Carrega variáveis do .env
 dotenv.config();
@@ -135,8 +136,61 @@ app.get("/proxy", async (req, res) => {
   }
 });
 
+// ===== Endpoint de Foto Estática/Fallback Segura =====
+app.get("/api/foto/:nome", (req, res) => {
+  try {
+    const nomeNormalized = req.params.nome
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    let baseDir = path.join(__dirname, "../dist/fotos_secretarios");
+    if (!fs.existsSync(baseDir)) {
+      baseDir = path.join(__dirname, "../public/fotos_secretarios");
+    }
+    
+    const extensions = [".jpg", ".jpeg", ".png", ".webp"];
+    
+    let foundPath = null;
+    for (const ext of extensions) {
+      const file = path.join(baseDir, nomeNormalized + ext);
+      if (fs.existsSync(file)) {
+        foundPath = file;
+        break;
+      }
+    }
+
+    if (foundPath) {
+      res.setHeader("Cache-Control", "public, max-age=86400"); // Cache de 1 dia
+      return res.sendFile(foundPath);
+    } else {
+      // Para evitar 404 e consequentes crashes do PDF, retornamos uma imagem de fallback com 200 OK.
+      let defaultLogo = path.join(__dirname, "../dist/pdf-assets/logo.png");
+      if (!fs.existsSync(defaultLogo)) {
+        defaultLogo = path.join(__dirname, "../public/pdf-assets/logo.png");
+      }
+      
+      if (fs.existsSync(defaultLogo)) {
+        res.setHeader("Content-Type", "image/png");
+        return res.sendFile(defaultLogo);
+      }
+      // Caso de fallback do fallback (pixel transparente 1x1)
+      const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "base64");
+      res.setHeader("Content-Type", "image/png");
+      return res.end(pixel);
+    }
+  } catch (err) {
+    console.error("[API] Erro ao servir foto:", err.message);
+    res.status(500).send("Erro interno");
+  }
+});
+
 // ===== Servir React buildado (dist/) =====
 app.use(express.static(path.join(__dirname, "../dist")));
+app.use("/secretarios", express.static(path.join(__dirname, "../dist")));
 
 // 🔥 Catch-all para React Router, sem afetar /proxy e /api
 app.get(/^(?!\/proxy|\/api).*$/, (req, res) => {

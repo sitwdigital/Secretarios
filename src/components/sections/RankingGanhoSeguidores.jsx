@@ -67,7 +67,7 @@ const RankingGanhoSeguidores = ({ dados = [], modoPrint = false }) => {
   };
 
   const resolveFoto = (pessoa) =>
-    pessoa?.foto || fotoPorNome(pessoa?.nome) || '/placeholder.png';
+    pessoa?.foto || fotoPorNome(pessoa?.nome) || '/secretarios/pdf-assets/logo.png';
 
   // salva ordem atual somente quando não estiver imprimindo
   useEffect(() => {

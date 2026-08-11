@@ -1,18 +1,10 @@
 // src/pdf/RankingPerfisEngajadosPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { fotoPorNome } from '../utils/fotoCatalog';
 
-const headerImg = "/pdf-assets/Perfismaisengajados.png";
-const footerImg = "/pdf-assets/footer_Relatorio.png";
-const iconInsta = "/pdf-assets/instagram.png";
-
-const normalizarNome = (nome) =>
-  nome
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "-");
-
-const getFotoPath = (nome) => `/fotos_secretarios/${normalizarNome(nome)}.jpg`;
+const headerImg = "/secretarios/pdf-assets/Perfismaisengajados.png";
+const footerImg = "/secretarios/pdf-assets/footer_Relatorio.png";
+const iconInsta = "/secretarios/pdf-assets/logo.png";
 
 const styles = StyleSheet.create({
   page: {
@@ -146,7 +138,7 @@ const RankingPerfisEngajadosPDF = ({ dados = [] }) => {
           {/* Barras */}
           <View style={styles.plotArea}>
             {engajados.map((p, i) => {
-              const fotoPath = getFotoPath(p.nome);
+              const fotoPath = fotoPorNome(p.nome);
               return (
                 <View key={i} style={styles.barWrapper}>
                   <Image src={fotoPath || iconInsta} style={styles.foto} />

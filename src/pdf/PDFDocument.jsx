@@ -4,7 +4,7 @@ import { Page, Document, Image, StyleSheet, Text, View, Font } from "@react-pdf/
 
 Font.register({
   family: "AMSIPRO",
-  src: "/fonts/AMSIPRO-SEMIBOLD.ttf",
+  src: "/secretarios/fonts/AMSIPRO-SEMIBOLD.ttf",
   fontWeight: "semibold",
 });
 
@@ -52,7 +52,7 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
       {/* Página 1: Capa */}
       <Page size="A4" orientation="landscape">
         <View style={styles.overlayContainer}>
-          <Image src="/pdf-assets/cover_Relatorio.png" style={styles.fullPage} />
+          <Image src="/secretarios/pdf-assets/cover_Relatorio.png" style={styles.fullPage} />
           {dataRelatorio && <Text style={styles.dataOverlay}>{dataRelatorio}</Text>}
         </View>
       </Page>
@@ -89,7 +89,7 @@ const PDFDocument = ({ dados = {}, dataRelatorio }) => {
 
       {/* Última página: Endpage */}
       <Page size="A4" orientation="landscape">
-        <Image src="/pdf-assets/endpage_Relatorio.png" style={styles.fullPage} />
+        <Image src="/secretarios/pdf-assets/endpage_Relatorio.png" style={styles.fullPage} />
       </Page>
     </Document>
   );

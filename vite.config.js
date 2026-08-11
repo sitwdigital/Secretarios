@@ -11,6 +11,18 @@ export default defineConfig({
   server: {
     port: 5173, // porta local padrão
     host: true, // permite acessar via rede/local
+    proxy: {
+      '/secretarios/api': {
+        target: 'http://localhost:7000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/secretarios/, '')
+      },
+      '/secretarios/proxy': {
+        target: 'http://localhost:7000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/secretarios/, '')
+      }
+    }
   },
   preview: {
     port: 4173,

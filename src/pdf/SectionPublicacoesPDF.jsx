@@ -1,15 +1,11 @@
 // src/pdf/SectionPublicacoesPDF.jsx
 import { Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
+import { fotoPorNome } from '../utils/fotoCatalog';
 
 // header/footer
-const headerImg = "/pdf-assets/header_Relatorio_Melhores.png";
-const footerImg = "/pdf-assets/footer_Relatorio.png";
-const seloVerificado = "/pdf-assets/verificado.png"; // 🔹 selo azul
-
-Font.register({
-  family: "AMSIPRO",
-  src: "/fonts/AMSIPRO-SEMIBOLD.ttf",
-});
+const headerImg = "/secretarios/pdf-assets/header_Relatorio_Melhores.png";
+const footerImg = "/secretarios/pdf-assets/footer_Relatorio.png";
+const seloVerificado = "/secretarios/pdf-assets/verificado.png"; // 🔹 selo azul
 
 // Lista de verificados
 const verificados = [
@@ -23,17 +19,6 @@ const verificados = [
   "Paulo Case Fernandes", "Bira do Pindaré", "Raul Cancian", "Celso Dias",
   "Leandro Costa"
 ];
-
-// Função utilitária: transforma nome em slug -> arquivo
-const nomeParaArquivo = (nome) => {
-  if (!nome) return null;
-  return "/fotos_secretarios/" +
-    nome
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
-      .toLowerCase()
-      .replace(/\s+/g, "-") +
-    ".jpg";
-};
 
 const styles = StyleSheet.create({
   page: {
@@ -133,7 +118,7 @@ const SectionPublicacoesPDF = ({ dados = [] }) => {
 
       <View style={styles.blocao}>
         {dadosOrdenados.slice(0, 5).map((item, index) => {
-          const perfilFoto = nomeParaArquivo(item?.NOME);
+          const perfilFoto = fotoPorNome(item?.NOME);
           const isVerificado = verificados.includes(item?.NOME);
 
           return (

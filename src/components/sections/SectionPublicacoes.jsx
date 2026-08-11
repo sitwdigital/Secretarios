@@ -44,7 +44,7 @@ const SectionPublicacoes = ({ dados = [] }) => {
             className="w-48 bg-white shadow rounded-lg overflow-hidden hover:scale-[1.02] transition"
           >
             <img
-              src={formatarLinkDrive(item?.FOTO) || "/placeholder.png"}
+              src={formatarLinkDrive(item?.FOTO) || "/secretarios/pdf-assets/logo.png"}
               alt={item?.NOME}
               className="w-full h-36 object-cover"
             />

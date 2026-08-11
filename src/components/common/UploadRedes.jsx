@@ -5,15 +5,46 @@ import processarRedes from '../../utils/processarRedes';
 import { fotoPorNome } from '../../utils/fotoCatalog';
 import { aplicarVariacoesEmTudo } from '../../shared/calcVariacao';
 import processarEngajados from '../../utils/processarEngajados';
+import { corrigirNome } from '../../utils/nomeHelper';
 
 // ---------- helpers ----------
 const num = (v) =>
   Number(String(v ?? 0).toString().replace(/\./g, '').replace(',', '.')) || 0;
 
-const lerAba = (wb, nome) =>
-  wb.Sheets?.[nome] ? XLSX.utils.sheet_to_json(wb.Sheets[nome]) : [];
+const lerAbaComAlternativas = (wb, nomesEsperados) => {
+  const normEsperados = nomesEsperados.map(n => 
+    n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim()
+  );
+  
+  const sheets = Object.keys(wb.Sheets || {});
+  for (const sheet of sheets) {
+    const sheetNorm = sheet.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (normEsperados.includes(sheetNorm)) {
+      return XLSX.utils.sheet_to_json(wb.Sheets[sheet]);
+    }
+  }
+  return [];
+};
 
-const nomeStr = (v) => (v ? String(v).trim() : '');
+const encontrarValor = (linha, chavesPossiveis) => {
+  if (!linha) return undefined;
+  const chavesNorm = chavesPossiveis.map(c => 
+    c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim()
+  );
+  
+  for (const k of Object.keys(linha)) {
+    const kNorm = k.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (chavesNorm.includes(kNorm)) {
+      return linha[k];
+    }
+  }
+  return undefined;
+};
+
+const nomeStr = (v) => {
+  const nomeVal = v ? String(v).trim() : '';
+  return corrigirNome(nomeVal);
+};
 
 // ---------- Snapshot ----------
 function getLastSnapshot() {
@@ -41,7 +72,7 @@ function saveSnapshot(resultado) {
 
 // ---------------------------------------------------------------------
 
-const UploadRedes = ({ setDados }) => {
+const UploadRedes = ({ setDados, snapshotAnterior }) => {
   const [arquivoSelecionado, setArquivoSelecionado] = useState(null);
 
   const handleUpload = async (e) => {
@@ -57,29 +88,32 @@ const UploadRedes = ({ setDados }) => {
         const workbook = XLSX.read(data, { type: 'array' });
 
         // Ler abas
-        const instagramRaw = lerAba(workbook, 'INSTAGRAM');
-        const facebookRaw  = lerAba(workbook, 'FACEBOOK');
-        const twitterRaw   = lerAba(workbook, 'TWITTER');
-        const somaSeguidores = lerAba(workbook, 'SOMA SEGUIDORES');
-        const engajadosRaw   = lerAba(workbook, 'PERFIS ENGAJADOS');
-        const publicacoesRaw = lerAba(workbook, 'PUBLICAÇÃO ENGAJADAS'); // 🔥 nova aba
+        const instagramRaw = lerAbaComAlternativas(workbook, ['INSTAGRAM', 'INSTA']);
+        const facebookRaw  = lerAbaComAlternativas(workbook, ['FACEBOOK', 'FACE']);
+        const twitterRaw   = lerAbaComAlternativas(workbook, ['TWITTER', 'TWITTER/X', 'X']);
+        const somaSeguidores = lerAbaComAlternativas(workbook, ['SOMA SEGUIDORES', 'SOMA DE SEGUIDORES', 'SOMA']);
+        const engajadosRaw   = lerAbaComAlternativas(workbook, ['PERFIS ENGAJADOS', 'PERFIS MAIS ENGAJADOS', 'ENGAJADOS', 'ENGAJAMENTO']);
+        const publicacoesRaw = lerAbaComAlternativas(workbook, ['PUBLICAÇÃO ENGAJADAS', 'PUBLICAÇÕES ENGAJADAS', 'PUBLICACOES ENGAJADAS', 'PUBLICAÇÕES', 'POSTS ENGAJADOS']);
+
+        const nomeAliases = ['SECRETÁRIO', 'SECRETÁRIOS', 'SECRETARIO', 'SECRETARIOS', 'NOME', 'NOME DO SECRETÁRIO', 'SECRETARIA', 'PERFIL'];
+        const seguidoresAliases = ['SEGUIDORES', 'SEGUIDOR', 'SOMA', 'SEGUIDORES TOTAL'];
 
         // Monta listas base com foto
         const instagram = instagramRaw.map((linha) => {
-          const nome = nomeStr(linha['SECRETÁRIO']);
+          const nome = nomeStr(encontrarValor(linha, nomeAliases));
           return {
             nome,
-            seguidores: num(linha['SEGUIDORES']),
+            seguidores: num(encontrarValor(linha, seguidoresAliases)),
             foto: fotoPorNome(nome) || '',
             cargo: '',
           };
         });
 
         const facebook = facebookRaw.map((linha) => {
-          const nome = nomeStr(linha['SECRETÁRIO']);
+          const nome = nomeStr(encontrarValor(linha, nomeAliases));
           return {
             nome,
-            seguidores: num(linha['SEGUIDORES']),
+            seguidores: num(encontrarValor(linha, seguidoresAliases)),
             foto: fotoPorNome(nome) || '',
             cargo: '',
           };
@@ -87,10 +121,10 @@ const UploadRedes = ({ setDados }) => {
 
         const twitter = twitterRaw
           .map((linha) => {
-            const nome = nomeStr(linha['SECRETÁRIO']);
+            const nome = nomeStr(encontrarValor(linha, nomeAliases));
             return {
               nome,
-              seguidores: num(linha['SEGUIDORES']),
+              seguidores: num(encontrarValor(linha, seguidoresAliases)),
               foto: fotoPorNome(nome) || '',
               cargo: '',
             };
@@ -111,30 +145,36 @@ const UploadRedes = ({ setDados }) => {
         // 🔥 Processar publicações engajadas (nova seção)
         const publicacoesEngajadas = publicacoesRaw.map((linha) => {
           // normaliza DATA
+          const dataRaw = encontrarValor(linha, ['DATA', 'DATA DE PUBLICACAO', 'DATA DA POSTAGEM']);
           let dataFormatada = "";
-          if (linha["DATA"]) {
-            if (typeof linha["DATA"] === "number") {
+          if (dataRaw) {
+            if (typeof dataRaw === "number") {
               // Excel serial → Date
-              const baseDate = new Date(1900, 0, linha["DATA"] - 1);
+              const baseDate = new Date(1900, 0, dataRaw - 1);
               dataFormatada = baseDate.toLocaleDateString("pt-BR");
             } else {
-              dataFormatada = String(linha["DATA"]).trim();
+              dataFormatada = String(dataRaw).trim();
             }
           }
 
+          const itemPos = encontrarValor(linha, ['ITEM', 'POSIÇÃO', 'POSICAO', 'ENGAJAMENTO', 'NÚMERO', 'NUMERO']);
+          const nome = nomeStr(encontrarValor(linha, ['NOME', 'SECRETÁRIO', 'SECRETARIO', 'SECRETÁRIOS', 'SECRETARIOS']));
+          const posicao = num(encontrarValor(linha, ['POSIÇÃO', 'POSICAO', 'ENGAJAMENTO', 'SEGUIDORES']));
+          const foto = encontrarValor(linha, ['FOTO', 'LINK', 'IMAGEM', 'FOTO DA PUBLICACAO']);
+
           return {
-            ITEM: linha['ITEM'],
-            NOME: nomeStr(linha['NOME']),
-            POSICAO: num(linha['POSIÇÃO']),
-            FOTO: linha['FOTO'],
+            ITEM: itemPos,
+            NOME: nome,
+            POSICAO: posicao,
+            FOTO: foto,
             DATA: dataFormatada,
           };
         });
         base.publicacoesEngajadas = publicacoesEngajadas;
 
         // ============== VARIAÇÕES ====================
-        const snapshotAnterior = getLastSnapshot();
-        const resultado = aplicarVariacoesEmTudo(base, snapshotAnterior || {});
+        const snap = snapshotAnterior || getLastSnapshot();
+        const resultado = aplicarVariacoesEmTudo(base, snap || {});
 
         // garantir que seções extras continuem
         resultado.perfisEngajados = engajados;
@@ -160,7 +200,7 @@ const UploadRedes = ({ setDados }) => {
         // Salvar no Banco de Dados da VPS
         try {
           console.log('📤 Enviando dados para o banco de dados...');
-          const response = await fetch('api/upload', {
+          const response = await fetch('/secretarios/api/upload', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

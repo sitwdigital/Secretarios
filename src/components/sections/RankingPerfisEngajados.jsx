@@ -9,17 +9,9 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
+import { fotoPorNome } from '../../utils/fotoCatalog';
 
-// Função utilitária para gerar caminho da foto
-const normalizarNome = (nome) =>
-  nome
-    .toLowerCase()
-    .normalize("NFD") // remove acentos
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "-"); // espaços -> hífen
-
-const getFotoPath = (nome) => `/fotos_secretarios/${normalizarNome(nome)}.jpg`;
-const fallbackFoto = "/pdf-assets/instagram.png";
+const fallbackFoto = "/secretarios/pdf-assets/logo.png";
 
 const RankingPerfisEngajados = ({ dados = [] }) => {
   const engajados = dados;
@@ -29,7 +21,7 @@ const RankingPerfisEngajados = ({ dados = [] }) => {
       {/* Header */}
       <div className="w-full">
         <img
-          src="/src/assets/Perfismaisengajados.png"
+          src="/secretarios/pdf-assets/Perfismaisengajados.png"
           alt="Header Perfis Engajados"
           className="w-full"
         />
@@ -78,7 +70,7 @@ const RankingPerfisEngajados = ({ dados = [] }) => {
                 content={(props) => {
                   const { x, y, width, value } = props;
                   if (!value) return null;
-                  const fotoPath = getFotoPath(value);
+                  const fotoPath = fotoPorNome(value);
 
                   return (
                     <image
@@ -100,7 +92,7 @@ const RankingPerfisEngajados = ({ dados = [] }) => {
       {/* Footer */}
       <div className="w-full">
         <img
-          src="/pdf-assets/footer_Relatorio.png"
+          src="/secretarios/pdf-assets/footer_Relatorio.png"
           alt="Footer"
           className="w-full"
         />

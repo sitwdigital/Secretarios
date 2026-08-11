@@ -1,14 +1,14 @@
 // src/pdf/RankingTwitterPDF.jsx
 import { Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
 
-const headerImg = "/pdf-assets/header_Relatorio_X.png";
-const footerImg = "/pdf-assets/footer_Relatorio.png";
-const legendaImg = "/pdf-assets/LEGENDA.png";
+const headerImg = "/secretarios/pdf-assets/header_Relatorio_X.png";
+const footerImg = "/secretarios/pdf-assets/footer_Relatorio.png";
+const legendaImg = "/secretarios/pdf-assets/LEGENDA.png";
 
 // Ícones de status
 const iconesStatus = {
-  ganhou: "/pdf-assets/GANHOU.png",
-  perdeu: "/pdf-assets/PERDEU.png",
+  ganhou: "/secretarios/pdf-assets/GANHOU.png",
+  perdeu: "/secretarios/pdf-assets/PERDEU.png",
 };
 
 const styles = StyleSheet.create({
