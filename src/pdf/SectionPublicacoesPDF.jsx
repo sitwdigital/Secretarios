@@ -17,7 +17,8 @@ const verificados = [
   "Zé Reinaldo Tavares", "Marcello Dualibe", "Anderson Ferreira",
   "Vinícius Ferro", "Cauê Aragão", "Alberto Bastos", "Washington Oliveira",
   "Paulo Case Fernandes", "Bira do Pindaré", "Raul Cancian", "Celso Dias",
-  "Leandro Costa"
+  "Leandro Costa", "Márcio Machado", "Gardênia Garrido", "Sandro Montenegro",
+  "Lycia Waquim"
 ];
 
 const styles = StyleSheet.create({

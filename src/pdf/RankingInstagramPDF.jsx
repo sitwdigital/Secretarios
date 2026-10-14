@@ -44,7 +44,11 @@ const verificados = [
   "Vinícius Ferro",
   "Cauê Aragão",
   "Alberto Bastos",
-  "Washington Oliveira"
+  "Washington Oliveira",
+  "Márcio Machado",
+  "Gardênia Garrido",
+  "Sandro Montenegro",
+  "Lycia Waquim"
 ];
 
 const styles = StyleSheet.create({
