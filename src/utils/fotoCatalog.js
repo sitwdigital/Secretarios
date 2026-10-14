@@ -36,10 +36,8 @@ const ALIASES = {
   // Caso em algum momento venha sem o "( inativo )"
   'olindina-medeiros': 'olindina-mendeiros',
 
-  // Aliases para Lycia Waquim e variações
+  // Caso venha escrito Lucia Waquim (com c) em vez de Lycia Waquim
   'lucia-waquim': 'lycia-waquim',
-  'luzia-frazao-waquim': 'lycia-waquim',
-  'luzia-waquim': 'lycia-waquim',
 };
 
 export function fotoPorNome(nome) {
